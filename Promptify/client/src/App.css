@@ -1,0 +1,30 @@
+/* Global Imports */
+@import url('./styles/global/header.css');
+/* @import url('./styles/global/body.css'); */
+@import url('./styles/global/footer.css');
+@import url('./styles/global/loading-screen.css');
+@import url('./styles/global/message.css');
+@import url('./styles/global/modal.css');
+@import url('./styles/global/signup.css');
+@import url('./styles/global/login.css');
+
+/* Global Color Palette */
+:root {
+    --black-olive: #1f271bff;
+    --paynes-gray: #19647eff;
+    --verdigris: #28afb0ff;
+    --pale-cyan: #a8c2cc;
+    --naples-yellow: #f4d35eff;
+    --sandy-brown: #ee964bff;
+
+    --dark-text: #0c100b;
+    --light-text: #edebe4;
+
+    --mild-danger-red: #e83a48;
+    --danger-red: #b71d1d;
+    --success-green: #26c726;
+}
+
+.mild-danger-red {
+    color: var(--mild-danger-red);
+}

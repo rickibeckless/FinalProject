@@ -1,0 +1,41 @@
+/* Global Footer Styles */
+#main-footer {
+    background-color: var(--black-olive);
+    color: var(--light-text);
+    padding: 1.5rem 0;
+    text-align: center;
+}
+
+#footer-navbar ul {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 2rem;
+}
+
+#footer-navbar a {
+    color: var(--verdigris);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#footer-navbar a:hover {
+    color: var(--pale-cyan);
+}
+
+#footer-cr-statement {
+    font-size: 0.9rem;
+    margin-top: 1rem;
+}
+
+#footer-cr-link {
+    color: var(--verdigris);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+#footer-cr-link:hover {
+    color: var(--pale-cyan);
+}

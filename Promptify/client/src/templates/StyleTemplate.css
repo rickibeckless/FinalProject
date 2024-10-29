@@ -1,0 +1,25 @@
+/*
+Desc: This is a template for creating a new CSS file. 
+    It includes a basic structure and comments for organization.
+*/
+
+/* Short Descriptive Comment Here */
+/* .selector {
+    property: value;
+} */
+
+/* Responsive Styles */
+/* Mobile */
+@media (max-width: 550px) {
+
+}
+
+/* Tablet */
+@media (min-width: 551px) and (max-width: 900px) {
+
+}
+
+/* Desktop */
+@media (min-width: 901px) {
+
+}

@@ -1,0 +1,48 @@
+/* Loading Screen Styles */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #00000080;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-screen-text {
+    font-family: monospace;
+
+    overflow: hidden;
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 700;
+    border-right: .2rem solid #ffffff;
+    white-space: nowrap;
+    max-width: 10ch;
+
+    animation: typing 3s steps(10, start) infinite, blink-caret 1s step-end infinite;
+}
+
+@keyframes typing {
+    from {
+        max-width: 0;
+    }
+
+    to {
+        max-width: 10.2ch;
+    }
+}
+
+@keyframes blink-caret {
+    from,
+    to {
+        border-color: transparent;
+    }
+
+    50% {
+        border-color: #ffffff;
+    }
+}

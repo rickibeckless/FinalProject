@@ -1,0 +1,59 @@
+/* Global Header Styles */
+#main-header {
+    background-color: var(--black-olive);
+    color: var(--light-text);
+    border-bottom: 2px solid var(--dark-text);
+
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    display: grid;
+    grid-template-columns: minmax(200px, 20vw) 2fr;
+    align-items: center;
+}
+
+#main-logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    padding: 1rem 0;
+}
+
+#main-logo a,
+#main-navbar a {
+    color: var(--light-text);
+    text-decoration: none;
+}
+
+#main-navbar ul {
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#main-navbar a {
+    margin: 0 1rem;
+    font-size: 1.2rem;
+}
+
+#main-navbar a:hover {
+    text-decoration: underline;
+}
+
+#main-navbar .dropdown {
+    display: none;
+}
+
+#main-navbar .dropdown.active {
+    display: block;
+    position: absolute;
+    background-color: var(--black-olive);
+    border: 2px solid var(--dark-text);
+    border-top: none;
+    width: 100%;
+    z-index: 1000;
+}

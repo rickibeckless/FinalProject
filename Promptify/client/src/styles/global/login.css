@@ -1,0 +1,6 @@
+.login-btn.attempts-error {
+    pointer-events: none;
+    border: none;
+    background-color: #1f271b8c;
+    color: var(--light-text);
+}
