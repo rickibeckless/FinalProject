@@ -8,7 +8,7 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 
 - Home ⭐
 - Profile
-- All Challenges
+- Current Challenges ⭐
 - Challenge Details
 - Create Challenge
 - Create Submission
@@ -18,15 +18,19 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 
 ## Wireframe 1: Home
 
-![Promptify Wire-frame Home](./promptify_wireframe_home.png)
+![Promptify Wire-frame Home](./wireframe_imgs/promptify_wireframe_home.png)
+
+WireFrame also found on [wireframe.cc](https://wireframe.cc/bXCjuw)
 
 ## Wireframe 2: Profile
 
 [👉🏾👉🏾👉🏾 include wireframe 2]
 
-## Wireframe 3: All Challenges
+## Wireframe 3: Current Challenges
 
-[👉🏾👉🏾👉🏾 include wireframe 3]
+![Promptify Wire-frame Current Challenges](./wireframe_imgs/promptify_wireframe_current_challenges.png)
+
+WireFrame also found on [wireframe.cc](https://wireframe.cc/1TmgQV)
 
 ## Wireframe 4: Challenge Details
 
