@@ -7,7 +7,7 @@ Reference the Creating an Entity Relationship Diagram final project guide in the
 [👉🏾👉🏾👉🏾 List the pages you expect to have in your app, with a ⭐ next to pages you have wireframed]
 
 - Home ⭐
-- Profile
+- Profile ⭐
 - Current Challenges ⭐
 - Challenge Details
 - Create Challenge
@@ -24,7 +24,9 @@ WireFrame also found on [wireframe.cc](https://wireframe.cc/bXCjuw)
 
 ## Wireframe 2: Profile
 
-[👉🏾👉🏾👉🏾 include wireframe 2]
+![Promptify Wire-frame Profile](./wireframe_imgs/promptify_wireframe_profile.png)
+
+WireFrame also found on [wireframe.cc](https://wireframe.cc/rxBF8D)
 
 ## Wireframe 3: Current Challenges
 
