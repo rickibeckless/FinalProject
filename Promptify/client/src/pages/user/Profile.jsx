@@ -72,7 +72,7 @@ export default function Profile() {
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
-            <main id="profile-page">
+            <main id="profile-body" className="container">
                 <h1>Your Profile</h1>
                 {user ? (
                     <section id="profile-info">
@@ -86,7 +86,7 @@ export default function Profile() {
                         </div>
                         <div className="profile-info-item">
                             <h2>Member Since</h2>
-                            <p>{new Date(user?.created_at).toLocaleDateString()}</p>
+                            <p>{new Date(user?.date_created).toLocaleDateString()}</p>
                         </div>
                     </section>
                 ) : <p>Please log in or create an account to view your profile information.</p>}

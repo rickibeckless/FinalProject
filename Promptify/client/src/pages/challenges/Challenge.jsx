@@ -36,7 +36,7 @@ export default function Challenge() {
             {loading ? <LoadingScreen /> : null}
             <PageTitle title={`${challenge.name} | Promptify`} />
 
-            <main>
+            <main id="challenge-body" className="container">
 
 
                 {message && <MessagePopup message={message} setMessage={setMessage} />}

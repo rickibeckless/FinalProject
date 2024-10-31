@@ -10,22 +10,37 @@ export function AuthProvider({ children }) {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
+        let validToken = false;
 
-        async function fetchUser() {
-            if (token) {
-                const decoded = jwtDecode(token);
-                const response = await fetch(`/api/users/${decoded.id}`);
-                const data = await response.json();
+        if (token) {
+            const decoded = jwtDecode(token);
+            const currentTime = Date.now() / 1000;
 
-                if (response.ok) {
-                    setUser(data[0]);
-                } else {
-                    localStorage.removeItem("token");
+            if (decoded.exp < currentTime) {
+                localStorage.removeItem("token");
+            } else {
+                validToken = true;
+            };
+        }
+
+        if (validToken) {
+            async function fetchUser() {
+                if (token) {
+                    const decoded = jwtDecode(token);
+                    const response = await fetch(`/api/users/${decoded.id}`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        setUser(data[0]);
+                    } else {
+                        localStorage.removeItem("token");
+                    };
                 };
             };
-        };
 
-        fetchUser();
+            fetchUser();
+        };
+        
         setAuthLoading(false);
     }, [user, setUser]);
 

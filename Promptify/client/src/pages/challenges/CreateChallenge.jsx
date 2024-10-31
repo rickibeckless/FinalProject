@@ -12,7 +12,7 @@ export default function CreateChallenge() {
     const [focusedInput, setFocusedInput] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [challengeForm, setChallengeForm] = useState({
-        author_id: user.id,
+        author_id: user?.id,
         name: '',
         description: '',
         genre: '',
@@ -92,7 +92,7 @@ export default function CreateChallenge() {
             {loading ? <LoadingScreen /> : null}
             <PageTitle title="Create Challenge | Promptify" />
 
-            <main id="new-challenge">
+            <main id="new-challenge-body" className="container">
                 <h2>Sign Up</h2>
                 <form id="new-challenge-form" onSubmit={handleSubmit}>
                     {currentPage === 1 && (

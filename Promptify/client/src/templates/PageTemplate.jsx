@@ -9,7 +9,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 
 // sets the page title, used by all pages in the format "Page Title | StudyGo"
-import PageTitle from "../components/global/PageTitle.jsx"; // note: modals will not use this component
+import PageTitle from "../components/global/PageTitle.jsx"; // note: components will not use this
 
 // loading screen for when the page is loading (also used for transitions and testing)
 import LoadingScreen from "../components/global/LoadingScreen.jsx";
@@ -43,6 +43,8 @@ export default function PageTemplate() {
             <PageTitle title="Page Title | Promptify" />
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
+
+            <main id="-body" className="container"></main>
         </>
     );
 };
