@@ -1,46 +1,70 @@
 /* Global Header Styles */
 #main-header {
-    background-color: var(--black-olive);
-    color: var(--light-text);
-    border-bottom: 2px solid var(--dark-text);
+    background-color: var(--light-olive);
+    color: var(--black-olive);
 
     position: sticky;
     top: 0;
     left: 0;
     z-index: 1000;
 
+    height: 11.7vh;
+
     display: grid;
     grid-template-columns: minmax(200px, 20vw) 2fr;
     align-items: center;
 }
 
-#main-logo {
+#main-logo a {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2rem;
+    font-size: 2.2rem;
     padding: 1rem 0;
+    font-family: var(--font-family-league-script);
 }
 
 #main-logo a,
-#main-navbar a {
-    color: var(--light-text);
+#main-navbar .nav-link,
+#main-navbar .nav-link a {
+    color: var(--black-olive);
     text-decoration: none;
+    cursor: pointer;
+}
+
+#main-navbar {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-right: 1rem;
 }
 
 #main-navbar ul {
     list-style: none;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+    position: relative;
 }
 
-#main-navbar a {
-    margin: 0 1rem;
+#main-navbar li {
+    position: relative;
+}
+
+#main-navbar .nav-link {
+    font-size: 1.2rem;
+
+    width: 100%;
+}
+
+#main-navbar .user-nav-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
     font-size: 1.2rem;
 }
 
-#main-navbar a:hover {
+#main-navbar .nav-link:hover {
     text-decoration: underline;
 }
 
@@ -49,11 +73,73 @@
 }
 
 #main-navbar .dropdown.active {
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
     position: absolute;
-    background-color: var(--black-olive);
+    background-color: var(--transparent-olive);
+    border-radius: 5px;
+    border: 1px solid var(--black-olive);
+    z-index: 1000;    
+    
+    top: 40px;
+    padding: 1rem;
+}
+
+#main-navbar .dropdown.active li {
+    
+}
+
+.challenge-nav {
+    font-size: 1.2rem;
+}
+
+.challenge-nav .dropdown.active {
+    width: 25vw;
+    left: -60px;
+}
+
+.user-nav .dropdown.active {
+    width: 20vw;
+    left: -12px;
+}
+
+.challenge-nav,
+.user-nav,
+.account-link {
+    padding: 0.5rem;
+    cursor: pointer;
+}
+
+.user-nav-username {
+    font-family: var(--font-family-cutive-mono);
+    font-weight: bold;
+}
+
+.account-links {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.account-links .account-link {
     border: 2px solid var(--dark-text);
-    border-top: none;
-    width: 100%;
-    z-index: 1000;
+    border-radius: 5px;
+    background-color: var(--black-olive);
+    color: var(--light-olive);
+}
+
+.nav-link-text {
+    opacity: 60%;
+    margin-left: auto;
+    transition: all 0.3s ease-in-out;
+}
+
+.nav-link:hover .nav-link-text {
+    opacity: 100%;
+    margin-left: 0;
 }

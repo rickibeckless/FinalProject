@@ -10,7 +10,10 @@
 
 /* Global Color Palette */
 :root {
+    --light-olive: #dfe9d9;
+    --transparent-olive: #dfe9d9db;
     --black-olive: #1f271bff;
+    
     --paynes-gray: #19647eff;
     --verdigris: #28afb0ff;
     --pale-cyan: #a8c2cc;

@@ -8,6 +8,23 @@ export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [authLoading, setAuthLoading] = useState(true);
 
+    async function fetchUser(token) {
+        if (token !== null) {
+            const decoded = jwtDecode(token);
+            const response = await fetch(`/api/users/${decoded.id}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                setUser(data[0]);
+                localStorage.setItem("token", token);
+            } else {
+                localStorage.removeItem("token");
+            };
+        } else {
+            setUser(null);
+        };
+    };
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         let validToken = false;
@@ -24,35 +41,20 @@ export function AuthProvider({ children }) {
         }
 
         if (validToken) {
-            async function fetchUser() {
-                if (token) {
-                    const decoded = jwtDecode(token);
-                    const response = await fetch(`/api/users/${decoded.id}`);
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        setUser(data[0]);
-                    } else {
-                        localStorage.removeItem("token");
-                    };
-                };
-            };
-
-            fetchUser();
+            fetchUser(token);
         };
         
         setAuthLoading(false);
-    }, [user, setUser]);
+    }, []);
 
     const login = (token) => {
-        localStorage.setItem("token", token);
-        const decoded = jwtDecode(token);
-        setUser(decoded);
+        fetchUser(token);
     };
 
     const logout = () => {
         localStorage.removeItem("token");
         setUser(null);
+        fetchUser(null);
     };
 
     return (

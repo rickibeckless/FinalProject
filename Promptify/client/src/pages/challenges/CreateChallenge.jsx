@@ -93,10 +93,10 @@ export default function CreateChallenge() {
             <PageTitle title="Create Challenge | Promptify" />
 
             <main id="new-challenge-body" className="container">
-                <h2>Sign Up</h2>
+                <h2>New Challenge</h2>
                 <form id="new-challenge-form" onSubmit={handleSubmit}>
                     {currentPage === 1 && (
-                        <>
+                        <div className="form-page">
                             <div className="form-input-holder">
                                 <label htmlFor="name">Name:<span className="form-input-required-asterisk">*</span></label>
                                 <input type="text" id="name" name="name" placeholder="New Challenge" value={challengeForm.name} onFocus={() => handleFocus('name-input')} onChange={handleChange} required />
@@ -108,11 +108,11 @@ export default function CreateChallenge() {
                             </div>
 
                             <button type="button" onClick={goToNextPage}>Next</button>
-                        </>
+                        </div>
                     )}
 
                     {currentPage === 2 && (
-                        <>
+                        <div className="form-page">
                             <div className="form-input-holder">
                                 <label htmlFor="skill_level">Skill Level:<span className="form-input-required-asterisk">*</span></label>
                                 <select id="skill_level" name="skill_level" value={challengeForm.skill_level} onFocus={() => handleFocus('skill_level-input')} onChange={handleChange} required>
@@ -159,11 +159,11 @@ export default function CreateChallenge() {
 
                             <button type="button" onClick={goToPreviousPage}>Back</button>
                             <button type="button" onClick={goToNextPage}>Next</button>
-                        </>
+                        </div>
                     )}
 
                     {currentPage === 3 && (
-                        <>
+                        <div className="form-page">
                             <div className="form-input-holder">
                                 <label htmlFor="prompt">Prompt:<span className="form-input-required-asterisk">*</span></label>
                                 <textarea id="prompt" name="prompt" placeholder="Enter your prompt here." value={challengeForm.prompt} onFocus={() => handleFocus('prompt-input')} onChange={handleChange} required />
@@ -171,11 +171,11 @@ export default function CreateChallenge() {
 
                             <button type="button" onClick={goToPreviousPage}>Back</button>
                             <button type="button" onClick={goToNextPage}>Next</button>
-                        </>
+                        </div>
                     )}
 
                     {currentPage === 4 && (
-                        <>
+                        <div className="form-page">
                             <div className="form-input-holder">
                                 <label htmlFor="start_date_time">Start Date & Time:<span className="form-input-required-asterisk">*</span></label>
                                 <input type="datetime-local" id="start_date_time" name="start_date_time" value={challengeForm.start_date_time} onFocus={() => handleFocus('start_date_time-input')} onChange={handleChange} required />
@@ -188,11 +188,11 @@ export default function CreateChallenge() {
 
                             <button type="button" onClick={goToPreviousPage}>Back</button>
                             <button type="button" onClick={goToNextPage}>Next</button>
-                        </>
+                        </div>
                     )}
 
                     {currentPage === 5 && (
-                        <>
+                        <div className="form-page">
                             <h3>Review Your Challenge</h3>
 
                             <div className="form-input-holder">
@@ -245,7 +245,7 @@ export default function CreateChallenge() {
 
                             <p>Need to make changes?</p>
                             <button type="button" onClick={goToPreviousPage}>Back</button>
-                        </>
+                        </div>
                     )}
                 </form>
 

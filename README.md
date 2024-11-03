@@ -14,7 +14,7 @@ Designed and developed by: Ricki Beckless
 
 ### Inspiration
 
-As an avid writer who loves a challenge but often struggles with writer’s block, I aspired to create an engaging platform to foster collaboration between like-minded writers and inspire creativity and excitement in the writing process.
+As an avid writer who loves a challenge but often struggles with writer's block, I aspired to create an engaging platform to foster collaboration between like-minded writers and inspire creativity and excitement in the writing process.
 
 ## Tech Stack
 
@@ -24,7 +24,7 @@ Backend: Node.js + Express.js, Railway + PostgreSQL
 
 ## Features
 
-### User Creation and Authentication
+### ✅ User Creation and Authentication
 
 > This feature supports user authentication, fulfilling the requirement of having a well-designed RESTful API for POST requests (account creation).
 
@@ -46,7 +46,7 @@ Each user has a personalized profile that showcases their writing, including com
 
 [gif goes here]
 
-### Writing Challenges
+### ✅ Writing Challenges
 
 > This feature demonstrates the implementation of dynamic routes for creating and accessing challenges, fulfilling the need for GET, POST, and DELETE requests.
 

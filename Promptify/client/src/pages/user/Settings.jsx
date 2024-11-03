@@ -22,7 +22,7 @@ import LoginModal from "../../components/global/modals/Login.jsx";
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
-export default function Profile() {
+export default function Settings() {
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
@@ -65,28 +65,55 @@ export default function Profile() {
 
     return (
         <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
-            <PageTitle title="Profile | Promptify" />
+            <PageTitle title="Settings | Promptify" />
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
             <main id="profile-body" className="container">
-                <h1>Your Profile</h1>
+                <h1>Settings</h1>
+
+                <aside id="table-of-contents">
+                    <h2>Table of Contents</h2>
+                    <ul>
+                        <li><a href="#profile-info">Profile Information</a></li>
+                        <li><a href="#notifications">Notifications</a></li>
+                        <li><a href="#profile-delete">Delete Profile</a></li>
+                    </ul>
+                </aside>
+
                 {user ? (
-                    <section id="profile-info">
-                        <div className="profile-info-item">
-                            <h2>Username</h2>
-                            <p>{user?.username}</p>
+                    <section id="settings-content">
+                        <div id="profile-info">
+                            <h2>Profile Information</h2>
+                            <div className="profile-info-item">
+                                <h3>Username</h3>
+                                <p>{user?.username}</p>
+                            </div>
+                            <div className="profile-info-item">
+                                <h3>Email</h3>
+                                <p>{user?.email}</p>
+                            </div>
                         </div>
-                        <div className="profile-info-item">
-                            <h2>Email</h2>
-                            <p>{user?.email}</p>
+
+                        <div id="notifications">
+                            <h2>Notifications</h2>
+                            <div className="profile-info-item">
+                                <h3>Email Notifications</h3>
+                                <p>Receive email notifications for new challenges, reminders, and more.</p>
+                            </div>
+                            <div className="profile-info-item">
+                                <h3>Push Notifications</h3>
+                                <p>Receive push notifications for new challenges, reminders, and more.</p>
+                            </div>
                         </div>
-                        <div className="profile-info-item">
-                            <h2>Member Since</h2>
-                            <p>{new Date(user?.date_created).toLocaleDateString()}</p>
+
+                        <div id="profile-delete">
+                            <h2>Delete Profile</h2>
+                            <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
+                            <button className="btn btn-danger">Delete Profile</button>
                         </div>
                     </section>
-                ) : <p>Please log in or create an account to view your profile information.</p>}
+                ) : <p>Please log in or create an account to view and edit your settings.</p>}
             </main>
 
             {showSignUpModal && <SignUpModal toggleModal={toggleModal} />}

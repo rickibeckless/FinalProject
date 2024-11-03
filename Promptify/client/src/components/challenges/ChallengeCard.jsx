@@ -85,7 +85,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
             <div className="challenge-card-header">
                 <h2 className="challenge-card-name">{challenge.name}</h2>
-                <p className="challenge-card-author">{author?.username}</p>
+                <a href={`/${author?.username}`} className="challenge-card-author">{author?.username}</a>
                 <div className="challenge-card-tags-holder">
                     {tags.map((tag) => (
                         <span key={tag} className="challenge-card-tag">{tag}</span>

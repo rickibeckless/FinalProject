@@ -1,9 +1,10 @@
 /* Global Footer Styles */
 #main-footer {
-    background-color: var(--black-olive);
-    color: var(--light-text);
+    background-color: var(--light-olive);
+    color: var(--black-olive);
     padding: 1.5rem 0;
     text-align: center;
+    height: 16vh;
 }
 
 #footer-navbar ul {
