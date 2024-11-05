@@ -17,6 +17,11 @@ import ChallengeArchive from './pages/challenges/ChallengeArchive.jsx';
 import Challenge from './pages/challenges/Challenge.jsx';
 import NotFound from './pages/NotFound.jsx';
 
+// footer pages
+import About from './pages/footer/About.jsx';
+import TermsOfService from './pages/footer/TermsOfService.jsx';
+import Help from './pages/footer/Help.jsx';
+
 // set router
 const router = createBrowserRouter([
     { // main pages
@@ -26,6 +31,9 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/profile', element: <Profile /> },
             { path: '/settings', element: <Settings /> },
+            { path: '/about', element: <About /> },
+            { path: '/terms-of-service', element: <TermsOfService /> },
+            { path: '/help', element: <Help /> },
             { path: '/challenges', element: <AllChallenges /> },
             { path: '/challenges/create', element: <CreateChallenge /> },
             { path: '/challenges/archive', element: <ChallengeArchive /> },

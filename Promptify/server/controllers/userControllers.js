@@ -16,12 +16,12 @@ export const getUsers = async (req, res) => {
 export const getUserById = async (req, res) => {
     try {
         const results = await pool.query('SELECT * FROM users WHERE id = $1', [req.params.id]);
-        res.status(200).json(results.rows);
-
+        
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         };
-
+        
+        res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching user by ID:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
@@ -38,10 +38,13 @@ export const createUserWithConventional = async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         };
 
+        const adminEmails = process.env.ADMIN_EMAILS.split(',');
+        const isAdmin = email === adminEmails[0] || email === adminEmails[1] ? true : false;
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         
-        const results = await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *', [username, email, hashedPassword]);
+        const results = await pool.query('INSERT INTO users (username, email, password, is_admin) VALUES ($1, $2, $3, $4) RETURNING *', [username, email, hashedPassword, isAdmin]);
         res.status(201).json(results.rows);
     } catch (error) {
         console.error('Error creating user:', error);
@@ -75,6 +78,22 @@ export const loginUserWithConventional = async (req, res) => {
         res.status(200).json({ token });
     } catch (error) {
         console.error('Error logging in user:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const deleteUser = async (req, res) => {
+    // TODO: Add functionality to change users challenges, submissions, and comments to a default `deleted_user` user
+    try {
+        const results = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [req.params.id]);
+        res.status(200).json(results.rows);
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        };
+
+    } catch (error) {
+        console.error('Error deleting user:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
 };

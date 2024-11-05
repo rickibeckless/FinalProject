@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import rateLimit from 'express-rate-limit';
-import { getUsers, getUserById, createUserWithConventional, loginUserWithConventional } from "../controllers/userControllers.js";
+import { getUsers, getUserById, createUserWithConventional, loginUserWithConventional, deleteUser } from "../controllers/userControllers.js";
 
 const router = express.Router();
 
@@ -25,5 +25,7 @@ router.get("/auth/github/callback", passport.authenticate("github", { failureRed
         res.status(200).json(req.user);
     }
 );
+
+router.delete("/delete", deleteUser); // DELETE user
 
 export default router;

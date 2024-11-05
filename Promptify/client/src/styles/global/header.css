@@ -15,13 +15,34 @@
     align-items: center;
 }
 
+#main-logo {
+    background-image: url(../../assets/android-chrome-192x192.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 #main-logo a {
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 2.2rem;
-    padding: 1rem 0;
     font-family: var(--font-family-league-script);
+    background-color: #9dad9366;
+    text-shadow: 4px 4px 4px #3a3a3a;
+    border-radius: 50%;
+
+    transition: all 0.3s ease-in-out;
+}
+
+#main-logo a:hover {
+    background-color: #9dad93bf;
+    text-shadow: 5px 5px 3px #4d5739;
 }
 
 #main-logo a,
@@ -87,22 +108,18 @@
     padding: 1rem;
 }
 
-#main-navbar .dropdown.active li {
-    
-}
-
 .challenge-nav {
     font-size: 1.2rem;
 }
 
 .challenge-nav .dropdown.active {
-    width: 25vw;
-    left: -60px;
+    width: 220%;
+    left: -60%;
 }
 
 .user-nav .dropdown.active {
-    width: 20vw;
-    left: -12px;
+    width: 100%;
+    left: 0;
 }
 
 .challenge-nav,
@@ -131,6 +148,13 @@
     border-radius: 5px;
     background-color: var(--black-olive);
     color: var(--light-olive);
+
+    transition: all 0.3s ease-in-out;
+}
+
+.account-links .account-link:hover {
+    background-color: var(--verdigris);
+    color: var(--black-olive);
 }
 
 .nav-link-text {

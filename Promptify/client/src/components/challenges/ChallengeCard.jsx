@@ -17,29 +17,49 @@ import MessagePopup from "../global/MessagePopup.jsx";
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
+// styling for page will be imported here
+import "../../styles/challenges/challenge-card.css"; // styling for the challenge card
+
 export default function ChallengeCard({ sortBy, challenge, index }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState(null);
     const [userInChallenge, setUserInChallenge] = useState(false);
     const [tags, setTags] = useState([]);
     const [countdown, setCountdown] = useState(null);
+    const [formattedDate, setFormattedDate] = useState(null);
 
     const navigate = useNavigate(); // used to navigate to a different page
 
     useEffect(() => {
-        console.log(challenge);
+        const newTags = [challenge.genre, challenge.status, challenge.skill_level];
 
-        setTags([challenge.genre, challenge.status, challenge.skill_level]);
+        const limitationTags = [
+            challenge.limitations.time_limit.min  && "time limit" || challenge.limitations.time_limit.max && "time limit",
+            challenge.limitations.word_limit.min && "word limit" || challenge.limitations.word_limit.max && "word limit",
+            challenge.limitations.character_limit.min && "character limit" || challenge.limitations.character_limit.max && "character limit",
+            challenge.limitations.required_phrase && "required phrase",
+        ];
 
-        if (challenge.limitations) {
-            setTags((prev) => [...prev, "limitations"]);
-        };
+        const filteredLimitationTags = limitationTags.filter(Boolean);
 
+        const participationCountTags = [
+            challenge.participation_count <= 10 && "0-10",
+            challenge.participation_count <= 50 && challenge.participation_count > 10 && "11-50",
+            challenge.participation_count <= 100 && challenge.participation_count > 50 && "51-100",
+            challenge.participation_count > 100 && "100+",
+        ];
+
+        const filteredParticipationCountTags = participationCountTags.filter(Boolean);
+
+        setTags([...newTags, ...filteredLimitationTags, ...filteredParticipationCountTags]);
+        
         let now = new Date();
         let timeToStart = new Date(challenge.start_date_time) - now;
         let timeToEnd = new Date(challenge.end_date_time) - now;
 
-        const updateCountdown = (time) => {
+        setFormattedDate(new Date(challenge.end_date_time).toLocaleString());
+
+        const updateCountdown = (time, status) => {
             let days, hours, minutes;
             const formatTwoDigits = (num) => String(num).padStart(2, '0');
 
@@ -54,17 +74,17 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                     return;
                 };
 
-                {time === timeToStart
-                    ? setCountdown(`Starting In: ${formatTwoDigits(days)}d:${formatTwoDigits(hours)}h:${formatTwoDigits(minutes)}m`) 
-                    : setCountdown(`Ends In: ${formatTwoDigits(days)}d:${formatTwoDigits(hours)}h:${formatTwoDigits(minutes)}m`)
+                {status === "upcoming"
+                    ? setCountdown(`Starting In: ${formatTwoDigits(days)} days, ${formatTwoDigits(hours)} hours, ${formatTwoDigits(minutes)} minutes`) 
+                    : setCountdown(`Ends In: ${formatTwoDigits(days)} days, ${formatTwoDigits(hours)} hours, ${formatTwoDigits(minutes)} minutes`)
                 };
             }, 1000);
         };
 
-        if (timeToStart > 0) {
-            updateCountdown(timeToStart);
-        } else if (timeToEnd > 0) {
-            updateCountdown(timeToEnd);
+        if (timeToStart > 0 && timeToEnd > 0) {
+            updateCountdown(timeToStart, "upcoming");
+        } else if (timeToEnd > 0 && timeToStart <= 0) {
+            updateCountdown(timeToEnd, "in-progress");
         } else {
             setCountdown("Challenge Ended");
         };
@@ -84,18 +104,24 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
     return (
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
             <div className="challenge-card-header">
-                <h2 className="challenge-card-name">{challenge.name}</h2>
+                <div className="challenge-card-section">
+                    <h2 className="challenge-card-name">{challenge.name}</h2>
+                    <p className="challenge-card-dates">{new Date(challenge.start_date_time).toLocaleDateString()} - {new Date(challenge.end_date_time).toLocaleDateString()}</p>
+                </div>
                 <a href={`/${author?.username}`} className="challenge-card-author">{author?.username}</a>
+                <div className="points-holder" title={`${challenge.available_points} available points!`}>
+                    <p className="points">{challenge.available_points}pts</p>
+                </div>
                 <div className="challenge-card-tags-holder">
                     {tags.map((tag) => (
-                        <span key={tag} className="challenge-card-tag">{tag}</span>
+                        <span key={tag} value={tag} className="challenge-card-tag">{tag}</span>
                     ))}
                 </div>
             </div>
             <div className="challenge-card-content">
                 <p className="challenge-card-description">{challenge.description}</p>
                 <p className="challenge-card-prompt">{challenge.prompt}</p>
-                <div className="challenge-card-countdown">
+                <div className="challenge-card-countdown" title={formattedDate}>
                     {countdown}
                 </div>
             </div>

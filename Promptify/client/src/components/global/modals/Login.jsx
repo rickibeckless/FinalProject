@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../../../context/AuthProvider.jsx";
 import LoadingScreen from "../LoadingScreen.jsx";
 import MessagePopup from "../MessagePopup.jsx";
+import CloseImg from "../../../assets/close.svg";
+import LoginImg from "../../../assets/login.svg";
+import GithubImg from "../../../assets/github.svg";
 
 export default function LoginModal({ toggleModal }) {
     const [loading, setLoading] = useState(true); // set to false when done loading
@@ -91,11 +94,16 @@ export default function LoginModal({ toggleModal }) {
             {loading ? <LoadingScreen /> : null}
 
             <div id="modalOverlay"></div>
-            <div id="sign-up-modal" className="modal">
-                <button type="button" onClick={() => toggleModal('login', 'close')}>X</button>
+            <div id="account-form-modal" className="login-form-modal modal">
+                <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('login', 'close')}>
+                    <img src={CloseImg} alt="Close Modal" />
+                </button>
                 <div className="modal-content">
-                    <h2>Login</h2>
-                    <form id="sign-up-form" className="modal-form" onSubmit={handleSubmit}>
+                    <div className="account-form-modal-header">
+                        <h2>Login | Promptify</h2>
+                        <p>Log in to create and share prompts!</p>
+                    </div>
+                    <form id="account-form" className="modal-form" onSubmit={handleSubmit}>
                         <div className="form-input-holder">
                             <label htmlFor="username_email">Username or Email<span className="form-input-required-asterisk">*</span></label>
                             <input type="text" id="username_email" name="username_email" placeholder="john_doe" value={userForm.username_email} onFocus={() => handleFocus('username_email-input')} onChange={handleChange} required />
@@ -106,10 +114,20 @@ export default function LoginModal({ toggleModal }) {
                             <input type="password" id="password" name="password" placeholder="aBcd_123" value={userForm.password} onFocus={() => handleFocus('password-input')} onChange={handleChange} required />
                         </div>
 
-                        <button type="submit" className={`login-btn ${tooManyAttempts ? "attempts-error" : ""}`}>Login</button>
+                        <button type="submit" className={`account-form-submit-btn login-btn ${tooManyAttempts ? "attempts-error" : ""}`}>
+                            Login
+                            <img src={LoginImg} alt="Login" />
+                        </button>
                         {tooManyAttempts && <p className="attempts-error">Too many login attempts. Please try again after <span className="attempts-error-timer">{attemptsTimer}</span> seconds.</p>}
                     </form>
-                    <p>Don't have an account? <button type="button" onClick={() => toggleModal('sign-up', 'login')}>Sign Up</button></p>
+                    <div className="other-account-btns">
+                        <button type="button" className="github-account-btn">
+                            <img src={GithubImg} alt="GitHub Logo" />
+                            Login with GitHub
+                        </button>
+
+                        <p>Don't have an account? <button type="button" onClick={() => toggleModal('sign-up', 'login')}>Sign Up</button></p>
+                    </div>
                 </div>
 
                 {message && <MessagePopup message={message} setMessage={setMessage} />}

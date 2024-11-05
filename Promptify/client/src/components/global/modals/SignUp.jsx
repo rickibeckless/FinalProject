@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
 import LoadingScreen from "../LoadingScreen.jsx";
 import MessagePopup from "../MessagePopup.jsx";
+import CloseImg from "../../../assets/close.svg";
+import LoginImg from "../../../assets/login.svg";
+import GithubImg from "../../../assets/github.svg";
 
 export default function SignUpModal({ toggleModal }) {
     const [loading, setLoading] = useState(true); // set to false when done loading
@@ -31,6 +34,10 @@ export default function SignUpModal({ toggleModal }) {
 
     const handleFocus = (input_field) => {
         setFocusedInput(input_field);
+    };
+
+    const handleBlur = () => {
+        setFocusedInput(null);
     };
 
     const handleSubmit = async (e) => {
@@ -79,16 +86,21 @@ export default function SignUpModal({ toggleModal }) {
             {loading ? <LoadingScreen /> : null}
 
             <div id="modalOverlay"></div>
-            <div id="sign-up-modal" className="modal">
-                <button type="button" onClick={() => toggleModal('sign-up', 'close')}>X</button>
+            <div id="account-form-modal" className="sign-up-form-modal modal">
                 <div className="modal-content">
-                    <h2>Sign Up</h2>
-                    <form id="sign-up-form" className="modal-form" onSubmit={handleSubmit}>
+                <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('sign-up', 'close')}>
+                    <img src={CloseImg} alt="Close" />
+                </button>
+                    <div className="account-form-modal-header">
+                        <h2>Sign Up | Promptify</h2>
+                        <p>Sign up to start creating and sharing prompts!</p>
+                    </div>
+                    <form id="account-form" className="modal-form" onSubmit={handleSubmit}>
                         <div className="form-input-holder">
                             <label htmlFor="username">Username<span className="form-input-required-asterisk">*</span></label>
-                            <input type="text" id="username" name="username" placeholder="john_doe" value={userForm.username} onFocus={() => handleFocus('username-input')} onChange={handleChange} required />
+                            <input type="text" id="username" name="username" placeholder="john_doe" value={userForm.username} onFocus={() => handleFocus('username-input')} onBlur={() => handleBlur()} onChange={handleChange} required />
                             
-                            <div className={`form-input-add ${focusedInput !== 'username-input' ? " no-show-element" : ""}`}>
+                            <div className={`form-input-add no-show-element ${focusedInput === 'username-input' ? "show" : ""}`}>
                                 <p>Username must be unique, no special characters (sans underscores _), and at least:</p>
 
                                 <ul className="input-requirements-list">
@@ -97,31 +109,33 @@ export default function SignUpModal({ toggleModal }) {
                                     </li>
                                 </ul>
                                 
-                                {userForm.username.match(/[^A-Za-z0-9_]/) ? 
-                                    <ul className="input-requirements-error">Not allowed:
-                                        {userForm.username.match(/[^A-Za-z0-9_]/g)?.map((char, index) => {
-                                            return <li key={index} className="input-requirements-error">{char}</li>
-                                        })}
-                                    </ul>
-                                    : null
-                                }
+                                {userForm.username.match(/[^A-Za-z0-9_]/) ? (
+                                    <>
+                                        <p className="input-requirements-error">Username cannot contain these characters:</p>
+                                        <ul className="input-requirements-error">
+                                            {[...new Set(userForm.username.match(/[^A-Za-z0-9_]/g))].map((char, index) => (
+                                                <li key={index} className="input-requirements-error">{char}</li>
+                                            ))}
+                                        </ul>
+                                    </>
+                                ) : null}
                             </div>
                         </div>
 
                         <div className="form-input-holder">
                             <label htmlFor="email">Email<span className="form-input-required-asterisk">*</span></label>
-                            <input type="email" id="email" name="email" placeholder="jdoe@email.com" value={userForm.email} onFocus={() => handleFocus('email-input')} onChange={handleChange} required />
+                            <input type="email" id="email" name="email" placeholder="jdoe@email.com" value={userForm.email} onFocus={() => handleFocus('email-input')} onBlur={() => handleBlur()} onChange={handleChange} required />
                             
-                            <div className={`form-input-add ${focusedInput !== 'email-input' ? " no-show-element" : ""}`}>
+                            <div className={`form-input-add no-show-element ${focusedInput === 'email-input' ? "show" : ""}`}>
                                 <p>We will never share your email with anyone else.</p>
                             </div>
                         </div>
 
                         <div className="form-input-holder">
                             <label htmlFor="password">Password<span className="form-input-required-asterisk">*</span></label>
-                            <input type="password" id="password" name="password" placeholder="aBcd_123" value={userForm.password} onFocus={() => handleFocus('password-input')} onChange={handleChange} required />
+                            <input type="password" id="password" name="password" placeholder="aBcd_123" value={userForm.password} onFocus={() => handleFocus('password-input')} onBlur={() => handleBlur()} onChange={handleChange} required />
                             
-                            <div className={`form-input-add ${focusedInput !== 'password-input' ? " no-show-element" : ""}`}>
+                            <div className={`form-input-add no-show-element ${focusedInput === 'password-input' ? "show" : ""}`}>
                                 <p>Password must contain at least:</p>
                                 <ul className="input-requirements-list">
                                     <li className="input-requirement">
@@ -149,17 +163,27 @@ export default function SignUpModal({ toggleModal }) {
 
                         <div className="form-input-holder">
                             <label htmlFor="confirmPassword">Confirm Password<span className="form-input-required-asterisk">*</span></label>
-                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="aBcd_123" value={userForm.confirmPassword} onFocus={() => handleFocus('confirm-password-input')} onChange={handleChange} required />
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="aBcd_123" value={userForm.confirmPassword} onFocus={() => handleFocus('confirm-password-input')} onBlur={() => handleBlur()} onChange={handleChange} required />
                             
-                            <div className={`form-input-add ${focusedInput !== 'confirm-password-input' ? " no-show-element" : ""}`}>
+                            <div className={`form-input-add no-show-element ${focusedInput === 'confirm-password-input' ? "show" : ""}`}>
                                 <p>Re-enter your password to confirm.</p>
                                 {userForm.password !== userForm.confirmPassword ? <p className="input-requirements-error">Passwords do not match.</p> : null}
                             </div>
                         </div>
 
-                        <button type="submit">Sign Up</button>
+                        <button type="submit" className="account-form-submit-btn sign-up-btn">
+                            Sign Up
+                            <img src={LoginImg} alt="Sign Up" />
+                        </button>
                     </form>
-                    <p>Already have an account? <button type="button" onClick={() => toggleModal('login', 'sign-up')}>Log in</button></p>
+                    <div className="other-account-btns">
+                        <button type="button" className="github-account-btn">
+                            <img src={GithubImg} alt="GitHub Logo" />
+                            Sign Up with GitHub
+                        </button>
+
+                        <p>Already have an account? <button type="button" onClick={() => toggleModal('login', 'sign-up')}>Log in</button></p>
+                    </div>
                 </div>
 
                 {message && <MessagePopup message={message} setMessage={setMessage} />}

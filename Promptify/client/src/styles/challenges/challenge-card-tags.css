@@ -1,0 +1,160 @@
+.challenge-card-tags-holder {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.challenge-card-tag {
+    background-color: #e9eef2;
+    color: var(--black-olive);
+    border-radius: 0.3rem;
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+
+    transition: background-color 0.15s;
+}
+
+.challenge-card-tag:hover {
+    background-color: #dfe7ed;
+}
+
+/* Individual Tag Colors */
+
+/* genre tags */
+.challenge-card-tag[value="fantasy"] {
+    background-color: #e6e6fa;
+    color: #4b0082;
+}
+
+.challenge-card-tag[value="fantasy"]:hover {
+    background-color: #d8d8f0;
+    color: #3a006a;
+}
+
+.challenge-card-tag[value="general"] {
+    background-color: #f5f5f5;
+    color: #2f4f4f;
+}
+
+.challenge-card-tag[value="general"]:hover {
+    background-color: #e0e0e0;
+    color: #1f3f3f;
+}
+
+.challenge-card-tag[value="non-fiction"] {
+    background-color: #f5deb3;
+    color: #556b2f;
+}
+
+.challenge-card-tag[value="non-fiction"]:hover {
+    background-color: #e5cd9a;
+    color: #4a5b28;
+}
+
+.challenge-card-tag[value="poetry"] {
+    background-color: #ffe4e1;
+    color: #a52a2a;
+}
+
+.challenge-card-tag[value="poetry"]:hover {
+    background-color: #ffdad8;
+    color: #8b1f1f;
+}
+
+.challenge-card-tag[value="thriller"] {
+    background-color: #ffcccb;
+    color: #8b0000;
+}
+
+.challenge-card-tag[value="thriller"]:hover {
+    background-color: #f5b7b5;
+    color: #6b0000;
+}
+
+/* skill level tags */
+.challenge-card-tag[value="beginner"] {
+    background-color: #d4f5d4;
+    color: #3e8f3e;
+}
+
+.challenge-card-tag[value="beginner"]:hover {
+    background-color: #c4e5c4;
+}
+
+.challenge-card-tag[value="intermediate"] {
+    background-color: #d4e2f5;
+    color: #3e5f8f;
+}
+
+.challenge-card-tag[value="intermediate"]:hover {
+    background-color: #c4d2e5;
+}
+
+.challenge-card-tag[value="advanced"] {
+    background-color: #f5d4f5;
+    color: #8f3e8f;
+}
+
+.challenge-card-tag[value="advanced"]:hover {
+    background-color: #e5c4e5;
+}
+
+/* availability tags */
+.challenge-card-tag[value="upcoming"] {
+    background-color: #e0f7fa;
+    color: #00796b;
+}
+
+.challenge-card-tag[value="upcoming"]:hover {
+    background-color: #b2ebf2;
+    color: #004d40;
+}
+
+.challenge-card-tag[value="in-progress"] {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.challenge-card-tag[value="in-progress"]:hover {
+    background-color: #ffe0b2;
+    color: #c65100;
+}
+
+.challenge-card-tag[value="scoring"] {
+    background-color: #e8f5e9;
+    color: #388e3c;
+}
+
+.challenge-card-tag[value="scoring"]:hover {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+}
+
+.challenge-card-tag[value="ended"] {
+    background-color: #efebe9;
+    color: #5d4037;
+}
+
+.challenge-card-tag[value="ended"]:hover {
+    background-color: #d7ccc8;
+    color: #3e2723;
+}
+
+/* limitation tags */
+.challenge-card-tag[value="character limit"],
+.challenge-card-tag[value="required phrase"],
+.challenge-card-tag[value="word limit"],
+.challenge-card-tag[value="time limit"] {
+    background-color: #f0f4c3;
+    color: #827717;
+}
+
+.challenge-card-tag[value="character limit"]:hover,
+.challenge-card-tag[value="required phrase"]:hover,
+.challenge-card-tag[value="word limit"]:hover,
+.challenge-card-tag[value="time limit"]:hover {
+    background-color: #e6ee9c;
+    color: #5c6c1a;
+}

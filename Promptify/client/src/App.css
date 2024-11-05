@@ -1,12 +1,12 @@
 /* Global Imports */
 @import url('./styles/global/header.css');
-/* @import url('./styles/global/body.css'); */
+@import url('./styles/global/body.css');
 @import url('./styles/global/footer.css');
 @import url('./styles/global/loading-screen.css');
 @import url('./styles/global/message.css');
 @import url('./styles/global/modal.css');
-@import url('./styles/global/signup.css');
-@import url('./styles/global/login.css');
+@import url('./styles/global/login-signup/login-signup.css');
+@import url('./styles/footerPages/footer-page-styles.css');
 
 /* Global Color Palette */
 :root {

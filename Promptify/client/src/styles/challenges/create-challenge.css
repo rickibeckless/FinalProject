@@ -1,0 +1,154 @@
+/* Main Container Styling */
+#create-challenge-body {
+    color: var(--dark-text);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #0000001a;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+/* Form Layout */
+#create-challenge-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
+    padding: 2rem;
+    margin: 5vh 0;
+    
+    background-color: var(--light-olive);
+    color: var(--dark-text);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #0000001a;
+
+    width: 75vw;
+    height: 80vh;
+}
+
+#create-challenge-form .form-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1rem;
+    height: 80%;
+    overflow: auto;
+}
+
+/* Form Labels and Inputs */
+.create-challenge-form-input-holder label {
+    color: var(--dark-text);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.create-challenge-form-input-holder textarea {
+    resize: none;
+    height: 40vh;
+}
+
+.create-challenge-form-input-holder input[type="text"],
+.create-challenge-form-input-holder input[type="number"],
+.create-challenge-form-input-holder textarea,
+.create-challenge-form-input-holder select,
+.create-challenge-form-input-holder input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--paynes-gray);
+    border-radius: 4px;
+    color: var(--dark-text);
+}
+
+.create-challenge-form-input-holder input[type="text"]:focus,
+.create-challenge-form-input-holder input[type="number"]:focus,
+.create-challenge-form-input-holder textarea:focus,
+.create-challenge-form-input-holder select:focus,
+.create-challenge-form-input-holder input[type="datetime-local"]:focus {
+    border-color: var(--verdigris);
+    outline: none;
+}
+
+/* Limitations Styling */
+.limitations-checkboxes {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 2rem auto 1rem;
+    width: 60%;
+}
+
+.limitations-checkboxes .limitation-checkbox-holder {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.limitations-checkboxes .limitation-checkbox-holder input[type="checkbox"] {
+    cursor: pointer;
+}
+
+.limitations-checkboxes .limitation-checkbox-holder .limitations-input {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+}
+
+/* Required Asterisk Styling */
+.create-challenge-form-input-holder .form-input-required-asterisk {
+    color: var(--mild-danger-red);
+}
+
+/* Form Page Navigation Buttons */
+.form-navigation-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-navigation-buttons .button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.form-navigation-buttons .button-group button {
+    background-color: var(--naples-yellow);
+    border: none;
+    border-radius: 5px;
+    padding: .3rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-navigation-buttons .button-group button:hover {
+    background-color: var(--sandy-brown);
+}
+
+/* Current Page Number Styling */
+.current-page-number {
+    font-weight: bold;
+    color: var(--dark-text);
+}
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: var(--success-green);
+    color: var(--light-text);
+    border: none;
+    border-radius: 5px;
+    padding: .5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--paynes-gray);
+}

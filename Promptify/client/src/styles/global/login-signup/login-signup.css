@@ -1,0 +1,158 @@
+@import url('./login.css');
+@import url('./signup.css');
+
+#account-form-modal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 74vh;
+    width: 34vw;
+}
+
+.account-form-modal-close-btn {
+    align-self: flex-end;
+    cursor: pointer;
+
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 5px;
+
+    position: absolute;
+}
+
+.account-form-modal-close-btn img {
+    width: 100%;
+    height: 100%;
+}
+
+.account-form-modal-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: 2rem;
+
+    text-align: center;
+}
+
+#account-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    height: 100%;
+    justify-content: space-evenly;
+
+    margin-bottom: 1rem;
+}
+
+#account-form .form-input-holder {
+    display: flex;
+    flex-direction: column;
+}
+
+#account-form .form-input-holder label {
+    grid-area: label;
+
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+#account-form .form-input-holder input {
+    grid-area: input;
+
+    padding: 1%;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+#account-form .form-input-required-asterisk {
+    color: var(--danger-red);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.no-show-element {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    width: 100%;
+
+    transition: max-height .2s ease, opacity .1s, visibility .1s;
+}
+
+.no-show-element.show {
+    visibility: visible;
+    opacity: 1;
+    max-height: 500px;
+    overflow: auto;
+    pointer-events: auto;
+
+    transition: max-height .2s ease, opacity .1s, visibility .1s;
+
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    width: 95%;
+    margin: 1vw auto;
+    padding: 1vw;
+}
+
+.account-form-submit-btn,
+.github-account-btn,
+.other-account-btns p {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    flex-wrap: wrap;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.account-form-submit-btn,
+.github-account-btn,
+.other-account-btns p button {
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.account-form-submit-btn img,
+.github-account-btn img {
+    height: 1.5rem;
+}
+
+.other-account-btns {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 1rem;
+}
+
+.github-account-btn {
+    background-color: #4b5563;
+    color: var(--light-text);
+}
+
+.github-account-btn:hover {
+    background-color: #374151;
+}
+
+.other-account-btns p button {
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    font-weight: 500;
+}
+
+.other-account-btns p button:hover {
+    background-color: var(--paynes-gray);
+}

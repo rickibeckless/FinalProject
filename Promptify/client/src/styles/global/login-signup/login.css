@@ -1,3 +1,7 @@
+.login-form-modal .modal-content {
+    height: 100%;
+}
+
 .login-btn.attempts-error {
     pointer-events: none;
     border: none;

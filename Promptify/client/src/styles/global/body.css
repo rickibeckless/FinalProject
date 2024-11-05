@@ -1,0 +1,20 @@
+.container.left-aside-right-section {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "left-aside right-section";
+}
+
+.container.left-aside-right-section .left-aside {
+    grid-area: left-aside;
+    display: flex;
+    flex-direction: column;
+}
+
+.container.left-aside-right-section .right-section {
+    grid-area: right-section;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}

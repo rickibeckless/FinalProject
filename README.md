@@ -33,7 +33,11 @@ Backend: Node.js + Express.js, Railway + PostgreSQL
 Users can easily create an account which allows them to participate in writing challenges and leave feedback on others submissions. The authentication process requires the user to submit a *unique* username, *unique* email address, and a password that follows the specified guidelines. Passwords are encrypted using JSON Web Tokens.
 - *users do **not** need to create an account to access the platform, but will need to be signed-in to participate in challenges.*
 
-[gif goes here]
+#### Login Gif
+![login gif](./project_demos/features/user_login.gif)
+
+#### Signup Gif
+![signup gif](./project_demos/features/user_signup.gif)
 
 ### User Profiles
 
@@ -55,7 +59,7 @@ Users can create and participate in a variety of writing challenges and prompts.
 
 [gif goes here]
 
-### Challenge Labels/Tagging
+### ✅ Challenge Labels/Tagging
 
 > Tags serve as a filtering feature, allowing users to easily search for challenges that match their preferences, fulfilling a custom feature requirement.
 

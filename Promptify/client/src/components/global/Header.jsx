@@ -28,6 +28,8 @@ export default function Header() {
 
     useEffect(() => { // runs once when the page loads
         setLoading(false); // set to false when done loading
+
+        // set the user's welcome message based on the time of day
         const userDate = new Date();
         const userHour = userDate.getHours();
         if (userHour >= 0 && userHour < 12) {
@@ -71,10 +73,14 @@ export default function Header() {
         <>
             {loading ? <LoadingScreen /> : null}
             <header id="main-header">
-                <h1 id="main-logo"><a href="/">Promptify</a></h1>
+                <h1 id="main-logo">
+                    <a href="/">
+                        Promptify
+                    </a>
+                </h1>
                 <nav id="main-navbar">
                     <ul className="challenge-nav" onMouseEnter={() => toggleDropdown('challenges')} onMouseLeave={() => toggleDropdown('challenges')}>
-                        Challenges
+                        <li>Challenges</li>
 
                         <li className={`challenge-nav-dropdown dropdown ${openNavDropdown === "challenges" ? "active" : ""}`}>
                             {location.pathname !== "/challenges" && 
