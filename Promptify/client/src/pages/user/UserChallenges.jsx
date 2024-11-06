@@ -18,6 +18,18 @@ export default function UserChallenges() {
         setLoading(false);
     }, []);
 
+    /**
+     * I want to have this page display all of the challenges that a user has bookmarked 
+     *     meaning, the user selected "bookmark" on a challenge (this would require a new column in the users table)
+     * I also want to have a section for "current challenges" and a section for "past challenges"
+     * The user should be able to filter the "all your challenges" to show:
+     *     - all challenges
+     *     - current challenges
+     *     - past challenges
+     * or maybe these will all be tabs on the page
+    */
+    // decide whether or not to have this be a tab page or to separate into different pages
+
     return (
         <>
             {loading ? <LoadingScreen /> : null}

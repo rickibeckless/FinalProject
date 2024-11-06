@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import rateLimit from 'express-rate-limit';
-import { getUsers, getUserById, createUserWithConventional, loginUserWithConventional, deleteUser } from "../controllers/userControllers.js";
+import { getUsers, getUserById, createUserWithConventional, loginUserWithConventional, editUser, bookmarkChallenge, deleteUser } from "../controllers/userControllers.js";
 
 const router = express.Router();
 
@@ -26,6 +26,9 @@ router.get("/auth/github/callback", passport.authenticate("github", { failureRed
     }
 );
 
-router.delete("/delete", deleteUser); // DELETE user
+router.patch("/:id/edit", editUser); // PATCH user
+router.patch("/:id/:challengeId/bookmark", bookmarkChallenge); // PATCH bookmark challenge
+
+router.delete("/:id/delete", deleteUser); // DELETE user
 
 export default router;

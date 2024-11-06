@@ -82,16 +82,55 @@ export const loginUserWithConventional = async (req, res) => {
     };
 };
 
-export const deleteUser = async (req, res) => {
-    // TODO: Add functionality to change users challenges, submissions, and comments to a default `deleted_user` user
+export const editUser = async (req, res) => {
     try {
-        const results = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [req.params.id]);
-        res.status(200).json(results.rows);
+        const { username, email, about, skill_level, profile_picture_url } = req.body;
 
+        const results = await pool.query('UPDATE users SET username = $1, email = $2, about = $3, skill_level = $4, profile_picture_url = $5 WHERE id = $6 RETURNING *', [username, email, about, skill_level, profile_picture_url, req.params.id]);
+        
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         };
 
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error editing user:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const bookmarkChallenge = async (req, res) => {
+    try {
+        const { id, challengeId } = req.params;
+
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+        const bookmarks = user.rows[0].bookmarked_challenges;
+        let updatedBookmarks;
+
+        if (bookmarks.includes(challengeId)) {
+            updatedBookmarks = bookmarks.filter(bookmark => bookmark !== challengeId);
+        } else {
+            updatedBookmarks = [...bookmarks, challengeId];
+        };
+
+        const results = await pool.query('UPDATE users SET bookmarked_challenges = $1 WHERE id = $2 RETURNING *', [updatedBookmarks, id]);
+        return res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error bookmarking challenge:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const deleteUser = async (req, res) => {
+    // TODO: Add functionality to change users challenges, submissions, and comments to a default `deleted_user` user
+    try {
+        const results = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [req.params.id]);
+        
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        };
+        
+        res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error deleting user:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });

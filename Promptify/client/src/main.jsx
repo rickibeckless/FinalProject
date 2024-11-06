@@ -7,10 +7,17 @@ import './index.css';
 
 // import pages
 import Home from './pages/Home.jsx';
+import User from './pages/User.jsx';
+
+// admin pages
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+
+// user pages
 import Profile from './pages/user/Profile.jsx';
 import Settings from './pages/user/Settings.jsx';
 import UserChallenges from './pages/user/UserChallenges.jsx';
-import User from './pages/User.jsx';
+
+// challenge pages
 import AllChallenges from './pages/challenges/AllChallenges.jsx';
 import CreateChallenge from './pages/challenges/CreateChallenge.jsx';
 import ChallengeArchive from './pages/challenges/ChallengeArchive.jsx';
@@ -29,6 +36,7 @@ const router = createBrowserRouter([
         element: <App />,
         children: [
             { path: '/', element: <Home /> },
+            { path: '/admin', element: <AdminDashboard /> },
             { path: '/profile', element: <Profile /> },
             { path: '/settings', element: <Settings /> },
             { path: '/about', element: <About /> },

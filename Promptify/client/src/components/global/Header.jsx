@@ -61,11 +61,19 @@ export default function Header() {
         };
     };
 
-    const toggleDropdown = (type) => {
+    const toggleDropdown = (type, state) => {
         if (type === "challenges") {
-            setOpenNavDropdown(openNavDropdown === "challenges" ? null : "challenges");
+            if (state === "close") {
+                setOpenNavDropdown(null);
+            } else if (state === "open") {
+                setOpenNavDropdown("challenges");
+            };
         } else if (type === "user") {
-            setOpenNavDropdown(openNavDropdown === "user" ? null : "user");
+            if (state === "close") {
+                setOpenNavDropdown(null);
+            } else if (state === "open") {
+                setOpenNavDropdown("user");
+            };
         };
     };
 
@@ -79,7 +87,7 @@ export default function Header() {
                     </a>
                 </h1>
                 <nav id="main-navbar">
-                    <ul className="challenge-nav" onMouseEnter={() => toggleDropdown('challenges')} onMouseLeave={() => toggleDropdown('challenges')}>
+                    <ul className="challenge-nav" onMouseEnter={() => toggleDropdown('challenges', 'open')} onMouseLeave={() => toggleDropdown('challenges', 'close')}>
                         <li>Challenges</li>
 
                         <li className={`challenge-nav-dropdown dropdown ${openNavDropdown === "challenges" ? "active" : ""}`}>
@@ -128,7 +136,7 @@ export default function Header() {
                             {location.pathname !== "/login" && <li className="account-link" onClick={() => toggleModal('login')}>Login</li>}
                         </ul>
                     ) :
-                        <ul className="user-nav" onMouseEnter={() => toggleDropdown('user')} onMouseLeave={() => toggleDropdown('user')}>
+                        <ul className="user-nav" onMouseEnter={() => toggleDropdown('user', 'open')} onMouseLeave={() => toggleDropdown('user', 'close')}>
                             <li className="user-nav-welcome">{userWelcome}, <span className="user-nav-username">{user.username}</span>!</li>
 
                             <li className={`user-nav-dropdown dropdown ${openNavDropdown === "user" ? "active" : ""}`}>

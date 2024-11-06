@@ -13,12 +13,12 @@ export default function AllChallenges() {
     const { user } = useContext(AuthContext);
 
     const [challenges, setChallenges] = useState(null);
-    const [sortBy, setSortBy] = useState("submissions");
+    const [sortBy, setSortBy] = useState("date");
     const [showFiltersModal, setShowFiltersModal] = useState(window.innerWidth >= 900);
     const [showFiltersModalButton, setShowFiltersModalButton] = useState(window.innerWidth <= 900);
     const [search, setSearch] = useState("");
     const [filters, setFilters] = useState({
-        sortBy: "submissions",
+        sortBy: "date",
         sortOrder: "asc",
         limitations: {
             timeLimit: true,
@@ -102,7 +102,17 @@ export default function AllChallenges() {
             const data = await response.json();
 
             if (response.ok) {
-                setChallenges(data);
+                const sortedChallenges = data.sort((a, b) => {
+                    if (sortBy === "date") {
+                        return new Date(a.start_date_time) - new Date(b.start_date_time);
+                    } else if (sortBy === "submissions") {
+                        return a.submissions_count - b.submissions_count;
+                    }
+                    return 0;
+                });
+
+                setChallenges(sortedChallenges);
+                //setChallenges(data);
                 setLoading(false);
             } else {
                 setMessage(data.message);
@@ -110,7 +120,7 @@ export default function AllChallenges() {
         };
 
         fetchChallenges();
-    }, [navigate]);
+    }, []);
 
     return (
         <>
@@ -135,7 +145,6 @@ export default function AllChallenges() {
                                     <label htmlFor="sort-by">Sort By:</label>
                                     <select id="sort-by" name="sort-by" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
                                         <option value="submissions">Submissions</option>
-                                        <option value="likes">Likes</option>
                                         <option value="date">Date</option>
                                     </select>
                                 </div>
@@ -173,11 +182,11 @@ export default function AllChallenges() {
                                     <fieldset className="filter-challenges">
                                         <legend>Genre</legend>
                                         <div className="limits-holder">
-                                            <label><input type="checkbox" name="poetry" /> Poetry</label>
                                             <label><input type="checkbox" name="non-fiction" /> Non-Fiction</label>
-                                            <label><input type="checkbox" name="fantasy" /> Fantasy</label>
                                             <label><input type="checkbox" name="thriller" /> Thriller</label>
+                                            <label><input type="checkbox" name="fantasy" /> Fantasy</label>
                                             <label><input type="checkbox" name="general" /> General</label>
+                                            <label><input type="checkbox" name="poetry" /> Poetry</label>
                                         </div>
                                     </fieldset>
 

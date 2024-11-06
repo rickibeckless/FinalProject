@@ -14,6 +14,17 @@ export default function Home() {
         setLoading(false);
     }, []);
 
+    // if the user is logged in, redirect them to their `your challenges` page
+    // get all challenges, splice the first 3, use the challenges card component to display them
+    // write out a list of features and how it works
+    // decide if the how section should be on this page
+    // decide if the last three sections should be a carousel or just a list
+    // want to make at least one of the sections a carousel
+    // create a left aside for the user to navigate to the different sections
+        // this will be the same kind of aside that will be on the:
+            // settings page
+            // your challenges page
+
     return (
         <>
             {loading && <LoadingScreen />}

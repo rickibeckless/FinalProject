@@ -3,7 +3,7 @@
 import express from 'express';
 import './config/dotenv.js';
 import cors from 'cors';
-import { userRoutes, challengeRoutes } from './routes/data.js';
+import { defaultRoutes, userRoutes, challengeRoutes } from './routes/data.js';
 import { authSession, passport } from './middleware/auth.js';
 
 const PORT = process.env.PORT || 8080;
@@ -15,6 +15,7 @@ app.use(authSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api/admin/default', defaultRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/challenges', challengeRoutes);
 

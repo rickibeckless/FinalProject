@@ -1,10 +1,21 @@
+import { useContext } from "react";
+import AuthContext from "../../context/AuthProvider.jsx";
+
 import PromptifyLogo2 from "../../assets/android-chrome-192x192.png";
 
 export default function Footer() {
+    const { user } = useContext(AuthContext);
+
     return (
         <footer id="main-footer">
             <nav id="footer-navbar">
                 <ul>
+                    {user && user.is_admin === true ? (
+                        <li>
+                            <a href="/admin">Admin</a>
+                            <div className="custom-bottom-border"></div>
+                        </li>
+                    ) : null}
                     <li>
                         <a href="/about">About</a>
                         <div className="custom-bottom-border"></div>

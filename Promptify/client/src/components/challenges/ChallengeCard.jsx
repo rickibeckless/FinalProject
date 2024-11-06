@@ -20,6 +20,10 @@ import AuthContext from "../../context/AuthProvider.jsx"; // context used for au
 // styling for page will be imported here
 import "../../styles/challenges/challenge-card.css"; // styling for the challenge card
 
+// import any images or assets here
+import BookmarkImg from "../../assets/bookmark.svg";
+import BookmarkFilledImg from "../../assets/bookmark_filled.svg";
+
 export default function ChallengeCard({ sortBy, challenge, index }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState(null);
@@ -27,6 +31,10 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
     const [tags, setTags] = useState([]);
     const [countdown, setCountdown] = useState(null);
     const [formattedDate, setFormattedDate] = useState(null);
+    const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
+    const [showPointsDetails, setShowPointsDetails] = useState(false);
+
+    // TODO: Replace filter input checkboxes with custom checkboxes
 
     const navigate = useNavigate(); // used to navigate to a different page
 
@@ -97,21 +105,85 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                 setAuthor(data[0]);
             };
         };
+
+        async function checkIfBookmarked() {
+            if (user) {
+                if (user.bookmarked_challenges.includes(challenge.id)) {
+                    setBookmarkedChallenge(true);
+                } else {
+                    setBookmarkedChallenge(false);
+                };
+            };
+        };
         
         fetchAuthor();
-    }, []);
+        checkIfBookmarked();
+    }, [challenge, navigate]);
+
+    const handleBookmark = async () => {
+        // /api/users/:id/:challengeId/bookmark
+
+        if (user) {
+            const response = await fetch(`/api/users/${user.id}/${challenge.id}/bookmark`, {
+                method: "PATCH",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                setBookmarkedChallenge(!bookmarkedChallenge);
+            } else {
+                console.error("Error bookmarking challenge");
+            };
+        } else {
+            console.error("User not logged in");
+        };
+    };
+
+    const handlePointsDetails = (state) => {
+        if (state === 'close') {
+            setShowPointsDetails(false);
+        } else if (state === 'open') {
+            setShowPointsDetails(true);
+        }
+    };
+
+    const splitParagraph = (paragraph) => {
+        return paragraph.split('').map((line, index) => {
+            return <span key={index}>{line}</span>;
+        });
+    };
 
     return (
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
             <div className="challenge-card-header">
+                {user && (
+                    <>
+                        {!bookmarkedChallenge ? (
+                            <button className="bookmark-holder" title="Bookmark this challenge for later!" type="button" onClick={handleBookmark}>
+                                <img className="bookmark" src={BookmarkImg} alt="bookmark" />
+                            </button>
+                        ) : (
+                            <button className="bookmark-holder filled" title="Remove bookmark" type="button" onClick={handleBookmark}>
+                                <img className="bookmark filled" src={BookmarkFilledImg} alt="filled bookmark" />
+                            </button>
+                        )}
+                    </>
+                )}
+
                 <div className="challenge-card-section">
                     <h2 className="challenge-card-name">{challenge.name}</h2>
                     <p className="challenge-card-dates">{new Date(challenge.start_date_time).toLocaleDateString()} - {new Date(challenge.end_date_time).toLocaleDateString()}</p>
                 </div>
                 <a href={`/${author?.username}`} className="challenge-card-author">{author?.username}</a>
-                <div className="points-holder" title={`${challenge.available_points} available points!`}>
+                
+                <div className="points-holder" onMouseEnter={() => handlePointsDetails('open')} onMouseLeave={() => handlePointsDetails('close')}>
                     <p className="points">{challenge.available_points}pts</p>
                 </div>
+                <div className={`points-details-holder ${showPointsDetails ? 'shown' : ''}`}>
+                    <p className={`points-details ${showPointsDetails ? 'shown' : ''}`}>You can get up to {challenge.available_points} points!</p>
+                </div>
+
                 <div className="challenge-card-tags-holder">
                     {tags.map((tag) => (
                         <span key={tag} value={tag} className="challenge-card-tag">{tag}</span>
