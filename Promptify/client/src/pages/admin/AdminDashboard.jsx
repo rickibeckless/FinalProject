@@ -7,7 +7,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-// sets the page title, used by all pages in the format "Page Title | StudyGo"
+// sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
 
 // loading screen for when the page is loading (also used for transitions and testing)
@@ -23,7 +23,7 @@ import LoginModal from "../../components/global/modals/Login.jsx";
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
 export default function AdminDashboard() {
-    const { user } = useContext(AuthContext); // context used for authentication
+    const { user, loading: authLoading } = useContext(AuthContext); // get context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
     const token = localStorage.getItem("token");
@@ -34,20 +34,14 @@ export default function AdminDashboard() {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     useEffect(() => {
-        if (user) {
-            if (user.is_admin === true) {
-                console.log(user)
+        if (!authLoading) {
+            if (user && user.is_admin) {
                 setLoading(false);
             } else {
-                setLoading(false);
-                navigate('/404');
-            };
-        } else {
-            setLoading(false);
-            navigate('/404');
-        };
-
-    }, [loading, user]);
+                navigate("/404");
+            }
+        }
+    }, [authLoading, user, navigate]);
 
     const toggleModal = (type, previousType) => {
         if (previousType) {

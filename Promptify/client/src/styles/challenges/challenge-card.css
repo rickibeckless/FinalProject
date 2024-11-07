@@ -196,11 +196,14 @@
 .challenge-card-button {
     background-color: var(--verdigris);
     color: var(--light-text);
-    padding: 0.5rem 0.9rem;
     font-size: 0.9rem;
+    text-decoration: none;
+    
+    padding: 0.5rem 0.9rem;
     border: none;
     border-radius: 0.3rem;
     cursor: pointer;
+
     transition: background-color 0.15s, transform 0.15s;
 }
 

@@ -33,7 +33,7 @@
 #footer-cr-link {
     position: relative;
     display: inline-block;
-    padding-bottom: 3px;
+    /* padding-bottom: 3px; */
 }
 
 #footer-navbar li::after,

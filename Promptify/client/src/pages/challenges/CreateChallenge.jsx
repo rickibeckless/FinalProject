@@ -19,7 +19,9 @@ export default function CreateChallenge() {
     const [message, setMessage] = useState(""); // set to message to display in message popup
     const { user } = useContext(AuthContext);
     const [focusedInput, setFocusedInput] = useState(null);
+    const totalPages = 5;
     const [currentPage, setCurrentPage] = useState(1);
+    const [currentDateTime, setCurrentDateTime] = useState('');
     const [selectedLimitations, setSelectedLimitations] = useState([]);
     const [challengeForm, setChallengeForm] = useState({
         author_id: '',
@@ -28,12 +30,6 @@ export default function CreateChallenge() {
         genre: '',
         prompt: '',
         skill_level: '',
-        // limitations: {
-        //     time_limit: '',
-        //     word_limit: '',
-        //     character_limit: '',
-        //     required_phrase: ''
-        // },
         limitations: {
             time_limit: { min: '', max: '' },
             word_limit: { min: '', max: '' },
@@ -50,15 +46,6 @@ export default function CreateChallenge() {
 
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
-
-    // useEffect(() => {
-    //     if (token) {
-    //         setLoading(false);
-    //     } else {
-    //         setLoading(false);
-    //         setShowLoginModal(true);
-    //     };
-    // }, [loading, user]);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -99,16 +86,15 @@ export default function CreateChallenge() {
         };
     };
 
-    // const handleChange = (e) => {
-    //     setChallengeForm({
-    //         ...challengeForm,
-    //         [e.target.name]: e.target.value
-    //     });
-    // };
+    useEffect(() => {
+        const now = new Date();
+        const formattedDateTime = now.toISOString().slice(0, 16);
+        setCurrentDateTime(formattedDateTime);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-    
+
         if (Object.keys(challengeForm.limitations).includes(name)) {
             setChallengeForm((prevForm) => ({
                 ...prevForm,
@@ -137,7 +123,7 @@ export default function CreateChallenge() {
                 }
             }
         }));
-    };    
+    };
 
     const handleFocus = (input_field) => {
         setFocusedInput(input_field);
@@ -145,18 +131,17 @@ export default function CreateChallenge() {
 
     const handleLimitations = (e) => {
         const { name, checked } = e.target;
-    
+
         if (checked) {
             setSelectedLimitations((prev) => [...prev, name]);
         } else {
             setSelectedLimitations((prev) => prev.filter((limitation) => limitation !== name));
         }
-    
+
         setChallengeForm((prevForm) => ({
             ...prevForm,
             limitations: {
                 ...prevForm.limitations,
-                //[name]: checked ? prevForm.limitations[name] : ''
                 [name]: checked ? prevForm.limitations[name] : { min: '', max: '' }
             }
         }));
@@ -164,7 +149,7 @@ export default function CreateChallenge() {
 
     const goToNextPage = (i) => {
         if (i === 'last') {
-            setCurrentPage(5);
+            setCurrentPage(totalPages);
         } else {
             setCurrentPage((prevPage) => prevPage + i);
         }
@@ -260,87 +245,38 @@ export default function CreateChallenge() {
                                     </select>
                                 </div>
 
-                                {/* <div className="create-challenge-form-input-holder">
-                                    <label htmlFor="limitations">Does your prompt have any limitations?</label>
-                                    <div className="limitations-checkboxes">
-                                        <div className="limitation-checkbox-holder">
-                                            <input type="checkbox" id="time_limit" name="time_limit" onFocus={() => handleFocus('time_limit-input')} onChange={handleLimitations} />
-                                            <label htmlFor="time_limit">Time Limit</label>
-
-                                            {selectedLimitations.includes('time_limit') && (
-                                                <div className="limitations-input">
-                                                    <input type="number" min="5" max="300" id="time_limit-input" name="time_limit" placeholder="Enter time limit" value={challengeForm.limitations.time_limit} onFocus={() => handleFocus('time_limit-input')} onChange={handleChange} />
-                                                    {focusedInput === 'time_limit-input' && <p>Time limit in minutes (5-300)</p>}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="limitation-checkbox-holder">
-                                            <input type="checkbox" id="word_limit" name="word_limit" onFocus={() => handleFocus('word_limit-input')} onChange={handleLimitations} />
-                                            <label htmlFor="word_limit">Word Limit</label>
-
-                                            {selectedLimitations.includes('word_limit') && (
-                                                <div className="limitations-input">
-                                                    <input type="number" min="50" id="word_limit-input" name="word_limit" placeholder="Enter word limit" value={challengeForm.limitations.word_limit} onFocus={() => handleFocus('word_limit-input')} onChange={handleChange} />
-                                                    {focusedInput === 'word_limit-input' && <p>Word limit (50+)</p>}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="limitation-checkbox-holder">
-                                            <input type="checkbox" id="character_limit" name="character_limit" onFocus={() => handleFocus('character_limit-input')} onChange={handleLimitations} />
-                                            <label htmlFor="character_limit">Character Limit</label>
-
-                                            {selectedLimitations.includes('character_limit') && (
-                                                <div className="limitations-input">
-                                                    <input type="number" min="50" id="character_limit-input" name="character_limit" placeholder="Enter character limit" value={challengeForm.limitations.character_limit} onFocus={() => handleFocus('character_limit-input')} onChange={handleChange} />
-                                                    {focusedInput === 'character_limit-input' && <p>Character limit (50+)</p>}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="limitation-checkbox-holder">
-                                            <input type="checkbox" id="required_phrase" name="required_phrase" onFocus={() => handleFocus('required_phrase-input')} onChange={handleLimitations} />
-                                            <label htmlFor="required_phrase">Required Phrase</label>
-
-                                            {selectedLimitations.includes('required_phrase') && (
-                                                <div className="limitations-input">
-                                                    <input type="text" id="required_phrase-input" name="required_phrase" placeholder="Enter required phrase(s)" value={challengeForm.limitations.required_phrase} onFocus={() => handleFocus('required_phrase-input')} onChange={handleChange} />
-                                                    {focusedInput === 'required_phrase-input' && <p>Enclose each phrase in `backticks`</p>}
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div> */}
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="limitations">Does your prompt have any limitations?</label>
                                     <div className="limitations-checkboxes">
 
                                         <div className="limitation-checkbox-holder">
-                                            <input 
-                                                type="checkbox" 
-                                                id="time_limit" 
-                                                name="time_limit" 
-                                                onFocus={() => handleFocus('time_limit-input')} 
-                                                onChange={handleLimitations} 
+                                            <input
+                                                type="checkbox"
+                                                id="time_limit"
+                                                name="time_limit"
+                                                onFocus={() => handleFocus('time_limit-input')}
+                                                onChange={handleLimitations}
                                             />
                                             <label htmlFor="time_limit">Time Limit</label>
 
                                             {selectedLimitations.includes('time_limit') && (
                                                 <div className="limitations-input">
-                                                    <input 
-                                                        type="number" 
-                                                        id="time_limit-min" 
-                                                        name="time_limit_min" 
-                                                        placeholder="Min time limit" 
-                                                        value={challengeForm.limitations.time_limit?.min || ''} 
-                                                        onFocus={() => handleFocus('time_limit-min')} 
+                                                    <input
+                                                        type="number"
+                                                        id="time_limit-min"
+                                                        name="time_limit_min"
+                                                        placeholder="Min time limit"
+                                                        value={challengeForm.limitations.time_limit?.min || ''}
+                                                        onFocus={() => handleFocus('time_limit-min')}
                                                         onChange={(e) => handleRangeChange(e, 'time_limit', 'min')}
                                                     />
-                                                    <input 
-                                                        type="number" 
-                                                        id="time_limit-max" 
-                                                        name="time_limit_max" 
-                                                        placeholder="Max time limit" 
-                                                        value={challengeForm.limitations.time_limit?.max || ''} 
-                                                        onFocus={() => handleFocus('time_limit-max')} 
+                                                    <input
+                                                        type="number"
+                                                        id="time_limit-max"
+                                                        name="time_limit_max"
+                                                        placeholder="Max time limit"
+                                                        value={challengeForm.limitations.time_limit?.max || ''}
+                                                        onFocus={() => handleFocus('time_limit-max')}
                                                         onChange={(e) => handleRangeChange(e, 'time_limit', 'max')}
                                                     />
                                                     {focusedInput === 'time_limit-min' && <p>Enter minimum time in minutes</p>}
@@ -350,33 +286,33 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input 
-                                                type="checkbox" 
-                                                id="word_limit" 
-                                                name="word_limit" 
-                                                onFocus={() => handleFocus('word_limit-input')} 
-                                                onChange={handleLimitations} 
+                                            <input
+                                                type="checkbox"
+                                                id="word_limit"
+                                                name="word_limit"
+                                                onFocus={() => handleFocus('word_limit-input')}
+                                                onChange={handleLimitations}
                                             />
                                             <label htmlFor="word_limit">Word Limit</label>
 
                                             {selectedLimitations.includes('word_limit') && (
                                                 <div className="limitations-input">
-                                                    <input 
-                                                        type="number" 
-                                                        id="word_limit-min" 
-                                                        name="word_limit_min" 
-                                                        placeholder="Min word limit" 
-                                                        value={challengeForm.limitations.word_limit?.min || ''} 
-                                                        onFocus={() => handleFocus('word_limit-min')} 
+                                                    <input
+                                                        type="number"
+                                                        id="word_limit-min"
+                                                        name="word_limit_min"
+                                                        placeholder="Min word limit"
+                                                        value={challengeForm.limitations.word_limit?.min || ''}
+                                                        onFocus={() => handleFocus('word_limit-min')}
                                                         onChange={(e) => handleRangeChange(e, 'word_limit', 'min')}
                                                     />
-                                                    <input 
-                                                        type="number" 
-                                                        id="word_limit-max" 
-                                                        name="word_limit_max" 
-                                                        placeholder="Max word limit" 
-                                                        value={challengeForm.limitations.word_limit?.max || ''} 
-                                                        onFocus={() => handleFocus('word_limit-max')} 
+                                                    <input
+                                                        type="number"
+                                                        id="word_limit-max"
+                                                        name="word_limit_max"
+                                                        placeholder="Max word limit"
+                                                        value={challengeForm.limitations.word_limit?.max || ''}
+                                                        onFocus={() => handleFocus('word_limit-max')}
                                                         onChange={(e) => handleRangeChange(e, 'word_limit', 'max')}
                                                     />
                                                     {focusedInput === 'word_limit-min' && <p>Minimum word limit</p>}
@@ -386,33 +322,33 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input 
-                                                type="checkbox" 
-                                                id="character_limit" 
-                                                name="character_limit" 
-                                                onFocus={() => handleFocus('character_limit-input')} 
-                                                onChange={handleLimitations} 
+                                            <input
+                                                type="checkbox"
+                                                id="character_limit"
+                                                name="character_limit"
+                                                onFocus={() => handleFocus('character_limit-input')}
+                                                onChange={handleLimitations}
                                             />
                                             <label htmlFor="character_limit">Character Limit</label>
 
                                             {selectedLimitations.includes('character_limit') && (
                                                 <div className="limitations-input">
-                                                    <input 
-                                                        type="number" 
-                                                        id="character_limit-min" 
-                                                        name="character_limit_min" 
-                                                        placeholder="Min character limit" 
-                                                        value={challengeForm.limitations.character_limit?.min || ''} 
-                                                        onFocus={() => handleFocus('character_limit-min')} 
+                                                    <input
+                                                        type="number"
+                                                        id="character_limit-min"
+                                                        name="character_limit_min"
+                                                        placeholder="Min character limit"
+                                                        value={challengeForm.limitations.character_limit?.min || ''}
+                                                        onFocus={() => handleFocus('character_limit-min')}
                                                         onChange={(e) => handleRangeChange(e, 'character_limit', 'min')}
                                                     />
-                                                    <input 
-                                                        type="number" 
-                                                        id="character_limit-max" 
-                                                        name="character_limit_max" 
-                                                        placeholder="Max character limit" 
-                                                        value={challengeForm.limitations.character_limit?.max || ''} 
-                                                        onFocus={() => handleFocus('character_limit-max')} 
+                                                    <input
+                                                        type="number"
+                                                        id="character_limit-max"
+                                                        name="character_limit_max"
+                                                        placeholder="Max character limit"
+                                                        value={challengeForm.limitations.character_limit?.max || ''}
+                                                        onFocus={() => handleFocus('character_limit-max')}
                                                         onChange={(e) => handleRangeChange(e, 'character_limit', 'max')}
                                                     />
                                                     {focusedInput === 'character_limit-min' && <p>Minimum character limit</p>}
@@ -422,25 +358,25 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input 
-                                                type="checkbox" 
-                                                id="required_phrase" 
-                                                name="required_phrase" 
-                                                onFocus={() => handleFocus('required_phrase-input')} 
-                                                onChange={handleLimitations} 
+                                            <input
+                                                type="checkbox"
+                                                id="required_phrase"
+                                                name="required_phrase"
+                                                onFocus={() => handleFocus('required_phrase-input')}
+                                                onChange={handleLimitations}
                                             />
                                             <label htmlFor="required_phrase">Required Phrase</label>
 
                                             {selectedLimitations.includes('required_phrase') && (
                                                 <div className="limitations-input">
-                                                    <input 
-                                                        type="text" 
-                                                        id="required_phrase-input" 
-                                                        name="required_phrase" 
-                                                        placeholder="Enter required phrase(s)" 
-                                                        value={challengeForm.limitations.required_phrase || ''} 
-                                                        onFocus={() => handleFocus('required_phrase-input')} 
-                                                        onChange={handleChange} 
+                                                    <input
+                                                        type="text"
+                                                        id="required_phrase-input"
+                                                        name="required_phrase"
+                                                        placeholder="Enter required phrase(s)"
+                                                        value={challengeForm.limitations.required_phrase || ''}
+                                                        onFocus={() => handleFocus('required_phrase-input')}
+                                                        onChange={handleChange}
                                                     />
                                                     {focusedInput === 'required_phrase-input' && <p>Enclose each phrase in `backticks`</p>}
                                                 </div>
@@ -464,17 +400,17 @@ export default function CreateChallenge() {
                             <div className="form-page">
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="start_date_time">Start Date & Time:<span className="form-input-required-asterisk">*</span></label>
-                                    <input type="datetime-local" id="start_date_time" name="start_date_time" value={challengeForm.start_date_time} onFocus={() => handleFocus('start_date_time-input')} onChange={handleChange} required />
+                                    <input type="datetime-local" id="start_date_time" min={currentDateTime} name="start_date_time" value={challengeForm.start_date_time} onFocus={() => handleFocus('start_date_time-input')} onChange={handleChange} required />
                                 </div>
 
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="end_date_time">End Date & Time:<span className="form-input-required-asterisk">*</span></label>
-                                    <input type="datetime-local" id="end_date_time" name="end_date_time" value={challengeForm.end_date_time} onFocus={() => handleFocus('end_date_time-input')} onChange={handleChange} required />
+                                    <input type="datetime-local" id="end_date_time" min={currentDateTime} name="end_date_time" value={challengeForm.end_date_time} onFocus={() => handleFocus('end_date_time-input')} onChange={handleChange} required />
                                 </div>
                             </div>
                         )}
 
-                        {currentPage === 5 && (
+                        {currentPage === totalPages && (
                             <div className="form-page">
                                 <h3>Review Your Challenge</h3>
 
@@ -498,38 +434,28 @@ export default function CreateChallenge() {
                                     <p>{challengeForm.skill_level}</p>
                                 </div>
 
-                                {/* <div className="create-challenge-form-input-holder">
-                                    <label htmlFor="limitations">Limitations:</label>
-                                    <ul>
-                                        {challengeForm.limitations.time_limit && <li>Time Limit: {challengeForm.limitations.time_limit} minutes</li>}
-                                        {challengeForm.limitations.word_limit && <li>Word Limit: {challengeForm.limitations.word_limit} words</li>}
-                                        {challengeForm.limitations.character_limit && <li>Character Limit: {challengeForm.limitations.character_limit} characters</li>}
-                                        {challengeForm.limitations.required_phrase && <li>Required Phrase(s): {challengeForm.limitations.required_phrase}</li>}
-                                    </ul>
-                                </div> */}
-
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="limitations">Restrictions:</label>
                                     <ul>
                                         {challengeForm.limitations.time_limit.min || challengeForm.limitations.time_limit.max ? (
                                             <li>
-                                                Time Limit: 
+                                                Time Limit:
                                                 {challengeForm.limitations.time_limit.min && <span>{challengeForm.limitations.time_limit.min} minutes</span>}
                                                 {challengeForm.limitations.time_limit.max && <span> - {challengeForm.limitations.time_limit.max} minutes</span>}
                                             </li>
                                         ) : null}
-                                        
+
                                         {challengeForm.limitations.word_limit.min || challengeForm.limitations.word_limit.max ? (
                                             <li>
-                                                Word Limit: 
+                                                Word Limit:
                                                 {challengeForm.limitations.word_limit.min && <span>{challengeForm.limitations.word_limit.min} words</span>}
                                                 {challengeForm.limitations.word_limit.max && <span> - {challengeForm.limitations.word_limit.max} words</span>}
                                             </li>
                                         ) : null}
-                                        
+
                                         {challengeForm.limitations.character_limit.min || challengeForm.limitations.character_limit.max ? (
                                             <li>
-                                                Character Limit: 
+                                                Character Limit:
                                                 {challengeForm.limitations.character_limit.min && <span>{challengeForm.limitations.character_limit.min} characters</span>}
                                                 {challengeForm.limitations.character_limit.max && <span> - {challengeForm.limitations.character_limit.max} characters</span>}
                                             </li>
@@ -559,8 +485,8 @@ export default function CreateChallenge() {
                         )}
 
                         <div className="form-navigation-buttons">
-                        
-                            {currentPage > 1 && currentPage <= 5 &&
+
+                            {currentPage > 1 && currentPage <= totalPages &&
                                 <div className="button-group">
                                     <button type="button" onClick={() => goToPreviousPage('first')}>
                                         <img src={FirstPageImg} alt="First Page" />
@@ -573,10 +499,10 @@ export default function CreateChallenge() {
                             }
 
                             <div className="current-page-number">
-                                <p>{currentPage} / 5</p>
+                                <p>{currentPage} / {totalPages}</p>
                             </div>
 
-                            {currentPage < 5 && currentPage !== 5 &&
+                            {currentPage < totalPages && currentPage !== totalPages &&
                                 <div className="button-group">
                                     <button type="button" onClick={() => goToNextPage(1)}>
                                         <img src={NextPageImg} alt="Next Page" />
@@ -587,7 +513,7 @@ export default function CreateChallenge() {
                                     </button>
                                 </div>
                             }
-                            {currentPage === 5 && 
+                            {currentPage === totalPages &&
                                 <button type="submit">Create Challenge</button>
                             }
                         </div>

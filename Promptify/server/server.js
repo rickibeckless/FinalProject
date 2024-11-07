@@ -3,7 +3,7 @@
 import express from 'express';
 import './config/dotenv.js';
 import cors from 'cors';
-import { defaultRoutes, userRoutes, challengeRoutes } from './routes/data.js';
+import { defaultRoutes, userRoutes, challengeRoutes, submissionRoutes } from './routes/data.js';
 import { authSession, passport } from './middleware/auth.js';
 
 const PORT = process.env.PORT || 8080;
@@ -18,6 +18,7 @@ app.use(passport.session());
 app.use('/api/admin/default', defaultRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/challenges', challengeRoutes);
+app.use('/api/submissions', submissionRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server is running on 'http://localhost:${PORT}'`);

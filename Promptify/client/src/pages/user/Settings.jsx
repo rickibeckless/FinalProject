@@ -5,9 +5,9 @@
 
 // general imports
 import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
-// sets the page title, used by all pages in the format "Page Title | StudyGo"
+// sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
 
 // loading screen for when the page is loading (also used for transitions and testing)
@@ -75,9 +75,9 @@ export default function Settings() {
                 <aside id="table-of-contents">
                     <h2>Table of Contents</h2>
                     <ul>
-                        <li><a href="#profile-info">Profile Information</a></li>
-                        <li><a href="#notifications">Notifications</a></li>
-                        <li><a href="#profile-delete">Delete Profile</a></li>
+                        <li><Link to="#profile-info">Profile Information</Link></li>
+                        <li><Link to="#notifications">Notifications</Link></li>
+                        <li><Link to="#profile-delete">Delete Profile</Link></li>
                     </ul>
                 </aside>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import AuthContext from "../../context/AuthProvider.jsx";
 import SignUpModal from "./modals/SignUp.jsx";
 import LoginModal from "./modals/Login.jsx";
@@ -40,6 +40,10 @@ export default function Header() {
             setUserWelcome("Good evening");
         };
     }, []); // the empty array means this effect will only run once
+
+    useEffect(() => {
+        setOpenNavDropdown(null);
+    }, [location]);
 
     const toggleModal = (type, previousType) => {
         if (previousType) {
@@ -82,9 +86,9 @@ export default function Header() {
             {loading ? <LoadingScreen /> : null}
             <header id="main-header">
                 <h1 id="main-logo">
-                    <a href="/">
+                    <Link to="/">
                         Promptify
-                    </a>
+                    </Link>
                 </h1>
                 <nav id="main-navbar">
                     <ul className="challenge-nav" onMouseEnter={() => toggleDropdown('challenges', 'open')} onMouseLeave={() => toggleDropdown('challenges', 'close')}>
@@ -93,18 +97,18 @@ export default function Header() {
                         <li className={`challenge-nav-dropdown dropdown ${openNavDropdown === "challenges" ? "active" : ""}`}>
                             {location.pathname !== "/challenges" && 
                                 <li className="nav-link">
-                                    <a className="user-nav-link" href="/challenges">
+                                    <Link className="user-nav-link" to="/challenges">
                                         <img src={GlobeImg} alt="globe icon" />
                                         <span className="nav-link-text">Current Challenges</span>
-                                    </a>
+                                    </Link>
                                 </li>
                             }
                             {location.pathname !== "/challenges/archive" && 
                                 <li className="nav-link">
-                                    <a className="user-nav-link" href="/challenges/archive">
+                                    <Link className="user-nav-link" to="/challenges/archive">
                                         <img src={BoxGridImg} alt="box grid icon" />
                                         <span className="nav-link-text">Challenge Archive</span>
-                                    </a>
+                                    </Link>
                                 </li>
                             }
 
@@ -112,18 +116,18 @@ export default function Header() {
                                 <>
                                     {location.pathname !== "/challenges/create" && 
                                         <li className="nav-link">
-                                            <a className="user-nav-link" href="/challenges/create">
+                                            <Link className="user-nav-link" to="/challenges/create">
                                                 <img src={AddImg} alt="add icon" />
                                                 <span className="nav-link-text">Create Challenge</span>
-                                            </a>
+                                            </Link>
                                         </li>
                                     }
                                     {location.pathname !== `/${user.username}/challenges` && 
                                         <li className="nav-link">
-                                            <a className="user-nav-link" href={`/${user.username}/challenges`}>
+                                            <Link className="user-nav-link" to={`/${user.username}/challenges`}>
                                                 <img src={BoxQuestionImg} alt="box question icon" />
                                                 <span className="nav-link-text">Your Challenges</span>
-                                            </a>
+                                            </Link>
                                         </li>
                                     }
                                 </>
@@ -142,18 +146,18 @@ export default function Header() {
                             <li className={`user-nav-dropdown dropdown ${openNavDropdown === "user" ? "active" : ""}`}>
                                 {location.pathname !== "/profile" && 
                                     <li className="nav-link">
-                                        <a className="user-nav-link" href="/profile">
+                                        <Link className="user-nav-link" to="/profile">
                                             <img src={PersonImg} alt="person icon" />
                                             <span className="nav-link-text">Your Profile</span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 }
                                 {location.pathname !== "/settings" && 
                                     <li className="nav-link">
-                                        <a className="user-nav-link" href="/settings">
+                                        <Link className="user-nav-link" to="/settings">
                                             <img src={SettingsImg} alt="settings icon" />
                                             <span className="nav-link-text">Settings</span>
-                                        </a>
+                                        </Link>
                                     </li>
                                 }
                                 <li className="logout-btn mild-danger-red nav-link user-nav-link" onClick={() => logout()}>

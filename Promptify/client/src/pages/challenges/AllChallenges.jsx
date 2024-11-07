@@ -104,7 +104,7 @@ export default function AllChallenges() {
             if (response.ok) {
                 const sortedChallenges = data.sort((a, b) => {
                     if (sortBy === "date") {
-                        return new Date(a.start_date_time) - new Date(b.start_date_time);
+                        return new Date(a.end_date_time) - new Date(b.end_date_time);
                     } else if (sortBy === "submissions") {
                         return a.submissions_count - b.submissions_count;
                     }

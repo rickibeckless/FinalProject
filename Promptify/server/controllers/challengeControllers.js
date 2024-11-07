@@ -1,6 +1,4 @@
 import { pool } from '../config/database.js';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
 export const getChallenges = async (req, res) => {
     try {

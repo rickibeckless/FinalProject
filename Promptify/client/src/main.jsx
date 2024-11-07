@@ -7,12 +7,12 @@ import './index.css';
 
 // import pages
 import Home from './pages/Home.jsx';
-import User from './pages/User.jsx';
 
 // admin pages
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 
 // user pages
+import User from './pages/User.jsx';
 import Profile from './pages/user/Profile.jsx';
 import Settings from './pages/user/Settings.jsx';
 import UserChallenges from './pages/user/UserChallenges.jsx';
@@ -22,6 +22,7 @@ import AllChallenges from './pages/challenges/AllChallenges.jsx';
 import CreateChallenge from './pages/challenges/CreateChallenge.jsx';
 import ChallengeArchive from './pages/challenges/ChallengeArchive.jsx';
 import Challenge from './pages/challenges/Challenge.jsx';
+import JoinChallenge from './pages/challenges/JoinChallenge.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 // footer pages
@@ -39,15 +40,21 @@ const router = createBrowserRouter([
             { path: '/admin', element: <AdminDashboard /> },
             { path: '/profile', element: <Profile /> },
             { path: '/settings', element: <Settings /> },
+
             { path: '/about', element: <About /> },
             { path: '/terms-of-service', element: <TermsOfService /> },
             { path: '/help', element: <Help /> },
+
             { path: '/challenges', element: <AllChallenges /> },
             { path: '/challenges/create', element: <CreateChallenge /> },
             { path: '/challenges/archive', element: <ChallengeArchive /> },
             { path: '/challenges/:challengeId', element: <Challenge /> },
+            { path: '/challenges/:challengeId/join', element: <JoinChallenge /> },
+
             { path: '/:username', element: <User /> },
             { path: '/:username/challenges', element: <UserChallenges /> },
+            { path: '/:username/challenges/:challengeId', element: <Challenge /> }, // will be used for user challenge submission <Submission />
+
             { path: '*', element: <NotFound /> },
             { path: '/404', element: <NotFound /> },
         ],

@@ -30,6 +30,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
     const [userInChallenge, setUserInChallenge] = useState(false);
     const [tags, setTags] = useState([]);
     const [countdown, setCountdown] = useState(null);
+    const [inProgress, setInProgress] = useState(false);
     const [formattedDate, setFormattedDate] = useState(null);
     const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
     const [showPointsDetails, setShowPointsDetails] = useState(false);
@@ -93,6 +94,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
             updateCountdown(timeToStart, "upcoming");
         } else if (timeToEnd > 0 && timeToStart <= 0) {
             updateCountdown(timeToEnd, "in-progress");
+            setInProgress(true);
         } else {
             setCountdown("Challenge Ended");
         };
@@ -175,7 +177,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                     <h2 className="challenge-card-name">{challenge.name}</h2>
                     <p className="challenge-card-dates">{new Date(challenge.start_date_time).toLocaleDateString()} - {new Date(challenge.end_date_time).toLocaleDateString()}</p>
                 </div>
-                <a href={`/${author?.username}`} className="challenge-card-author">{author?.username}</a>
+                <Link to={`/${author?.username}`} className="challenge-card-author">{author?.username}</Link>
                 
                 <div className="points-holder" onMouseEnter={() => handlePointsDetails('open')} onMouseLeave={() => handlePointsDetails('close')}>
                     <p className="points">{challenge.available_points}pts</p>
@@ -199,11 +201,11 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
             </div>
             <div className="challenge-card-footer">
                 <Link to={`/challenges/${challenge.id}`} className="challenge-card-link">View Challenge</Link>
-                {user && (
+                {user && inProgress && author?.id !== user?.id && (
                     (userInChallenge ? (
-                        <button className="challenge-card-button">View Submission</button>
+                        <Link to={`/${user.username}/challenges/${challenge.id}`} className="challenge-card-button">View Submission</Link>
                     ) : (
-                        <button className="challenge-card-button">Join Challenge</button>
+                        <Link to={`/challenges/${challenge.id}/join`} className="challenge-card-button">Join Challenge</Link>
                     ))
                 )}
             </div>

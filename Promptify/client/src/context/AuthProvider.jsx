@@ -10,20 +10,27 @@ export function AuthProvider({ children }) {
 
     async function fetchUser(token) {
         if (token !== null) {
-            const decoded = jwtDecode(token);
-            const response = await fetch(`/api/users/${decoded.id}`);
-            const data = await response.json();
+            try {
+                const decoded = jwtDecode(token);
+                const response = await fetch(`/api/users/${decoded.id}`);
+                const data = await response.json();
 
-            if (response.ok) {
-                setUser(data[0]);
-                localStorage.setItem("token", token);
-            } else {
+                if (response.ok) {
+                    setUser(data[0]);
+                    localStorage.setItem("token", token);
+                } else {
+                    localStorage.removeItem("token");
+                }
+            } catch (error) {
+                console.error("Failed to fetch user:", error);
                 localStorage.removeItem("token");
-            };
+                setUser(null);
+            }
         } else {
             setUser(null);
-        };
-    };
+        }
+        setAuthLoading(false);
+    }
 
     useEffect(() => {
         const token = localStorage.getItem("token");
@@ -37,17 +44,18 @@ export function AuthProvider({ children }) {
                 localStorage.removeItem("token");
             } else {
                 validToken = true;
-            };
+            }
         }
 
         if (validToken) {
             fetchUser(token);
-        };
-        
-        setAuthLoading(false);
+        } else {
+            setAuthLoading(false);
+        }
     }, []);
 
     const login = (token) => {
+        setAuthLoading(true);
         fetchUser(token);
     };
 
@@ -58,10 +66,10 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, authLoading }}>
             {authLoading ? <LoadingScreen /> : children}
         </AuthContext.Provider>
     );
-};
+}
 
 export default AuthContext;

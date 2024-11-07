@@ -7,7 +7,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-// sets the page title, used by all pages in the format "Page Title | StudyGo"
+// sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
 
 // loading screen for when the page is loading (also used for transitions and testing)

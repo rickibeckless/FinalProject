@@ -6,9 +6,9 @@
 
 // general imports
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
 
-// sets the page title, used by all pages in the format "Page Title | StudyGo"
+// sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../components/global/PageTitle.jsx"; // note: components will not use this
 
 // loading screen for when the page is loading (also used for transitions and testing)
@@ -40,7 +40,7 @@ export default function PageTemplate() {
 
     return (
         <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
-            <PageTitle title="Page Title | Promptify" />
+            <PageTitle title={`Page Title | Promptify`} />
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 

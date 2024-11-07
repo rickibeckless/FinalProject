@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import PageTitle from "../../components/global/PageTitle.jsx";
 
 export default function TermsOfService() {
@@ -100,7 +101,7 @@ export default function TermsOfService() {
             <section className="footer-section" id="contact">
                 <h2>13. Contact Us</h2>
                 <p>
-                    If you have any questions about these Terms, please contact the developer at <a href="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</a>.
+                    If you have any questions about these Terms, please contact the developer at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
                 </p>
             </section>
         </div>

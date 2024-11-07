@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import PageTitle from "../components/global/PageTitle.jsx";
 import LoadingScreen from "../components/global/LoadingScreen.jsx";
 import MessagePopup from "../components/global/MessagePopup.jsx";
@@ -37,8 +38,8 @@ export default function Home() {
                         <p>Start writing today with our writing challenges</p>
 
                         <div className="hero-buttons account-links">
-                            <a className="account-link" href="/challenges">Current Challenges</a>
-                            <a className="account-link" href="#">User Ranks</a>
+                            <Link className="account-link" to="/challenges">Current Challenges</Link>
+                            <Link className="account-link" to="#">User Ranks</Link>
                         </div>
                     </div>
                     <div id="hero-right">

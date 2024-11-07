@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import PageTitle from "../../components/global/PageTitle.jsx";
 
 export default function Help() {
@@ -37,7 +38,7 @@ export default function Help() {
 
                 <h3>3. Can I delete my account?</h3>
                 <p>
-                    Yes, if you wish to delete your account, please contact our support team at <a href="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</a> for assistance.
+                    Yes, if you wish to delete your account, please contact our support team at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link> for assistance.
                 </p>
 
                 <h3>4. How does community feedback work?</h3>
@@ -47,7 +48,7 @@ export default function Help() {
 
                 <h3>5. What should I do if I encounter a technical issue?</h3>
                 <p>
-                    If you experience any technical issues, please reach out to the developer via email at <a href="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</a>.
+                    If you experience any technical issues, please reach out to the developer via email at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
                 </p>
             </section>
 
@@ -62,13 +63,13 @@ export default function Help() {
                         <strong>Name:</strong> Ricki Beckless
                     </p>
                     <p>
-                        <strong>Email:</strong> <a href="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</a>
+                        <strong>Email:</strong> <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>
                     </p>
                     <p>
-                        <strong>GitHub:</strong> <a href="https://www.github.com/rickibeckless" target="_blank" rel="noopener noreferrer">github.com/rickibeckless</a>
+                        <strong>GitHub:</strong> <Link to="https://www.github.com/rickibeckless" target="_blank" rel="noopener noreferrer">github.com/rickibeckless</Link>
                     </p>
                     <p>
-                        <strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/ricki-beckless" target="_blank" rel="noopener noreferrer">linkedin.com/in/ricki-beckless</a>
+                        <strong>LinkedIn:</strong> <Link to="https://www.linkedin.com/in/ricki-beckless" target="_blank" rel="noopener noreferrer">linkedin.com/in/ricki-beckless</Link>
                     </p>
                 </fieldset>
 
