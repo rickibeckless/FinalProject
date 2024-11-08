@@ -46,7 +46,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
             challenge.limitations.time_limit.min  && "time limit" || challenge.limitations.time_limit.max && "time limit",
             challenge.limitations.word_limit.min && "word limit" || challenge.limitations.word_limit.max && "word limit",
             challenge.limitations.character_limit.min && "character limit" || challenge.limitations.character_limit.max && "character limit",
-            challenge.limitations.required_phrase && "required phrase",
+            challenge.limitations.required_phrase.length > 0 && "required phrase",
         ];
 
         const filteredLimitationTags = limitationTags.filter(Boolean);
@@ -117,14 +117,25 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                 };
             };
         };
+
+        async function checkIfUserInChallenge() {
+            if (user) {
+                const response = await fetch(`/api/submissions/${user.id}/${challenge.id}`);
+                const data = await response.json();
+
+                if (data.length > 0) {
+                    setUserInChallenge(true);
+                    console.log(`User is in challenge: ${challenge.id}`);
+                };
+            };
+        };
         
         fetchAuthor();
         checkIfBookmarked();
+        checkIfUserInChallenge();
     }, [challenge, navigate]);
 
     const handleBookmark = async () => {
-        // /api/users/:id/:challengeId/bookmark
-
         if (user) {
             const response = await fetch(`/api/users/${user.id}/${challenge.id}/bookmark`, {
                 method: "PATCH",
@@ -150,12 +161,6 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
         }
     };
 
-    const splitParagraph = (paragraph) => {
-        return paragraph.split('').map((line, index) => {
-            return <span key={index}>{line}</span>;
-        });
-    };
-
     return (
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
             <div className="challenge-card-header">
@@ -177,7 +182,11 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                     <h2 className="challenge-card-name">{challenge.name}</h2>
                     <p className="challenge-card-dates">{new Date(challenge.start_date_time).toLocaleDateString()} - {new Date(challenge.end_date_time).toLocaleDateString()}</p>
                 </div>
-                <Link to={`/${author?.username}`} className="challenge-card-author">{author?.username}</Link>
+
+                <div className="challenge-card-author-holder">
+                    <img className="challenge-card-author-image" src={author?.profile_picture_url} alt={`${author?.username} profile image`} />
+                    <Link to={`/${author?.username}`} className="challenge-card-author">{author?.username}</Link>
+                </div>
                 
                 <div className="points-holder" onMouseEnter={() => handlePointsDetails('open')} onMouseLeave={() => handlePointsDetails('close')}>
                     <p className="points">{challenge.available_points}pts</p>

@@ -1,11 +1,12 @@
 import express from "express";
-import { createDefaultUsers, createDefaultChallenges } from "../controllers/defaultControllers.js";
+import { resetFullDatabase, createDefaultUsers, createDefaultChallenges } from "../controllers/defaultControllers.js";
 import { requireRole } from "../middleware/auth.js";
 
 // /api/admin/default
 
 const router = express.Router();
 
+router.post("/reset/:currentAdminId", requireRole(['admin']), resetFullDatabase); // POST reset full database
 router.post("/users", requireRole(['admin']), createDefaultUsers); // POST new default users
 router.post("/challenges", requireRole(['admin']), createDefaultChallenges); // POST new default challenges
 // router.post("/submissions", requireRole(['admin']), createDefaultSubmissions); // POST new default submissions

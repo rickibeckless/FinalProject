@@ -129,9 +129,22 @@
     cursor: pointer;
 }
 
+.user-nav {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .user-nav-username {
     font-family: var(--font-family-cutive-mono);
     font-weight: bold;
+}
+
+.user-nav-image {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 5px;
+    margin-left: 1rem;
 }
 
 .account-links {

@@ -31,3 +31,33 @@
 .mild-danger-red {
     color: var(--mild-danger-red);
 }
+
+/* App */
+#scroll-top-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    border: none;
+    border-radius: 10px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0.5rem;
+    width: 3rem;
+    /* height: 2rem; */
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    transition: background-color 0.3s;
+}
+
+#scroll-top-btn:hover {
+    background-color: var(--paynes-gray);
+}

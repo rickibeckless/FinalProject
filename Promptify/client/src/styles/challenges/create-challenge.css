@@ -101,7 +101,7 @@
 }
 
 /* Required Asterisk Styling */
-.create-challenge-form-input-holder .form-input-required-asterisk {
+.form-input-required-asterisk {
     color: var(--mild-danger-red);
 }
 

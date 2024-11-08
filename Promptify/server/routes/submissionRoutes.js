@@ -5,14 +5,14 @@ const router = express.Router();
 
 // /api/submissions
 
-router.get("/:userId", getSubmissionsByUserId); // GET all submissions by user ID
-router.get("/:challengeId", getSubmissionsByChallengeId); // GET all submissions by challenge ID
-router.get("/:userId/:challengeId", getSubmissionByUserIdAndChallengeId); // GET submission by user ID and challenge ID
+router.get("/user/:userId", getSubmissionsByUserId); // GET all submissions by user ID
+router.get("/challenge/:challengeId", getSubmissionsByChallengeId); // GET all submissions by challenge ID
+router.get("/user/:userId/challenge:challengeId", getSubmissionByUserIdAndChallengeId); // GET submission by user ID and challenge ID
 
-router.post("/:userId/:challengeId/create", createSubmission); // POST new submission
+router.post("/user/:userId/challenge:challengeId/create", createSubmission); // POST new submission
 
-router.patch("/:userId/:challengeId/edit", editSubmission); // PATCH submission
+router.patch("/user/:userId/challenge:challengeId/edit", editSubmission); // PATCH submission
 
-router.delete("/:userId/:challengeId/delete", deleteSubmission); // DELETE submission
+router.delete("/user/:userId/challenge:challengeId/delete", deleteSubmission); // DELETE submission
 
 export default router;

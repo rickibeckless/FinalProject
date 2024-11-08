@@ -88,9 +88,9 @@ export default function SignUpModal({ toggleModal }) {
             <div id="modalOverlay"></div>
             <div id="account-form-modal" className="sign-up-form-modal modal">
                 <div className="modal-content">
-                <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('sign-up', 'close')}>
-                    <img src={CloseImg} alt="Close" />
-                </button>
+                    <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('sign-up', 'close')}>
+                        <img src={CloseImg} alt="Close" />
+                    </button>
                     <div className="account-form-modal-header">
                         <h2>Sign Up | Promptify</h2>
                         <p>Sign up to start creating and sharing prompts!</p>
@@ -179,15 +179,14 @@ export default function SignUpModal({ toggleModal }) {
                     <div className="other-account-btns">
                         <button type="button" className="github-account-btn">
                             <img src={GithubImg} alt="GitHub Logo" />
-                            Sign Up with GitHub
+                            <a className="github-link" href="http://localhost:8080/api/users/auth/github">Sign Up with GitHub</a>
                         </button>
 
                         <p>Already have an account? <button type="button" onClick={() => toggleModal('login', 'sign-up')}>Log in</button></p>
                     </div>
                 </div>
-
-                {message && <MessagePopup message={message} setMessage={setMessage} />}
             </div>
+            {message && <MessagePopup message={message} setMessage={setMessage} />}
         </>
     );
 };

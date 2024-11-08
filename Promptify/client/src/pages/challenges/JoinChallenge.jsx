@@ -5,6 +5,7 @@
 // general imports
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
+import DOMPurify from 'dompurify';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -24,6 +25,7 @@ import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
 
 // styles that a component uses may also be imported here
+import "../../styles/challenges/join-challenge.css";
 
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
@@ -58,6 +60,8 @@ export default function JoinChallenge() {
     const [characterMax, setCharacterMax] = useState(null);
     const [timeLimit, setTimeLimit] = useState(null);
 
+    const [elapsedTime, setElapsedTime] = useState(0);
+
     const [submissionForm, setSubmissionForm] = useState({
         title: '',
         summary: '',
@@ -65,7 +69,7 @@ export default function JoinChallenge() {
         genre: ''
     });
 
-    useEffect(() => { // runs once when the page loads
+    useEffect(() => {
         async function fetchChallenge() {
             try {
                 const response = await fetch(`/api/challenges/${challengeId}`, {
@@ -79,36 +83,44 @@ export default function JoinChallenge() {
                     const data = await response.json();
                     setChallenge(data[0]);
 
-                    if (data[0].limitations.word_limit.min) {
-                        setWordMin(data[0].limitations.word_limit.min);
+                    const { word_limit, character_limit, time_limit } = data[0].limitations;
+
+                    if (data[0].author_id === user.id) {
+                        setMessage("You cannot join your own challenge.");
+                        setLoading(false);
+                        return;
                     };
 
-                    if (data[0].limitations.word_limit.max) {
-                        setWordMax(data[0].limitations.word_limit.max);
+                    if (data[0].start_date_time > new Date()) {
+                        setMessage("This challenge has not started yet.");
+                        setLoading(false);
+                        return;
                     };
 
-                    if (data[0].limitations.character_limit.min) {
-                        setCharacterMin(data[0].limitations.character_limit.min);
+                    if (data[0].end_date_time < new Date()) {
+                        setMessage("This challenge has already ended.");
+                        setLoading(false);
+                        return;
                     };
 
-                    if (data[0].limitations.character_limit.max) {
-                        setCharacterMax(data[0].limitations.character_limit.max);
-                    };
+                    const timeLimitInSeconds = time_limit?.max * 60;
 
-                    if (data[0].limitations.time_limit.max) {
-                        setTimeLimit(data[0].limitations.time_limit.max);
-                    };
+                    setWordMin(word_limit?.min || null);
+                    setWordMax(word_limit?.max || null);
+                    setCharacterMin(character_limit?.min || null);
+                    setCharacterMax(character_limit?.max || null);
+                    setTimeLimit(timeLimitInSeconds || null);
 
                     fetchAuthor(data[0].author_id);
 
                     setLoading(false);
                 } else {
-                    console.error("JoinChallenge.jsx - fetchChallenge() - error fetching challenge:", response.statusText);
+                    console.error("Error fetching challenge:", response.statusText);
                     setMessage("Error fetching challenge. Please try again later.");
                     setLoading(false);
                 };
             } catch (error) {
-                console.error("JoinChallenge.jsx - fetchChallenge() - error fetching challenge:", error);
+                console.error("Error fetching challenge:", error);
                 setMessage("Error fetching challenge. Please try again later.");
                 setLoading(false);
             };
@@ -131,26 +143,41 @@ export default function JoinChallenge() {
         const formattedDateTime = now.toISOString();
         setStartDateTime(formattedDateTime);
         setOpenSubmissionForm(true);
-        setTimer(setInterval(() => {
-            let time = 0;
 
-            if (timeLimit !== null) {
-                time = timeLimit;
-
-                if (time <= 0) {
-                    clearInterval(timer);
-                    handleSubmit();
-                } else {
-                    time -= 1;
-                };
-            } else {
-                time += 1;
-            };
-        }, 1000));
+        if (timeLimit) {
+            setElapsedTime(timeLimit);
+        } else {
+            setElapsedTime(0);
+        };
     };
+
+    useEffect(() => {
+        let interval;
+        if (openSubmissionForm) {
+            interval = setInterval(() => {
+                setElapsedTime(prevTime => {
+                    if (timeLimit !== null && prevTime <= 1) {
+                        clearInterval(interval);
+                        handleSubmit();
+                        return 0;
+                    }
+                    return timeLimit ? prevTime - 1 : prevTime + 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [openSubmissionForm, timeLimit]);
+
+    const formatTime = (seconds) => {
+        const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+        const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+        const secs = String(seconds % 60).padStart(2, '0');
+        return `${hrs}:${mins}:${secs}`;
+    };    
 
     const handleCancel = () => {
         clearInterval(timer);
+        setElapsedTime(0);
         setSubmissionForm({
             title: '',
             summary: '',
@@ -182,8 +209,6 @@ export default function JoinChallenge() {
 
     const handleContentChange = (content) => {
         setSubmissionForm({ ...submissionForm, content });
-        // setWordCount(content.split(' ').length);
-        // setCharacterCount(content.length);
         updateCounts(content);
     };
 
@@ -220,7 +245,7 @@ export default function JoinChallenge() {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         setLoading(true);
         clearInterval(timer);
         const now = new Date();
@@ -249,12 +274,12 @@ export default function JoinChallenge() {
                 setMessage("Submission created successfully!");
                 setLoading(false);
             } else {
-                console.error("JoinChallenge.jsx - handleSubmit() - error creating submission:", response.statusText);
+                console.error("Error creating submission:", response.statusText);
                 setMessage("Error creating submission. Please try again later.");
                 setLoading(false);
             };
         } catch (error) {
-            console.error("JoinChallenge.jsx - handleSubmit() - error creating submission:", error);
+            console.error("Error creating submission:", error);
             setMessage("Error creating submission. Please try again later.");
             setLoading(false);
         }
@@ -262,56 +287,18 @@ export default function JoinChallenge() {
         setOpenSubmissionForm(false);
     };
 
-    const toolbar = document.querySelector('.ql-toolbar');
-    useEffect(() => {
-        async function setToolbar() {
-            toolbar.innerHTML = `
-                <div class="ql-toolbar ql-snow">
-                    <span class="ql-formats">
-                        <button type="button" class="ql-bold">
-                            <svg viewBox="0 0 18 18">
-                                <path class="ql-stroke"
-                                    d="M5,4H9.5A2.5,2.5,0,0,1,12,6.5v0A2.5,2.5,0,0,1,9.5,9H5A0,0,0,0,1,5,9V4A0,0,0,0,1,5,4Z">
-                                </path>
-                                <path class="ql-stroke"
-                                    d="M5,9h5.5A2.5,2.5,0,0,1,13,11.5v0A2.5,2.5,0,0,1,10.5,14H5a0,0,0,0,1,0,0V9A0,0,0,0,1,5,9Z">
-                                </path>
-                            </svg>
-                        </button>
-                        <button type="button" class="ql-italic">
-                            <svg viewBox="0 0 18 18">
-                                <line class="ql-stroke" x1="7" x2="13" y1="4" y2="4"></line>
-                                <line class="ql-stroke" x1="5" x2="11" y1="14" y2="14"></line>
-                                <line class="ql-stroke" x1="8" x2="10" y1="14" y2="4"></line>
-                            </svg>
-                        </button>
-                        <button type="button" class="ql-underline">
-                            <svg viewBox="0 0 18 18">
-                                <path class="ql-stroke" d="M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3"></path>
-                                <rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="12" x="3" y="15"></rect>
-                            </svg>
-                        </button>
-                    </span>
-                    <span class="ql-formats">
-                        <button type="button" class="ql-clean">
-                            <svg class="" viewBox="0 0 18 18">
-                                <line class="ql-stroke" x1="5" x2="13" y1="3" y2="3"></line>
-                                <line class="ql-stroke" x1="6" x2="9.35" y1="12" y2="3"></line>
-                                <line class="ql-stroke" x1="11" x2="15" y1="11" y2="15"></line>
-                                <line class="ql-stroke" x1="15" x2="11" y1="11" y2="15"></line>
-                                <rect class="ql-fill" height="1" rx="0.5" ry="0.5" width="7" x="2" y="14"></rect>
-                            </svg>
-                        </button>
-                    </span>
-                </div>
-            `;
-        };
+    const modules = {
+        toolbar: {
+            container: '#toolbar',
+        },
+    };
 
-        setToolbar();
-    }, [openSubmissionForm, toolbar]);
+    const formats = [
+        'bold', 'italic', 'underline', 'clean'
+    ];
 
     return (
-        <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
+        <>
             <PageTitle title={`New Submission | Promptify`} />
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
@@ -334,37 +321,84 @@ export default function JoinChallenge() {
                 </section>
 
                 {!openSubmissionForm ? (
-                    <button type="button" onClick={handleStart}>Start</button>
+                    <button type="button" className="form-cancel-btn" onClick={handleStart}>Start</button>
                 ) : (
-                    <button type="button" onClick={handleCancel}>Cancel</button>
+                    <button type="button" className="form-cancel-btn" onClick={handleCancel}>Cancel</button>
                 )}
 
                 {openSubmissionForm &&
                     <section id="submission-section">
-
                         <form id="submission-form" onSubmit={(e) => handleSubmit(e)}>
+                            {openSubmissionForm && (
+                                <p className="form-counter">{formatTime(elapsedTime)}</p>
+                            )}
+
                             {currentPage === 1 && (
                                 <div className="form-page">
-                                    <div className="create-challenge-form-input-holder">
+                                    <h3 className="form-page-header">Response Information</h3>
+                                    <div className="submission-form-input-holder">
                                         <label htmlFor="title">Title:<span className="form-input-required-asterisk">*</span></label>
                                         <input type="text" id="title" name="title" placeholder="New Challenge" value={submissionForm.title} onFocus={() => handleFocus('title-input')} onChange={(e) => handlePreContentChange(e)} required />
+                                    </div>
+                                    <div className="submission-form-input-holder">
+                                        <label htmlFor="summary">Summary:<span className="form-input-required-asterisk">*</span></label>
+                                        <textarea id="summary" name="summary" placeholder="Write a brief summary of your submission." value={submissionForm.summary} onFocus={() => handleFocus('summary-input')} onChange={(e) => handlePreContentChange(e)} required />
+                                    </div>
+                                    <div className="submission-form-input-holder">
+                                        <label htmlFor="genre">Genre:<span className="form-input-required-asterisk">*</span></label>
+                                        <select id="genre" name="genre" value={submissionForm.genre} onFocus={() => handleFocus('genre-input')} onChange={(e) => handlePreContentChange(e)} required>
+                                            <option value="">Select a genre</option>
+                                            <option value="fantasy">Fantasy</option>
+                                            <option value="non-fiction">Non-Fiction</option>
+                                            <option value="thriller">Thriller</option>
+                                            <option value="poetry">Poetry</option>
+                                            <option value="general">General</option>
+                                        </select>
                                     </div>
                                 </div>
                             )}
 
                             {currentPage === 2 && (
                                 <div className="form-page">
-                                    <div className="create-challenge-form-input-holder">
-                                        <ReactQuill theme="snow" value={submissionForm.content} onChange={(e) => handleContentChange(e)} />
+                                    <h3 className="form-page-header">Prompt Response<span className="form-input-required-asterisk">*</span></h3>
+                                    <div className="submission-form-input-holder">
+                                        <div id="toolbar">
+                                            <span className="ql-formats">
+                                                <button className="ql-bold"></button>
+                                                <button className="ql-italic"></button>
+                                                <button className="ql-underline"></button>
+                                                <button className="ql-clean"></button>
+                                            </span>
+                                        </div>
+                                        <ReactQuill formats={formats} modules={modules} theme="snow" value={submissionForm.content} onChange={(e) => handleContentChange(e)} />
                                     </div>
-                                    <div className="create-challenge-form-input-holder">
-                                        <p>{wordCount}/{wordMax}</p>
-                                        <p>{characterCount}/{characterMax}</p>
-                                        {timeLimit && <p>Time remaining: {timeLimit}</p>}
-                                        <p>{timer}</p>
+                                    <div className="submission-form-input-holder form-counters-holder">
+                                        <p className="form-counter">{wordCount}{wordMax && (<>/{wordMax}</>)} words</p>
+                                        <p className="form-counter">{characterCount}{characterMax && (<>/{characterMax}</>)} characters</p>
                                     </div>
-                                    <div className="create-challenge-form-input-holder">
-                                        {submissionForm.content}
+                                </div>
+                            )}
+
+                            {currentPage === 3 && (
+                                <div className="form-page">
+                                    <h3 className="form-page-header">Review your submission:</h3>
+                                    <div className="submission-form-input-holder">
+                                        <div className="submission-form-input-holder">
+                                            <h4>Title:</h4>
+                                            <p>{submissionForm.title}</p>
+                                        </div>
+                                        <div className="submission-form-input-holder">
+                                            <h4>Summary:</h4>
+                                            <p>{submissionForm.summary}</p>
+                                        </div>
+                                        <div className="submission-form-input-holder">
+                                            <h4>Genre:</h4>
+                                            <p>{submissionForm.genre}</p>
+                                        </div>
+                                        <div className="submission-form-input-holder">
+                                            <h4>Content:</h4>
+                                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(submissionForm.content) }} />
+                                        </div>
                                     </div>
                                 </div>
                             )}
@@ -398,7 +432,7 @@ export default function JoinChallenge() {
                                     </div>
                                 }
                                 {currentPage === totalPages &&
-                                    <button type="submit">Create Challenge</button>
+                                    <button type="submit">Submit</button>
                                 }
                             </div>
                         </form>

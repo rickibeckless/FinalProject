@@ -64,6 +64,32 @@ export default function AdminDashboard() {
         };
     };
 
+    const handleResetFullDatabase = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`/api/admin/default/reset/${user.id}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    role: user.is_admin ? "admin" : "user",
+                },
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                setMessage(data.error);
+            } else {
+                setMessage(data.message);
+            };
+
+            setLoading(false);
+        } catch (error) {
+            console.error(error);
+            setMessage("An error occurred. Please try again.");
+            setLoading(false);
+        };
+    };
+
     const handleSeedDefaultUsers = async () => {
         try {
             setLoading(true);
@@ -125,6 +151,7 @@ export default function AdminDashboard() {
             <main id="admin-dashboard-body" className="container">
                 <h1>Admin Dashboard</h1>
 
+                <button type="button" onClick={handleResetFullDatabase}>Reset Full Database</button>
                 <button type="button" onClick={handleSeedDefaultUsers}>Seed Default Users</button>
                 <button type="button" onClick={handleSeedDefaultChallenges}>Seed Default Challenges</button>
                 

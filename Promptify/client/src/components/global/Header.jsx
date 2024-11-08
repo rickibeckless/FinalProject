@@ -165,6 +165,8 @@ export default function Header() {
                                     <span className="nav-link-text">Logout</span>
                                 </li>
                             </li>
+
+                            <img className="user-nav-image" src={user?.profile_picture_url} alt={`${user?.username} profile image`} />
                         </ul>
                     }
                 </nav>

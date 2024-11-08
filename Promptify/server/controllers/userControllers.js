@@ -38,7 +38,7 @@ export const createUserWithConventional = async (req, res) => {
             return res.status(400).json({ error: 'User already exists' });
         };
 
-        const adminEmails = process.env.ADMIN_EMAILS.split(',');
+        const adminEmails = process.env.ADMIN_EMAILS.split(', ');
         const isAdmin = email === adminEmails[0] || email === adminEmails[1] ? true : false;
 
         const salt = await bcrypt.genSalt(10);

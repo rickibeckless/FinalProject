@@ -5,10 +5,6 @@ export const getSubmissionsByUserId = async (req, res) => {
         const { userId } = req.params;
         const results = await pool.query('SELECT * FROM submissions WHERE author_id = $1', [userId]);
 
-        if (results.rows.length === 0) {
-            return res.status(404).json({ error: 'No submissions for this user' });
-        }
-
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching user submissions by user id:', error);
@@ -22,10 +18,6 @@ export const getSubmissionsByChallengeId = async (req, res) => {
 
         const results = await pool.query('SELECT * FROM submissions WHERE challenge_id = $1', [challengeId]);
 
-        if (results.rows.length === 0) {
-            return res.status(404).json({ error: 'No submissions for this challenge' });
-        }
-
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching challenge submissions by challenge id:', error);
@@ -38,10 +30,6 @@ export const getSubmissionByUserIdAndChallengeId = async (req, res) => {
         const { userId, challengeId } = req.params;
 
         const results = await pool.query('SELECT * FROM submissions WHERE author_id = $1 AND challenge_id = $2', [userId, challengeId]);
-
-        if (results.rows.length === 0) {
-            return res.status(404).json({ error: 'User has no submissions for this challenge' });
-        }
 
         res.status(200).json(results.rows);
     } catch (error) {
@@ -73,6 +61,13 @@ export const createSubmission = async (req, res) => {
         const character_count = content.length;
 
         const results = await pool.query('INSERT INTO submissions (author_id, challenge_id, title, summary, content, genre, word_count, character_count, started_at, submitted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *', [userId, challengeId, title, summary, content, genre, word_count, character_count, started_at, submitted_at]);
+
+        if (results.rows.length === 0) {
+            return res.status(400).json({ error: 'Submission could not be created' });
+        };
+
+        await pool.query('UPDATE challenges SET submission_count = submission_count + 1 WHERE id = $1', [challengeId]);
+        await pool.query('UPDATE users SET completed_challenges = completed_challenges + 1 WHERE id = $1', [userId]);
 
         res.status(201).json(results.rows);
     } catch (error) {

@@ -33,7 +33,15 @@ export function AuthProvider({ children }) {
     }
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const paramsToken = new URLSearchParams(window.location.search).get("token");
+        let token;
+
+        if (paramsToken) {
+            token = paramsToken;
+        } else {
+            token = localStorage.getItem("token");
+        }
+        
         let validToken = false;
 
         if (token) {

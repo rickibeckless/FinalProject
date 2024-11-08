@@ -95,10 +95,10 @@ export default function LoginModal({ toggleModal }) {
 
             <div id="modalOverlay"></div>
             <div id="account-form-modal" className="login-form-modal modal">
-                <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('login', 'close')}>
-                    <img src={CloseImg} alt="Close Modal" />
-                </button>
                 <div className="modal-content">
+                    <button type="button" className="account-form-modal-close-btn" onClick={() => toggleModal('login', 'close')}>
+                        <img src={CloseImg} alt="Close Modal" />
+                    </button>
                     <div className="account-form-modal-header">
                         <h2>Login | Promptify</h2>
                         <p>Log in to create and share prompts!</p>
@@ -123,7 +123,7 @@ export default function LoginModal({ toggleModal }) {
                     <div className="other-account-btns">
                         <button type="button" className="github-account-btn">
                             <img src={GithubImg} alt="GitHub Logo" />
-                            Login with GitHub
+                            <a className="github-link" href="http://localhost:8080/api/users/auth/github">Login with GitHub</a>
                         </button>
 
                         <p>Don't have an account? <button type="button" onClick={() => toggleModal('sign-up', 'login')}>Sign Up</button></p>

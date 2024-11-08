@@ -8,7 +8,7 @@ const config = {
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
         callbackURL: process.env.GITHUB_CALLBACK_URL,
     },
-    frontendURL: process.env.FRONTEND_URL || "http://localhost:5173",
+    frontendURL: process.env.FRONTEND_URL || "http://localhost:5273",
     backendURL: process.env.BACKEND_URL || "http://localhost:8080",
 };
 

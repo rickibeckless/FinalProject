@@ -137,6 +137,19 @@
     height: 1.5rem;
 }
 
+.challenge-card-author-holder {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.challenge-card-author-image {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
 .challenge-card-author {
     color: var(--verdigris);
     font-size: 1rem;
