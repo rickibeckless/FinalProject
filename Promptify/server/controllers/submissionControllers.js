@@ -42,6 +42,8 @@ export const createSubmission = async (req, res) => {
     try {
         const { userId, challengeId } = req.params;
 
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [userId]);
+
         const checkIfUserAlreadySubmitted = await pool.query('SELECT * FROM submissions WHERE author_id = $1 AND challenge_id = $2', [userId, challengeId]);
 
         if (checkIfUserAlreadySubmitted.rows.length > 0) {
@@ -68,6 +70,26 @@ export const createSubmission = async (req, res) => {
 
         await pool.query('UPDATE challenges SET submission_count = submission_count + 1 WHERE id = $1', [challengeId]);
         await pool.query('UPDATE users SET completed_challenges = completed_challenges + 1 WHERE id = $1', [userId]);
+
+        let automaticComment;
+
+        if (user.rows[0].completed_challenges === 1) {
+            automaticComment = {
+                parent_comment_id: null,
+                user_id: '11111111-aaaa-aaaa-aaaa-111111111111',
+                submission_id: results.rows[0].id,
+                content: `Congratulations on submitting your first story, ${user.username}! We hope you had fun writing it. Good luck!`,
+            };
+        } else {
+            automaticComment = {
+                parent_comment_id: null,
+                user_id: '11111111-aaaa-aaaa-aaaa-111111111111',
+                submission_id: results.rows[0].id,
+                content: `Congratulations on submitting your story, ${user.username}! We hope you had fun writing it. Good luck!`,
+            };
+        };
+
+        await pool.query('INSERT INTO comments (parent_comment_id, user_id, submission_id, content) VALUES ($1, $2, $3, $4)', [automaticComment.parent_comment_id, automaticComment.user_id, automaticComment.submission_id, automaticComment.content]);
 
         res.status(201).json(results.rows);
     } catch (error) {
@@ -110,6 +132,9 @@ export const deleteSubmission = async (req, res) => {
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'Submission not found' });
         };
+
+        await pool.query('UPDATE challenges SET submission_count = submission_count - 1 WHERE id = $1', [challengeId]);
+        await pool.query('UPDATE users SET completed_challenges = completed_challenges - 1 WHERE id = $1', [userId]);
 
         res.status(200).json(results.rows);
     } catch (error) {

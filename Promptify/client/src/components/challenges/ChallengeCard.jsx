@@ -23,10 +23,12 @@ import "../../styles/challenges/challenge-card.css"; // styling for the challeng
 // import any images or assets here
 import BookmarkImg from "../../assets/bookmark.svg";
 import BookmarkFilledImg from "../../assets/bookmark_filled.svg";
+import AuthorImg from "../../assets/imgs/blank_profile_picture.png";
 
 export default function ChallengeCard({ sortBy, challenge, index }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState(null);
+    const [authorProfilePicture, setAuthorProfilePicture] = useState(AuthorImg);
     const [userInChallenge, setUserInChallenge] = useState(false);
     const [tags, setTags] = useState([]);
     const [countdown, setCountdown] = useState(null);
@@ -105,6 +107,9 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
 
             if (response.ok) {
                 setAuthor(data[0]);
+                if (data[0].profile_picture_url) {
+                    setAuthorProfilePicture(data[0].profile_picture_url);
+                }
             };
         };
 
@@ -120,7 +125,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
 
         async function checkIfUserInChallenge() {
             if (user) {
-                const response = await fetch(`/api/submissions/${user.id}/${challenge.id}`);
+                const response = await fetch(`/api/submissions/user/${user.id}/challenge/${challenge.id}`);
                 const data = await response.json();
 
                 if (data.length > 0) {
@@ -184,7 +189,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                 </div>
 
                 <div className="challenge-card-author-holder">
-                    <img className="challenge-card-author-image" src={author?.profile_picture_url} alt={`${author?.username} profile image`} />
+                    <img className="challenge-card-author-image" src={authorProfilePicture} alt={`${author?.username} profile image`} />
                     <Link to={`/${author?.username}`} className="challenge-card-author">{author?.username}</Link>
                 </div>
                 
@@ -205,18 +210,21 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                 <p className="challenge-card-description">{challenge.description}</p>
                 <p className="challenge-card-prompt">{challenge.prompt}</p>
                 <div className="challenge-card-countdown" title={formattedDate}>
-                    {countdown}
+                    {challenge.end_date_time === '3004-08-13T00:00:00.000Z' ? 'Never Ending!' : countdown}
                 </div>
             </div>
             <div className="challenge-card-footer">
                 <Link to={`/challenges/${challenge.id}`} className="challenge-card-link">View Challenge</Link>
-                {user && inProgress && author?.id !== user?.id && (
-                    (userInChallenge ? (
-                        <Link to={`/${user.username}/challenges/${challenge.id}`} className="challenge-card-button">View Submission</Link>
-                    ) : (
-                        <Link to={`/challenges/${challenge.id}/join`} className="challenge-card-button">Join Challenge</Link>
-                    ))
-                )}
+                <div className="challenge-card-footer-participants-join">
+                    {challenge.participation_count === 1 ? (<p className="challenge-card-participants">{challenge.participation_count} participant</p>) : (<p className="challenge-card-participants">{challenge.participation_count} participants</p>)}
+                    {user && inProgress && author?.id !== user?.id && (
+                        (userInChallenge ? (
+                            <Link to={`/${user.username}/challenges/${challenge.id}`} className="challenge-card-button">View Submission</Link>
+                        ) : (
+                            <Link to={`/challenges/${challenge.id}/join`} className="challenge-card-button">Join Challenge</Link>
+                        ))
+                    )}
+                </div>
             </div>
         </li>
     );

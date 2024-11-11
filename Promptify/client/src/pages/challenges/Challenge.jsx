@@ -6,6 +6,8 @@ import MessagePopup from "../../components/global/MessagePopup.jsx";
 import PageTitle from "../../components/global/PageTitle.jsx";
 import SubmissionCard from "../../components/challenges/SubmissionCard.jsx";
 
+import "../../styles/challenges/challenge.css";
+
 export default function Challenge() {
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup

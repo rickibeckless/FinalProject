@@ -45,7 +45,6 @@
     transform: scale(1.05);
 }
 
-
 .filter-challenges-form-input-holder input[type="text"]:focus,
 .filter-challenges-form-input-holder select:focus,
 fieldset.filter-challenges:focus {

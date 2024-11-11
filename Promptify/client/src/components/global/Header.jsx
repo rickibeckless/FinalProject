@@ -6,12 +6,14 @@ import LoginModal from "./modals/Login.jsx";
 import LoadingScreen from "./LoadingScreen.jsx";
 
 import LogoutImg from "../../assets/logout.svg";
+import BellImg from "../../assets/bell.svg";
 import PersonImg from "../../assets/person.svg";
 import SettingsImg from "../../assets/settings.svg";
 import AddImg from "../../assets/add.svg";
 import BoxGridImg from "../../assets/box_grid.svg";
 import GlobeImg from "../../assets/globe.svg";
 import BoxQuestionImg from "../../assets/box_question.svg";
+import UserProfileImg from "../../assets/imgs/blank_profile_picture.png";
 
 export default function Header() {
     const location = useLocation();
@@ -25,6 +27,8 @@ export default function Header() {
     const [showLoginModal, setShowLoginModal] = useState(false);
 
     const [userWelcome, setUserWelcome] = useState("Welcome");
+    const [userProfileImage, setUserProfileImage] = useState(UserProfileImg);
+    const [userNotifications, setUserNotifications] = useState([]);
 
     useEffect(() => { // runs once when the page loads
         setLoading(false); // set to false when done loading
@@ -38,6 +42,11 @@ export default function Header() {
             setUserWelcome("Good afternoon");
         } else {
             setUserWelcome("Good evening");
+        };
+
+        if (user) {
+            setUserProfileImage(user.profile_picture_url);
+            setUserNotifications(user.notifications);
         };
     }, []); // the empty array means this effect will only run once
 
@@ -144,6 +153,14 @@ export default function Header() {
                             <li className="user-nav-welcome">{userWelcome}, <span className="user-nav-username">{user.username}</span>!</li>
 
                             <li className={`user-nav-dropdown dropdown ${openNavDropdown === "user" ? "active" : ""}`}>
+                                {location.pathname !== "/notifications" &&
+                                    <li className="nav-link">
+                                        <Link className="user-nav-link" to="/notifications">
+                                            <img src={BellImg} alt="bell icon" />
+                                            <span className="nav-link-text">Notifications</span>
+                                        </Link>
+                                    </li>
+                                }
                                 {location.pathname !== "/profile" && 
                                     <li className="nav-link">
                                         <Link className="user-nav-link" to="/profile">
@@ -165,8 +182,14 @@ export default function Header() {
                                     <span className="nav-link-text">Logout</span>
                                 </li>
                             </li>
-
-                            <img className="user-nav-image" src={user?.profile_picture_url} alt={`${user?.username} profile image`} />
+                            <div className="user-nav-image-holder">
+                                {userNotifications && userNotifications.length > 0 && 
+                                    <div className="user-nav-notifications">
+                                        <p>{userNotifications.length}</p>
+                                    </div>
+                                }
+                                <img className="user-nav-image" src={userProfileImage} alt={`${user?.username} profile image`} />
+                            </div>
                         </ul>
                     }
                 </nav>

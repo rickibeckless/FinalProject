@@ -12,12 +12,16 @@ const challenges = JSON.parse(fs.readFileSync('./data/defaultData/defaultChallen
 export const resetFullDatabase = async (req, res) => {
     try {
         const { currentAdminId } = req.params;
+        const baseUserIds = ['55555555-aaaa-aaaa-aaaa-555555555555', '11111111-aaaa-aaaa-aaaa-111111111111', currentAdminId];
+        const baseChallengeIds = ['66666666-bbbb-bbbb-bbbb-666666666666', '77777777-bbbb-bbbb-bbbb-777777777777', '88888888-bbbb-bbbb-bbbb-888888888888'];
+        const baseSubmissionIds = ['44444444-cccc-cccc-cccc-444444444444'];
+        const baseCommentIds = ['11111111-dddd-dddd-dddd-111111111111'];
 
+        await pool.query('DELETE FROM users WHERE id != $1 AND id != $2 AND id != $3', baseUserIds);
+        await pool.query('DELETE FROM challenges WHERE id != $1 AND id != $2 AND id != $3', baseChallengeIds);
+        await pool.query('DELETE FROM submissions WHERE id != $1', baseSubmissionIds);
+        await pool.query('DELETE FROM comments WHERE id != $1', baseCommentIds);
         await pool.query('DELETE FROM upvotes');
-        await pool.query('DELETE FROM comments');
-        await pool.query('DELETE FROM submissions');
-        await pool.query('DELETE FROM challenges');
-        await pool.query('DELETE FROM users WHERE id != $1', [currentAdminId]);
 
         checkAndSetBaseData();
 
@@ -66,19 +70,32 @@ export const checkAndSetBaseData = async (req, res) => {
         const checkBaseComments = await pool.query('SELECT * FROM comments WHERE id = $1', baseCommentIds);
 
         if (checkBaseUsers.rows.length === 2) {
-            return res.status(200).json({ message: 'Base user data already set' });
+            console.log("Base user data already set");
         } else {
             const deletedUserValues = {
                 id: '55555555-aaaa-aaaa-aaaa-555555555555',
                 username: 'deleted_user',
-                about: 'This user has been deleted.'
+                about: 'This user has been deleted.',
+                notifications_settings: {
+                    "allow_notifications": false,
+                    "allow_email_notifications": false,
+                    "allow_push_notifications": false,
+                    "allow_following_user_notifications": false,
+                    "allow_follower_notifications": false,
+                    "allow_feedback_notifications": false,
+                    "allow_challenge_notifications": false,
+                    "allow_daily_notifications": false,
+                    "allow_weekly_notifications": false,
+                    "allow_skill_level_notifications": false,
+                    "allow_following_genre_notifications": false
+                }
             };
 
             const promptifyBotUserValues = {
                 id: '11111111-aaaa-aaaa-aaaa-111111111111',
                 username: 'PromptifyBot',
                 profile_picture_url: 'https://i.ibb.co/550MskP/Promptify-Icon.png',
-                about: 'Hi! I\'m the Promptify Bot! I have some challenges that you can check out, they\'re never ending!.',
+                about: 'Hi! I\'m the Promptify Bot! I have some challenges that you can check out, they\'re never ending!',
                 skill_level: 'advanced',
                 badges: {
                     "first_win": true,
@@ -96,14 +113,27 @@ export const checkAndSetBaseData = async (req, res) => {
                 },
                 completed_challenges: 1027, // My cat La'Gaia's birthday!
                 points: 184860, // La'Gaia's birthday x 180 (it may be cheesy, but... meh🤷🏽‍♀️)
+                notifications_settings: {
+                    "allow_notifications": false,
+                    "allow_email_notifications": false,
+                    "allow_push_notifications": false,
+                    "allow_following_user_notifications": false,
+                    "allow_follower_notifications": false,
+                    "allow_feedback_notifications": false,
+                    "allow_challenge_notifications": false,
+                    "allow_daily_notifications": false,
+                    "allow_weekly_notifications": false,
+                    "allow_skill_level_notifications": false,
+                    "allow_following_genre_notifications": false
+                }
             };
 
-            await pool.query('INSERT INTO users (id, username, about) VALUES ($1, $2, $3) RETURNING *', [deletedUserValues.id, deletedUserValues.username, deletedUserValues.about]);
-            await pool.query('INSERT INTO users (id, username, profile_picture_url, about, skill_level, badges, completed_challenges, points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [promptifyBotUserValues.id, promptifyBotUserValues.username, promptifyBotUserValues.profile_picture_url, promptifyBotUserValues.about, promptifyBotUserValues.skill_level, promptifyBotUserValues.badges, promptifyBotUserValues.completed_challenges, promptifyBotUserValues.points]);
+            await pool.query('INSERT INTO users (id, username, about, notifications_settings) VALUES ($1, $2, $3, $4) RETURNING *', [deletedUserValues.id, deletedUserValues.username, deletedUserValues.about, deletedUserValues.notifications_settings]);
+            await pool.query('INSERT INTO users (id, username, profile_picture_url, about, skill_level, badges, completed_challenges, points, notifications_settings) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [promptifyBotUserValues.id, promptifyBotUserValues.username, promptifyBotUserValues.profile_picture_url, promptifyBotUserValues.about, promptifyBotUserValues.skill_level, promptifyBotUserValues.badges, promptifyBotUserValues.completed_challenges, promptifyBotUserValues.points, promptifyBotUserValues.notifications_settings]);
         };
 
         if (checkBaseChallenges.rows.length === 3) {
-            return res.status(200).json({ message: 'Base challenge data already set' });
+            console.log("Base challenge data already set");
         } else {
             const defaultBeginnerChallengeValues = {
                 id: '66666666-bbbb-bbbb-bbbb-666666666666',
@@ -130,7 +160,7 @@ export const checkAndSetBaseData = async (req, res) => {
                 author_id: '11111111-aaaa-aaaa-aaaa-111111111111',
                 name: "Lost in Time: Sci-Fi Flashback",
                 description: "Tell a story of a character who is unexpectedly transported to a different era. Focus on how they adapt (or struggle) with the change.",
-                prompt: "Write about a character who wakes up in a time far removed from their own—whether it 's centuries into the future, where advanced AI runs society, or in a past era full of unknown dangers. Describe their confusion, awe, or fear as they encounter technologies or social customs they can't understand. How do they try to survive and make sense of their surroundings?",
+                prompt: "Write about a character who wakes up in a time far removed from their own—whether it's centuries into the future, where advanced AI runs society, or in a past era full of unknown dangers. Describe their confusion, awe, or fear as they encounter technologies or social customs they can't understand. How do they try to survive and make sense of their surroundings?",
                 start_date_time: '2024-11-07T00:00:00.000Z',
                 end_date_time: '3004-08-13T00:00:00.000Z',
                 skill_level: 'intermediate',
@@ -175,7 +205,7 @@ export const checkAndSetBaseData = async (req, res) => {
         };
 
         if (checkBaseSubmissions.rows.length === 3) {
-            return res.status(200).json({ message: 'Base submission data already set' });
+            console.log("Base submission data already set");
         } else {
             const defaultBeginnerSubmissionValues = {
                 id: '44444444-cccc-cccc-cccc-444444444444',
@@ -192,10 +222,15 @@ export const checkAndSetBaseData = async (req, res) => {
             };
 
             await pool.query('INSERT INTO submissions (id, author_id, challenge_id, title, summary, content, word_count, character_count, genre, started_at, submitted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *', [defaultBeginnerSubmissionValues.id, defaultBeginnerSubmissionValues.author_id, defaultBeginnerSubmissionValues.challenge_id, defaultBeginnerSubmissionValues.title, defaultBeginnerSubmissionValues.summary, defaultBeginnerSubmissionValues.content, defaultBeginnerSubmissionValues.word_count, defaultBeginnerSubmissionValues.character_count, defaultBeginnerSubmissionValues.genre, defaultBeginnerSubmissionValues.started_at, defaultBeginnerSubmissionValues.submitted_at]);
+
+            const botUser = await pool.query('SELECT * FROM users WHERE id = $1', ['11111111-aaaa-aaaa-aaaa-111111111111']);
+            const newBotUserCompletedChallengesCount = botUser.rows[0].completed_challenges + 1;
+
+            await pool.query('UPDATE users SET completed_challenges = $1 WHERE id = $2', [newBotUserCompletedChallengesCount, botUser.rows[0].id]);
         };
 
         if (checkBaseComments.rows.length === 3) {
-            return res.status(200).json({ message: 'Base comment data already set' });
+            console.log("Base comment data already set");
         } else {
             const defaultBeginnerCommentValues = {
                 id: '11111111-dddd-dddd-dddd-111111111111',
@@ -232,6 +267,25 @@ export const createDefaultUsers = async (req, res) => {
             const hashedPassword = await bcrypt.hash(user.password, salt);
 
             await pool.query('INSERT INTO users (id, email, password, username) VALUES ($1, $2, $3, $4) RETURNING *', [user.id, user.email, hashedPassword, user.username]);
+
+            const welcomeNotification = {
+                id: user.id,
+                title: "Welcome to Promptify!",
+                content: "We're excited to have you on board. Let's get started!",
+                type: "account_info",
+                status: "unread",
+                date_created: new Date().toISOString(),
+                date_deleted: null
+            };
+
+            await pool.query('UPDATE users SET notifications = $1 WHERE id = $2', [JSON.stringify([welcomeNotification]), user.id]);
+
+            const botUser = await pool.query('SELECT * FROM users WHERE id = $1', ['11111111-aaaa-aaaa-aaaa-111111111111']);
+            const newBotUserFollowCount = botUser.rows[0].followers + 1;
+
+            await pool.query('INSERT INTO user_followers (follower_id, following_id) VALUES ($1, $2)', [user.id, botUser.rows[0].id]);
+
+            await pool.query('UPDATE users SET followers = $1 WHERE id = $2', [newBotUserFollowCount, botUser.rows[0].id]);
         };
 
         res.status(201).json({ message: 'Default users created' });

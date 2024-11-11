@@ -14,6 +14,7 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 // user pages
 import User from './pages/User.jsx';
 import Profile from './pages/user/Profile.jsx';
+import Notifications from './pages/user/Notifications.jsx';
 import Settings from './pages/user/Settings.jsx';
 import UserChallenges from './pages/user/UserChallenges.jsx';
 
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/admin', element: <AdminDashboard /> },
             { path: '/profile', element: <Profile /> },
+            {  path: '/notifications', element: <Notifications /> },
             { path: '/settings', element: <Settings /> },
 
             { path: '/about', element: <About /> },

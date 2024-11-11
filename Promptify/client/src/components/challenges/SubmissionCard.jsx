@@ -19,15 +19,32 @@ import MessagePopup from "../global/MessagePopup.jsx";
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
 // styling for page will be imported here
-//import "../../styles/challenges/submission-card.css"; // styling for the submission card
+import "../../styles/submissions/submission-card.css"; // styling for the submission card
 
 // import any images or assets here
+import commentsImg from "../../assets/comments.svg";
+import commentsFilledImg from "../../assets/comments_filled.svg";
+import thumbsUpImg from "../../assets/thumbs_up.svg";
+import thumbsUpFilledImg from "../../assets/thumbs_up_filled.svg";
 
 export default function SubmissionCard({ challenge, submission }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState([]);
     const [comments, setComments] = useState([]);
     const [upvotes, setUpvotes] = useState([]);
+
+    const [openComments, setOpenComments] = useState(false);
+
+    async function fetchUpvotes() {
+        const response = await fetch(`/api/upvotes/submission/${submission.id}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            setUpvotes(data);
+        } else {
+            console.error(data.error);
+        };
+    };
 
     useEffect(() => {
         async function fetchAuthor() {
@@ -46,32 +63,63 @@ export default function SubmissionCard({ challenge, submission }) {
             const data = await response.json();
 
             if (response.ok) {
-                setComments(data);
-            } else {
-                console.error(data.error);
-            };
-        };
+                const commentsWithInfo = await Promise.all(data.map(async comment => {
+                    const response = await fetch(`/api/users/${comment.user_id}`);
+                    const data = await response.json();
+                    const author = data[0].username;
 
-        async function fetchUpvotes() {
-            const response = await fetch(`/api/upvotes/submission/${submission.id}`);
-            const data = await response.json();
+                    const childrenComments = data.filter(childComment => childComment.parent_comment_id === comment.id);
 
-            if (response.ok) {
-                setUpvotes(data);
+                    if (response.ok) {
+                        return {
+                            ...comment,
+                            author,
+                            childrenComments
+                        };
+                    }
+                }));
+
+                setComments(commentsWithInfo);
             } else {
                 console.error(data.error);
             };
         };
 
         fetchAuthor();
-        //fetchComments();
-        //fetchUpvotes();
+        fetchComments();
+        fetchUpvotes();
     }, [submission]);
+
+    const handleUpvote = async (e) => {
+        e.preventDefault();
+
+        const response = await fetch(`/api/upvotes/${submission.id}/upvote`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                userId: user?.id
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            fetchUpvotes();
+        } else {
+            console.error(data.error);
+        };
+    };
+
+    const toggleComments = () => {
+        setOpenComments(!openComments);
+    };
 
     const splicedContent = `${submission.content.slice(0, 300)}...`;
 
     return (
-        <li className={`submission-card`}>
+        <li className="submission-card">
             <div className="submission-card-header">
                 {/**
                 * TODO:
@@ -83,7 +131,7 @@ export default function SubmissionCard({ challenge, submission }) {
                 */}
                 <h3>{submission.title}</h3>
                 <p>{author.username}</p>
-                <p>{submission.submitted_at}</p>
+                <p>{new Date(submission.submitted_at).toLocaleString()}</p>
                 <p>{submission.genre}</p>
                 <p>{submission.word_count} words</p>
                 <p>{submission.character_count} characters</p>
@@ -108,16 +156,44 @@ export default function SubmissionCard({ challenge, submission }) {
                 * - Add input field to submit a comment
                 */}
                 <Link to={`/submissions/${submission.id}`} className="button">View Submission</Link>
-                <p>{upvotes.length} Upvotes</p>
-                <p>{comments.length} Comments</p>
-                <ul>
-                    {comments.slice(0, 3).map(comment => (
-                        <li key={comment.id}>
-                            <p>{comment.content}</p>
-                        </li>
-                    ))}
-                </ul>
+                <div className="submission-card-stats-holder">
+                    <div className="stat-count-holder" title={upvotes.length === 1 ? `${upvotes.length} Upvote` : `${upvotes.length} Upvotes`}>
+                        <p>{upvotes.length}</p>
 
+                        <button className="stat-btn" onClick={(e) => handleUpvote(e)}>
+                            {upvotes.find(upvote => upvote.user_id === user?.id) ? (
+                                <img key="filled-upvote" className="upvote filled" src={thumbsUpFilledImg} alt="filled upvote icon" />
+                            ) : (
+                                <img key="empty-upvote" className="upvote" src={thumbsUpImg} alt="upvote icon" />
+                            )}
+                        </button>
+                    </div>
+
+                    <div className="stat-count-holder" onClick={toggleComments} title={comments.length === 1 ? `${comments.length} Comment` : `${comments.length} Comments`}>
+                        <p>{comments.length}</p>
+
+                        <button type="button" className="stat-btn">
+                            {openComments ? (
+                                <img key="filled-comments" className="comments filled" src={commentsFilledImg} alt="filled comments icon" />
+                            ) : (
+                                <img key="empty-comments" className="comments" src={commentsImg} alt="comments icon" />
+                            )}
+                        </button>
+                    </div>
+                </div>
+
+                {openComments && (      
+                    <ul className="submission-card-comments-list">
+                        
+                        {comments.slice(0, 3).map(comment => (
+                            <li className="submission-card-comment" key={comment.id}>
+                                <h4>{comment.author}</h4>
+                                <p>{new Date(comment.date_created).toLocaleString()}</p>
+                                <p>{comment.content}</p>
+                            </li>
+                        ))}
+                    </ul>
+                )}
             </div>
         </li>
     );

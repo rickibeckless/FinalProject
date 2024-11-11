@@ -141,6 +141,7 @@
 .github-account-btn {
     background-color: #4b5563;
     color: var(--light-text);
+    text-decoration: none;
 }
 
 .github-account-btn:hover {

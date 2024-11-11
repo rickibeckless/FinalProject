@@ -1,0 +1,48 @@
+.submission-card {
+    list-style: none;
+    margin: 0 8vw;
+}
+
+.submission-card-header {
+    
+}
+
+.submission-card-content {
+
+}
+
+.submission-card-footer {
+
+    .submission-card-stats-holder {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+
+        .stat-count-holder {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            .stat-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+            }
+
+            img {
+                width: 1.5rem;
+                height: 1.5rem;
+            }
+        }
+    }
+
+    .submission-card-comments-list {
+
+        .submission-card-comment {
+            list-style: none;
+            
+        } 
+    }
+}

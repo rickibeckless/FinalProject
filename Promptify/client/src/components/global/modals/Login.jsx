@@ -89,6 +89,40 @@ export default function LoginModal({ toggleModal }) {
         setLoading(false);
     };
 
+    const loginWithGithub = async () => {
+        const popup = window.open(
+            '/api/users/auth/github',
+            'GitHub Login',
+            'width=800,height=600'
+        );
+    
+        const handleMessage = (event) => {    
+            const { token } = event.data;
+            if (token) {
+                setTooManyAttempts(false);
+                toggleModal('login');
+                login(token);
+    
+                popup.close();
+                window.removeEventListener('message', handleMessage);
+                setMessage("Successfully logged in with GitHub...");
+                setTimeout(() => {
+                    setMessage("");
+                }, 2000);
+            }
+        };
+    
+        window.addEventListener('message', handleMessage);
+    
+        const checkPopup = setInterval(() => {
+            if (!popup || popup.closed || popup.closed === undefined) {
+                clearInterval(checkPopup);
+                setMessage("Login popup was blocked. Please allow popups and try again.");
+                window.removeEventListener('message', handleMessage);
+            }
+        }, 1000);
+    };    
+
     return (
         <>
             {loading ? <LoadingScreen /> : null}
@@ -121,9 +155,9 @@ export default function LoginModal({ toggleModal }) {
                         {tooManyAttempts && <p className="attempts-error">Too many login attempts. Please try again after <span className="attempts-error-timer">{attemptsTimer}</span> seconds.</p>}
                     </form>
                     <div className="other-account-btns">
-                        <button type="button" className="github-account-btn">
+                        <button type="button" className="github-account-btn" onClick={loginWithGithub}>
                             <img src={GithubImg} alt="GitHub Logo" />
-                            <a className="github-link" href="http://localhost:8080/api/users/auth/github">Login with GitHub</a>
+                            <p>Login with GitHub</p>
                         </button>
 
                         <p>Don't have an account? <button type="button" onClick={() => toggleModal('sign-up', 'login')}>Sign Up</button></p>

@@ -91,7 +91,7 @@ export default function TermsOfService() {
             <section className="footer-section" id="ai-generated-content">
                 <h2>12. AI-Generated Content</h2>
                 <p>
-                    Promptify uses artificial intelligence to enhance user interactions and provide tailored insights, responses, and content. AI-generated or AI-assisted content may appear across various areas of our platform, including but not limited to the Terms of Service, About, Privacy Policy, Help, and Contact pages. Additionally, certain interactive or user-driven sections, such as challenge content, user submissions, and comments, may be generated or influenced by AI.
+                    Promptify uses artificial intelligence to enhance user interactions and provide tailored insights, responses, and content. AI-generated or AI-assisted content may appear across various areas of our platform, including but not limited to the Terms of Service, About, and Help pages. Additionally, certain interactive or user-driven sections, such as challenge content, user submissions, and comments, may be generated or influenced by AI.
                 </p>
                 <p>
                     While we strive to ensure that AI-generated content is accurate, reliable, and helpful, it may not always be free from errors or suitable for all purposes. Users are encouraged to independently verify any critical information and acknowledge that AI-generated content is provided "as is," without warranties of any kind.

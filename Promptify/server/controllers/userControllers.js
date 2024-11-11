@@ -1,6 +1,7 @@
 import { pool } from '../config/database.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { v4 as uuidv4 } from 'uuid';
 import { authSession, passport } from '../middleware/auth.js';
 
 export const getUsers = async (req, res) => {
@@ -43,8 +44,28 @@ export const createUserWithConventional = async (req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+
+        const welcomeNotification = {
+            id: uuidv4(),
+            title: "Welcome to Promptify!",
+            content: "We're excited to have you on board. Let's get started!",
+            type: "account_info",
+            status: "unread",
+            date_created: new Date().toISOString(),
+            date_deleted: null
+        };
         
-        const results = await pool.query('INSERT INTO users (username, email, password, is_admin) VALUES ($1, $2, $3, $4) RETURNING *', [username, email, hashedPassword, isAdmin]);
+        const results = await pool.query('INSERT INTO users (username, email, password, is_admin, notifications, following) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *', [username, email, hashedPassword, isAdmin, JSON.stringify([welcomeNotification]), 1]);
+        const botUser = await pool.query('SELECT * FROM users WHERE id = $1', ['11111111-aaaa-aaaa-aaaa-111111111111']);
+        const newBotUserFollowCount = botUser.rows[0].followers + 1;
+        
+        await pool.query(
+            'INSERT INTO user_followers (follower_id, following_id) VALUES ($1, $2)',
+            [results.rows[0].id, botUser.rows[0].id]
+        );
+
+        await pool.query('UPDATE users SET followers = $1 WHERE id = $2', [newBotUserFollowCount, botUser.rows[0].id]);
+
         res.status(201).json(results.rows);
     } catch (error) {
         console.error('Error creating user:', error);
@@ -73,6 +94,8 @@ export const loginUserWithConventional = async (req, res) => {
         if (!validPassword) {
             return res.status(400).json({ error: 'Invalid credentials' });
         };
+
+        await pool.query('UPDATE users SET last_login = $1 WHERE id = $2', [new Date().toISOString(), user.id]);
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '5h' });
         res.status(200).json({ token });

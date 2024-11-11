@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare, faSquareCheck } from '@fortawesome/free-solid-svg-icons';
+import AuthContext from "../../../context/AuthProvider.jsx";
 import LoadingScreen from "../LoadingScreen.jsx";
 import MessagePopup from "../MessagePopup.jsx";
 import CloseImg from "../../../assets/close.svg";
@@ -9,6 +10,7 @@ import LoginImg from "../../../assets/login.svg";
 import GithubImg from "../../../assets/github.svg";
 
 export default function SignUpModal({ toggleModal }) {
+    const { login } = useContext(AuthContext);
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
     const [focusedInput, setFocusedInput] = useState(null);
@@ -60,9 +62,7 @@ export default function SignUpModal({ toggleModal }) {
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log(data);
-
+                await response.json();
                 setMessage("User created successfully!");
 
                 setTimeout(() => {
@@ -80,6 +80,39 @@ export default function SignUpModal({ toggleModal }) {
 
         setLoading(false);
     };
+
+    const signupWithGithub = async () => {
+        const popup = window.open(
+            '/api/users/auth/github',
+            'GitHub Sign Up',
+            'width=800,height=600'
+        );
+    
+        const handleMessage = (event) => {    
+            const { token } = event.data;
+            if (token) {
+                toggleModal('sign-up');
+                login(token);
+    
+                popup.close();
+                window.removeEventListener('message', handleMessage);
+                setMessage("Successfully signed up with GitHub...");
+                setTimeout(() => {
+                    setMessage("");
+                }, 2000);
+            }
+        };
+    
+        window.addEventListener('message', handleMessage);
+    
+        const checkPopup = setInterval(() => {
+            if (!popup || popup.closed || popup.closed === undefined) {
+                clearInterval(checkPopup);
+                setMessage("Sign Up popup was blocked. Please allow popups and try again.");
+                window.removeEventListener('message', handleMessage);
+            }
+        }, 1000);
+    }; 
 
     return (
         <>
@@ -177,9 +210,9 @@ export default function SignUpModal({ toggleModal }) {
                         </button>
                     </form>
                     <div className="other-account-btns">
-                        <button type="button" className="github-account-btn">
+                        <button type="button" className="github-account-btn" onClick={signupWithGithub}>
                             <img src={GithubImg} alt="GitHub Logo" />
-                            <a className="github-link" href="http://localhost:8080/api/users/auth/github">Sign Up with GitHub</a>
+                            <p>Sign Up with GitHub</p>
                         </button>
 
                         <p>Already have an account? <button type="button" onClick={() => toggleModal('login', 'sign-up')}>Log in</button></p>

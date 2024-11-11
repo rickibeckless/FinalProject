@@ -228,3 +228,11 @@
 .challenge-card-button:active {
     transform: scale(1);
 }
+
+.challenge-card-footer-participants-join {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}

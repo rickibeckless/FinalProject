@@ -24,3 +24,8 @@ body,
     min-height: calc(100dvh - calc(11.7vh + 16vh));
     background-color: #ffffff;
 }
+
+::selection {
+    background-color: var(--sandy-brown);
+    color: #ffffff;
+}

@@ -1,17 +1,23 @@
 import express from "express";
-import {  } from "../controllers/upvoteControllers.js";
+import { 
+    getAllUpvotes,
+    getAllGivenUpvotesByUserId,
+    getAllReceivedUpvotesByUserId,
+    getAllUpvotesBySubmissionId,
+    getAllUpvotesByChallengeId,
+    handleUpvote
+} from "../controllers/upvoteControllers.js";
 
 const router = express.Router();
 
 // /api/upvotes
 
-router.get("/", ); // GET all upvotes
-router.get("/user/:userId", ); // GET all upvotes by user ID
-router.get("/submission/:submissionId", ); // GET all upvotes by submission ID
-router.get("/challenge/:challengeId", ); // GET all upvotes by challenge ID
+router.get("/", getAllUpvotes); // GET all upvotes
+router.get("/user/:userId/given", getAllGivenUpvotesByUserId); // GET all given upvotes by user ID
+router.get("/user/:userId/received", getAllReceivedUpvotesByUserId); // GET all received upvotes by user ID
+router.get("/submission/:submissionId", getAllUpvotesBySubmissionId); // GET all upvotes by submission ID
+router.get("/challenge/:challengeId", getAllUpvotesByChallengeId); // GET all upvotes by challenge ID
 
-router.post("/user/:userId/submission/:submissionId/create", ); // POST new upvote
-
-router.delete("/user/:userId/submission/:submissionId/delete", ); // DELETE upvote
+router.post("/:submissionId/upvote", handleUpvote); // Create or remove upvote
 
 export default router;

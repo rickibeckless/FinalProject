@@ -2,7 +2,16 @@ import express from "express";
 import passport from "passport";
 import rateLimit from 'express-rate-limit';
 import '../config/dotenv.js';
-import { getUsers, getUserById, createUserWithConventional, loginUserWithConventional, editUser, bookmarkChallenge, deleteUser } from "../controllers/userControllers.js";
+import { 
+    getUsers, 
+    getUserById, 
+    createUserWithConventional, 
+    loginUserWithConventional, 
+    editUser, 
+    bookmarkChallenge, 
+    deleteUser 
+} from "../controllers/userControllers.js";
+import { requireRole } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -43,17 +52,22 @@ router.get('/auth/github/logout', (req, res, next) => {
 
 router.get("/auth/github", passport.authenticate("github", { scope: ["read:user"] }));
 router.get("/auth/github/callback", passport.authenticate("github", { 
-    failureRedirect: "/auth/github/login/failed" 
+    failureRedirect: "/api/users/auth/github/login/failed",
 }),
     (req, res) => {
         const token = req.user.token;
-        res.redirect(`${process.env.FRONTEND_URL}?token=${token}`);
+        res.send(`
+            <script>
+                window.opener.postMessage({ token: "${token}" }, "${process.env.FRONTEND_URL}");
+                window.close();
+            </script>
+        `);
     }
 );
 
-router.patch("/:id/edit", editUser); // PATCH user
-router.patch("/:id/:challengeId/bookmark", bookmarkChallenge); // PATCH bookmark challenge
+router.patch("/:id/edit", requireRole(['admin', 'author']), editUser); // PATCH user
+router.patch("/:id/:challengeId/bookmark", requireRole(['admin', 'author']), bookmarkChallenge); // PATCH bookmark challenge
 
-router.delete("/:id/delete", deleteUser); // DELETE user
+router.delete("/:id/delete", requireRole(['admin', 'author']), deleteUser); // DELETE user
 
 export default router;

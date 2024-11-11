@@ -50,6 +50,7 @@
     font-size: 1rem;
     line-height: 1.6;
     color: var(--dark-text);
+    margin-top: 1rem;
 }
 
 /* List styles */

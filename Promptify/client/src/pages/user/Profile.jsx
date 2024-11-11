@@ -85,6 +85,18 @@ export default function Profile() {
                             <h2>Member Since</h2>
                             <p>{new Date(user?.date_created).toLocaleDateString()}</p>
                         </div>
+                        <div className="profile-info-item">
+                            <h2>Last log in</h2>
+                            <p>{new Date(user?.last_login).toLocaleDateString()}</p>
+                        </div>
+                        <div className="profile-info-item">
+                            <h2>Followers</h2>
+                            <p>{user?.followers}</p>
+                        </div>
+                        <div className="profile-info-item">
+                            <h2>Following</h2>
+                            <p>{user?.following}</p>
+                        </div>
                     </section>
                 ) : <p>Please log in or create an account to view your profile information.</p>}
             </main>
