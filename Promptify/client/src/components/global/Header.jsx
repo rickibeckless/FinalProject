@@ -29,6 +29,7 @@ export default function Header() {
     const [userWelcome, setUserWelcome] = useState("Welcome");
     const [userProfileImage, setUserProfileImage] = useState(UserProfileImg);
     const [userNotifications, setUserNotifications] = useState([]);
+    const [unreadNotifications, setUnreadNotifications] = useState([]);
 
     useEffect(() => { // runs once when the page loads
         setLoading(false); // set to false when done loading
@@ -47,6 +48,7 @@ export default function Header() {
         if (user) {
             setUserProfileImage(user.profile_picture_url);
             setUserNotifications(user.notifications);
+            setUnreadNotifications(user.notifications.filter(notification => notification.status === "unread"));
         };
     }, []); // the empty array means this effect will only run once
 
@@ -185,7 +187,7 @@ export default function Header() {
                             <div className="user-nav-image-holder">
                                 {userNotifications && userNotifications.length > 0 && 
                                     <div className="user-nav-notifications">
-                                        <p>{userNotifications.length}</p>
+                                        <p>{unreadNotifications.length}</p>
                                     </div>
                                 }
                                 <img className="user-nav-image" src={userProfileImage} alt={`${user?.username} profile image`} />

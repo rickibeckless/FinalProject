@@ -90,7 +90,7 @@ export const getNotificationsByNotificationId = async (req, res) => {
             WHERE id = $1 AND notification->>'id' = $2
         `, [userId, notificationId]);
 
-        await notificationCheck(results, res);
+        //await notificationCheck(results, res);
 
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'Notification not found' });
@@ -123,6 +123,27 @@ export const updateNotificationStatus = async (req, res) => {
 
         if (notification.rows.length === 0) {
             return res.status(404).json({ error: 'Notification not found' });
+        };
+
+        if (status === 'permanently_delete') {
+            const results = await pool.query(`
+                UPDATE users
+                SET notifications = (
+                    SELECT jsonb_agg(notification)
+                    FROM jsonb_array_elements(notifications) AS notification
+                    WHERE notification->>'id' != $2
+                )
+                WHERE id = $1
+                RETURNING notifications;
+            `, [userId, notificationId]);
+
+            await notificationCheck(results, res);
+
+            if (results.rowCount === 0) {
+                return res.status(404).json({ error: 'Notification not found' });
+            };
+
+            return res.status(200).json({ message: 'Notification permanently deleted' });
         };
 
         const results = await pool.query(`

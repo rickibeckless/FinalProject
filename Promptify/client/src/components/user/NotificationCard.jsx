@@ -33,7 +33,6 @@ export default function NotificationCard({ notificationId, toggleNotification })
             const data = await response.json();
 
             if (response.ok) {
-                console.log(data);
                 setNotification(data);
             } else {
                 console.error(data.error);
