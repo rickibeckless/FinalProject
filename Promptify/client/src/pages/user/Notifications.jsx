@@ -19,6 +19,8 @@ import MessagePopup from "../../components/global/MessagePopup.jsx";
 import SignUpModal from "../../components/global/modals/SignUp.jsx";
 import LoginModal from "../../components/global/modals/Login.jsx";
 
+import NotificationCard from "../../components/user/NotificationCard.jsx";
+
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
@@ -33,40 +35,49 @@ export default function Notifications() {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [showNotificationModal, setShowNotificationModal] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationId, setNotificationId] = useState("");
 
     const [notifications, setNotifications] = useState([]);
     const [tab, setTab] = useState("unread");
     const [unreadNotifications, setUnreadNotifications] = useState([]);
     const [readNotifications, setReadNotifications] = useState([]);
     const [deletedNotifications, setDeletedNotifications] = useState([]);
+    
+    async function fetchNotifications() {
+        try {
+            const response = await fetch(`/api/notifications/${user.id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                const rawData = await response.json();
+                const data = rawData[0].notifications;
+                setNotifications(data);
+
+                const unread = data.filter(notification => notification.status === "unread");
+                setUnreadNotifications(unread);
+
+                const read = data.filter(notification => notification.status === "read");
+                setReadNotifications(read);
+
+                const deleted = data.filter(notification => notification.status === "deleted");
+                setDeletedNotifications(deleted);
+            } else {
+                throw new Error("An error occurred");
+            };
+        } catch (error) {
+            console.error("Error fetching notifications:", error);
+            setMessage("An unexpected error occurred");
+        };
+    };
 
     useEffect(() => {
         if (token) {
-            setNotifications(user.notifications);
-
-            for (let i = 0; i < user.notifications.length; i++) {
-                if (user.notifications[i].status === "unread") {
-                    if (unreadNotifications.find(notification => notification.id === user.notifications[i].id)) {
-                        console.log("Notification already in unread notifications");
-                    } else {
-                        setUnreadNotifications([...unreadNotifications, user.notifications[i]]);
-                    };
-                } else if (user.notifications[i].status === "read") {
-                    if (readNotifications.find(notification => notification.id === user.notifications[i].id)) {
-                        console.log("Notification already in read notifications");
-                    } else {
-                        setReadNotifications([...readNotifications, user.notifications[i]]);
-                    };
-                } else if (user.notifications[i].status === "deleted") {
-                    if (deletedNotifications.find(notification => notification.id === user.notifications[i].id)) {
-                        console.log("Notification already in deleted notifications");
-                    } else {
-                        setDeletedNotifications([...deletedNotifications, user.notifications[i]]);
-                    };
-                };
-            };
-
+            fetchNotifications();
             setLoading(false);
         } else {
             setLoading(false);
@@ -98,14 +109,39 @@ export default function Notifications() {
     const handleTabChange = (e) => {
         const tab = e.target.value;
         setTab(tab);
+        setNotificationId("");
+        setShowNotification(false);
     };
 
-    const handleNotificationClick = (e) => {
+    const toggleNotification = (e) => {
         const notificationTitle = e.target.innerText;
         const notification = notifications.find(notification => notification.title === notificationTitle);
 
         if (notification) {
             console.log(notification);
+            setNotificationId(notification.id);
+            setShowNotification(!showNotification);
+        };
+    };
+
+    const markNotification = async (notificationId, status) => {
+        try {
+            const response = await fetch(`/api/notifications/${user.id}/${notificationId}/${status}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                fetchNotifications();
+                setMessage(`Notification marked as '${status}'`);
+            } else {
+                throw new Error("An error occurred");
+            };
+        } catch (error) {
+            console.error("Error updating notification status:", error);
+            setMessage("An unexpected error occurred");
         };
     };
 
@@ -125,99 +161,109 @@ export default function Notifications() {
                             <button type="button" className="notification-tab" value="deleted" onClick={(e) => handleTabChange(e)}>Deleted ({deletedNotifications.length})</button>
                         </div>
 
-                        {tab === "unread" && (
-                            <section id="unread-notifications-section">
-                                <h2>Unread Notifications</h2>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Notification</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {unreadNotifications.length > 0 ? unreadNotifications.map((notification, index) => (
-                                            <tr key={index}>
-                                                <td onClick={(e) => handleNotificationClick(e)}>{notification.title}</td>
-                                                <td>{notification.date_created}</td>
-                                                <td>
-                                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'read')}>Mark as Read</button>
-                                                    <button type="button" className="notification-action" onClick={() => deleteNotification(notification.id)}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        )) : (
+                        <section className="left-notification-holder">
+                            {tab === "unread" && (
+                                <section id="unread-notifications-section">
+                                    <h2>Unread Notifications</h2>
+                                    <table>
+                                        <thead>
                                             <tr>
-                                                <td colSpan="3">No unread notifications</td>
+                                                <th>Notification</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </section>
-                        )}
+                                        </thead>
+                                        <tbody>
+                                            {unreadNotifications.length > 0 ? unreadNotifications.map((notification, index) => (
+                                                <tr key={index}>
+                                                    <td onClick={(e) => toggleNotification(e)}>{notification.title}</td>
+                                                    <td>{notification.date_created}</td>
+                                                    <td>
+                                                        <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'read')}>Mark as Read</button>
+                                                        <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'delete')}>Delete</button>
+                                                    </td>
+                                                </tr>
+                                            )) : (
+                                                <tr>
+                                                    <td colSpan="3">No unread notifications</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </section>
+                            )}
 
-                        {tab === "read" && (
-                            <section id="read-notifications-section">
-                                <h2>Read Notifications</h2>
-                                
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Notification</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {readNotifications.length > 0 ? readNotifications.map((notification, index) => (
-                                            <tr key={index}>
-                                                <td>{notification.title}</td>
-                                                <td>{notification.date_created}</td>
-                                                <td>
-                                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Mark as Unread</button>
-                                                    <button type="button" className="notification-action" onClick={() => deleteNotification(notification.id)}>Delete</button>
-                                                </td>
-                                            </tr>
-                                        )) : (
+                            {tab === "read" && (
+                                <section id="read-notifications-section">
+                                    <h2>Read Notifications</h2>
+                                    
+                                    <table>
+                                        <thead>
                                             <tr>
-                                                <td colSpan="3">No read notifications</td>
+                                                <th>Notification</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </section>
-                        )}
+                                        </thead>
+                                        <tbody>
+                                            {readNotifications.length > 0 ? readNotifications.map((notification, index) => (
+                                                <tr key={index}>
+                                                    <td>{notification.title}</td>
+                                                    <td>{notification.date_created}</td>
+                                                    <td>
+                                                        <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Mark as Unread</button>
+                                                        <button type="button" className="notification-action" onClick={() => deleteNotification(notification.id)}>Delete</button>
+                                                    </td>
+                                                </tr>
+                                            )) : (
+                                                <tr>
+                                                    <td colSpan="3">No read notifications</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </section>
+                            )}
 
-                        {tab === "deleted" && (
-                            <section id="deleted-notifications-section">
-                                <h2>Deleted Notifications</h2>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Notification</th>
-                                            <th>Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {deletedNotifications.length > 0 ? deletedNotifications.map((notification, index) => (
-                                            <tr key={index}>
-                                                <td>{notification.title}</td>
-                                                <td>{notification.date_created}</td>
-                                                <td>
-                                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Mark as Unread</button>
-                                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'read')}>Mark as Read</button>
-                                                </td>
-                                            </tr>
-                                        )) : (
+                            {tab === "deleted" && (
+                                <section id="deleted-notifications-section">
+                                    <h2>Deleted Notifications</h2>
+                                    <table>
+                                        <thead>
                                             <tr>
-                                                <td colSpan="3">No deleted notifications</td>
+                                                <th>Notification</th>
+                                                <th>Date</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </section>
-                        )}
+                                        </thead>
+                                        <tbody>
+                                            {deletedNotifications.length > 0 ? deletedNotifications.map((notification, index) => (
+                                                <tr key={index}>
+                                                    <td>{notification.title}</td>
+                                                    <td>{notification.date_created}</td>
+                                                    <td>
+                                                        <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Mark as Unread</button>
+                                                        <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'read')}>Mark as Read</button>
+                                                    </td>
+                                                </tr>
+                                            )) : (
+                                                <tr>
+                                                    <td colSpan="3">No deleted notifications</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </section>
+                            )}                            
+                        </section>
+
+                        <section className="right-notification-holder">
+                            {showNotification ? (
+                                <NotificationCard notificationId={notificationId} toggleNotification={toggleNotification} />
+                            ) : (
+                                <p>Select a notification to view details</p>
+                            )}
+                        </section>
                     </>
                 ) : <p>Please log in or create an account to view your notifications.</p>}
             </main>

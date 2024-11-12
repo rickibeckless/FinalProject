@@ -15,16 +15,19 @@ export default function Home() {
         setLoading(false);
     }, []);
 
-    // if the user is logged in, redirect them to their `your challenges` page
-    // get all challenges, splice the first 3, use the challenges card component to display them
-    // write out a list of features and how it works
-    // decide if the how section should be on this page
-    // decide if the last three sections should be a carousel or just a list
-    // want to make at least one of the sections a carousel
-    // create a left aside for the user to navigate to the different sections
-        // this will be the same kind of aside that will be on the:
-            // settings page
-            // your challenges page
+    /**
+     * @rickibeckless
+     * if the user is logged in, redirect them to their `your challenges` page
+     * get all challenges, splice the first 3, use the challenges card component to display them
+     * write out a list of features and how it works
+     * decide if the how section should be on this page
+     * decide if the last three sections should be a carousel or just a list
+     * want to make at least one of the sections a carousel
+     * create a left aside for the user to navigate to the different sections
+     *  - this will be the same kind of aside that will be on the:
+     *      - settings page
+     *      - your challenges page
+    */
 
     return (
         <>
@@ -34,8 +37,13 @@ export default function Home() {
             <main id="home-body" className="container">
                 <section id="hero" className="home-section">
                     <div id="hero-left">
-                        <h1>Welcome to Promptify</h1>
-                        <p>Start writing today with our writing challenges</p>
+                        <h1>Unlock Your Creativity with Promptify</h1>
+                        <p>
+                            Discover fresh inspiration, tackle exciting 
+                            writing challenges, and connect with a community 
+                            of writers. Start your journey today and turn 
+                            your ideas into stories!
+                        </p>
 
                         <div className="hero-buttons account-links">
                             <Link className="account-link" to="/challenges">Current Challenges</Link>

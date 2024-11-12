@@ -68,28 +68,31 @@ export const createSubmission = async (req, res) => {
             return res.status(400).json({ error: 'Submission could not be created' });
         };
 
-        await pool.query('UPDATE challenges SET submission_count = submission_count + 1 WHERE id = $1', [challengeId]);
-        await pool.query('UPDATE users SET completed_challenges = completed_challenges + 1 WHERE id = $1', [userId]);
+        await pool.query('UPDATE challenges SET participation_count = participation_count + 1 WHERE id = $1', [challengeId]);
+        await pool.query('UPDATE users SET completed_challenges = completed_challenges + 1, points = points + 50 WHERE id = $1', [userId]);
 
         let automaticComment;
+        let username = user.rows[0].username;
 
-        if (user.rows[0].completed_challenges === 1) {
+        if (user.rows[0].completed_challenges <= 1) {
             automaticComment = {
                 parent_comment_id: null,
                 user_id: '11111111-aaaa-aaaa-aaaa-111111111111',
                 submission_id: results.rows[0].id,
-                content: `Congratulations on submitting your first story, ${user.username}! We hope you had fun writing it. Good luck!`,
+                content: `Congratulations on submitting your first story, ${username}! We hope you had fun writing it. Good luck!`,
             };
         } else {
             automaticComment = {
                 parent_comment_id: null,
                 user_id: '11111111-aaaa-aaaa-aaaa-111111111111',
                 submission_id: results.rows[0].id,
-                content: `Congratulations on submitting your story, ${user.username}! We hope you had fun writing it. Good luck!`,
+                content: `Congratulations on submitting your story, ${username}! We hope you had fun writing it. Good luck!`,
             };
         };
 
         await pool.query('INSERT INTO comments (parent_comment_id, user_id, submission_id, content) VALUES ($1, $2, $3, $4)', [automaticComment.parent_comment_id, automaticComment.user_id, automaticComment.submission_id, automaticComment.content]);
+
+        // TODO: update user badges
 
         res.status(201).json(results.rows);
     } catch (error) {

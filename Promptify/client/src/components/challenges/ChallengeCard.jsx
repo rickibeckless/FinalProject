@@ -130,7 +130,6 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
 
                 if (data.length > 0) {
                     setUserInChallenge(true);
-                    console.log(`User is in challenge: ${challenge.id}`);
                 };
             };
         };

@@ -7,5 +7,6 @@ import challengeRoutes from "./challengeRoutes.js";
 import submissionRoutes from "./submissionRoutes.js";
 import commentRoutes from "./commentRoutes.js";
 import upvoteRoutes from "./upvoteRoutes.js";
+import notificationRoutes from "./notificationRoutes.js";
 
-export { defaultRoutes, userRoutes, challengeRoutes, submissionRoutes, commentRoutes, upvoteRoutes };
+export { defaultRoutes, userRoutes, challengeRoutes, submissionRoutes, commentRoutes, upvoteRoutes, notificationRoutes };

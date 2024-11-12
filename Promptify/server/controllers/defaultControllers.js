@@ -21,6 +21,7 @@ export const resetFullDatabase = async (req, res) => {
         await pool.query('DELETE FROM challenges WHERE id != $1 AND id != $2 AND id != $3', baseChallengeIds);
         await pool.query('DELETE FROM submissions WHERE id != $1', baseSubmissionIds);
         await pool.query('DELETE FROM comments WHERE id != $1', baseCommentIds);
+        await pool.query('DELETE FROM user_followers WHERE follower_id != $1 AND following_id != $2', baseUserIds);
         await pool.query('DELETE FROM upvotes');
 
         checkAndSetBaseData();
@@ -254,14 +255,16 @@ export const createDefaultUsers = async (req, res) => {
         const all_users = [...users, ...users_two];
         
         for (const user of all_users) {
-            // check if username, email, or id already exists
-            const check = [user.username, user.email, user.id].map(async (field) => {
-                return await pool.query('SELECT * FROM users WHERE $1 = $2', [field, user[field]]);
-            });
-
-            if (check.includes(true)) {
+            const check = await Promise.all([
+                pool.query('SELECT * FROM users WHERE username = $1', [user.username]),
+                pool.query('SELECT * FROM users WHERE email = $1', [user.email]),
+                pool.query('SELECT * FROM users WHERE id = $1', [user.id])
+            ]);
+            
+            if (check.some(result => result.rows.length > 0)) {
+                await pool.query('UPDATE users SET following = following + 1 WHERE id = $1', [user.id]);
                 return res.status(400).json({ error: 'User already exists' });
-            };
+            }
 
             const salt = await bcrypt.genSalt(10);
             const hashedPassword = await bcrypt.hash(user.password, salt);
@@ -282,6 +285,8 @@ export const createDefaultUsers = async (req, res) => {
 
             const botUser = await pool.query('SELECT * FROM users WHERE id = $1', ['11111111-aaaa-aaaa-aaaa-111111111111']);
             const newBotUserFollowCount = botUser.rows[0].followers + 1;
+
+            await pool.query('UPDATE users SET following = following + 1 WHERE id = $1', [user.id]);
 
             await pool.query('INSERT INTO user_followers (follower_id, following_id) VALUES ($1, $2)', [user.id, botUser.rows[0].id]);
 

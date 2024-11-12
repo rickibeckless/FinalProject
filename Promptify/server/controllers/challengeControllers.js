@@ -1,14 +1,13 @@
 import { pool } from '../config/database.js';
 
-export const getChallenges = async (req, res) => {
+const challengeCheck = async (results, res) => {
     try {
-        const results = await pool.query('SELECT * FROM challenges');
-
-        const now = new Date();
-        const updates = [];
+        let updates = [];
 
         for (let i = 0; i < results.rows.length; i++) {
             const challenge = results.rows[i];
+
+            const now = new Date();
             let status;
 
             const timeToStart = new Date(challenge.start_date_time) - now;
@@ -21,19 +20,77 @@ export const getChallenges = async (req, res) => {
                 status = 'in-progress';
             } else if (timeToScore > 0) {
                 status = 'scoring';
+                await challengeScoring(challenge, res);
             } else {
                 status = 'ended';
             }
 
+            const participationResults = await pool.query('SELECT COUNT(*) FROM submissions WHERE challenge_id = $1', [challenge.id]);
+
             updates.push({
                 id: challenge.id,
-                status: status
+                status: status,
+                participationCount: participationResults.rows[0].count
             });
         };
 
         for (const update of updates) {
-            await pool.query('UPDATE challenges SET status = $1 WHERE id = $2', [update.status, update.id]);
+            await pool.query('UPDATE challenges SET status = $1, participation_count = $2 WHERE id = $3', [update.status, update.participationCount, update.id]);
         };
+    } catch (error) {
+        console.error('Error checking challenge:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+const challengeScoring = async (challenge, res) => {
+    try {
+        console.log("handling scoring for challenge:", challenge);
+    } catch (error) {
+        console.error('Error scoring challenge:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const getChallenges = async (req, res) => {
+    try {
+        const results = await pool.query('SELECT * FROM challenges');
+
+        // const now = new Date();
+        // const updates = [];
+
+        // for (let i = 0; i < results.rows.length; i++) {
+        //     const challenge = results.rows[i];
+        //     let status;
+
+        //     const timeToStart = new Date(challenge.start_date_time) - now;
+        //     const timeToEnd = new Date(challenge.end_date_time) - now;
+        //     const timeToScore = new Date(challenge.end_date_time) + 3600000 - now;
+
+        //     if (timeToStart > 0) {
+        //         status = 'upcoming';
+        //     } else if (timeToEnd > 0) {
+        //         status = 'in-progress';
+        //     } else if (timeToScore > 0) {
+        //         status = 'scoring';
+        //     } else {
+        //         status = 'ended';
+        //     }
+
+        //     const participationResults = await pool.query('SELECT COUNT(*) FROM submissions WHERE challenge_id = $1', [challenge.id]);
+
+        //     updates.push({
+        //         id: challenge.id,
+        //         status: status,
+        //         participationCount: participationResults.rows[0].count
+        //     });
+        // };
+
+        // for (const update of updates) {
+        //     await pool.query('UPDATE challenges SET status = $1, participation_count = $2 WHERE id = $3', [update.status, update.participationCount, update.id]);
+        // };
+
+        await challengeCheck(results, res);
 
         res.status(200).json(results.rows);
     } catch (error) {
@@ -45,12 +102,14 @@ export const getChallenges = async (req, res) => {
 export const getChallengeById = async (req, res) => {
     try {
         const results = await pool.query('SELECT * FROM challenges WHERE id = $1', [req.params.id]);
-        res.status(200).json(results.rows);
-
+        
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'Challenge not found' });
         };
 
+        await challengeCheck(results, res);
+        
+        res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching challenge by ID:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });

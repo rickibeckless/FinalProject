@@ -17,7 +17,7 @@ router.get("/user/:userId", getSubmissionsByUserId); // GET all submissions by u
 router.get("/challenge/:challengeId", getSubmissionsByChallengeId); // GET all submissions by challenge ID
 router.get("/user/:userId/challenge/:challengeId", getSubmissionByUserIdAndChallengeId); // GET submission by user ID and challenge ID
 
-router.post("/user/:userId/challenge/:challengeId/create", createSubmission); // POST new submission
+router.post("/:userId/:challengeId/create", createSubmission); // POST new submission
 
 router.patch("/user/:userId/challenge/:challengeId/edit", requireRole(['admin', 'author']), editSubmission); // PATCH submission
 

@@ -4,9 +4,39 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { authSession, passport } from '../middleware/auth.js';
 
+const userCheck = async (results, res) => {
+    try {
+        let updates = [];
+
+        for (let i = 0; i < results.rows.length; i++) {
+            const user = results.rows[i];
+            const followers = await pool.query('SELECT COUNT(*) FROM user_followers WHERE following_id = $1', [user.id]);
+            const following = await pool.query('SELECT COUNT(*) FROM user_followers WHERE follower_id = $1', [user.id]);
+            const completedChallenges = await pool.query('SELECT COUNT(*) FROM submissions WHERE author_id = $1', [user.id]);
+
+            updates.push({
+                id: user.id,
+                followers: followers.rows[0].count,
+                following: following.rows[0].count,
+                completedChallenges: completedChallenges.rows[0].count
+            });
+        };
+
+        for (const update of updates) {
+            await pool.query('UPDATE users SET followers = $1, following = $2, completed_challenges = $3 WHERE id = $4', [update.followers, update.following, update.completedChallenges, update.id]);
+        };
+    } catch (error) {
+        console.error('Error checking user:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
 export const getUsers = async (req, res) => {
     try {
         const results = await pool.query('SELECT * FROM users');
+
+        await userCheck(results, res);
+
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -21,6 +51,8 @@ export const getUserById = async (req, res) => {
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         };
+
+        await userCheck(results, res);
         
         res.status(200).json(results.rows);
     } catch (error) {

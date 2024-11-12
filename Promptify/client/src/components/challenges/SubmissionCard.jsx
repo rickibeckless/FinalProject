@@ -118,6 +118,10 @@ export default function SubmissionCard({ challenge, submission }) {
 
     const splicedContent = `${submission.content.slice(0, 300)}...`;
 
+    const removeHTMLTags = (str) => {
+        return str.replace(/<[^>]*>?/gm, '');
+    };
+
     return (
         <li className="submission-card">
             <div className="submission-card-header">
@@ -137,14 +141,14 @@ export default function SubmissionCard({ challenge, submission }) {
                 <p>{submission.character_count} characters</p>
             </div>
 
-            <div className="submission-card-content">
+            <div className="submission-card-content-holder">
                 {/**
                 * TODO:
                 * - Show submission description
                 * - Show spliced submission content
                 */}
-                <p>{submission.summary}</p>
-                <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(splicedContent) }}></div>
+                <p className="submission-card-summary">{submission.summary}</p>
+                <p className="submission-card-content">{removeHTMLTags(splicedContent)}</p>
             </div>
 
             <div className="submission-card-footer">
