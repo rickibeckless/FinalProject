@@ -1,0 +1,30 @@
+.current-filters-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    margin: 2vh auto;
+    padding: 0;
+
+    width: 90%;
+    list-style-type: none;
+}
+
+.filter-tag {
+    background-color: var(--black-olive);
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 4px 10px;
+    font-size: 0.9em;
+    color: var(--light-olive);
+    cursor: pointer;
+    
+    transition: all 0.3s ease-in-out;
+}
+
+.filter-tag:hover {
+    background-color: var(--light-olive);
+    color: var(--black-olive);
+}

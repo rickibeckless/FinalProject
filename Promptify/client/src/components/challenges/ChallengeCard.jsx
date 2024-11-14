@@ -25,7 +25,7 @@ import BookmarkImg from "../../assets/bookmark.svg";
 import BookmarkFilledImg from "../../assets/bookmark_filled.svg";
 import AuthorImg from "../../assets/imgs/blank_profile_picture.png";
 
-export default function ChallengeCard({ sortBy, challenge, index }) {
+export default function ChallengeCard({ challenge }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState(null);
     const [authorProfilePicture, setAuthorProfilePicture] = useState(AuthorImg);
@@ -36,8 +36,6 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
     const [formattedDate, setFormattedDate] = useState(null);
     const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
     const [showPointsDetails, setShowPointsDetails] = useState(false);
-
-    // TODO: Replace filter input checkboxes with custom checkboxes
 
     const navigate = useNavigate(); // used to navigate to a different page
 
@@ -143,11 +141,13 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
         if (user) {
             const response = await fetch(`/api/users/${user.id}/${challenge.id}/bookmark`, {
                 method: "PATCH",
+                headers: {
+                    role: user ? "author" : "none",
+                },
             });
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data);
                 setBookmarkedChallenge(!bookmarkedChallenge);
             } else {
                 console.error("Error bookmarking challenge");
@@ -164,6 +164,25 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
             setShowPointsDetails(true);
         }
     };
+
+    const calculatePoints = (points) => {
+        // first place: 50% of available points
+        // second place: 30% of available points
+        // third place: 20% of available points
+
+        // if there are less than 3 participants, the points will be split evenly between the participants
+        // if there is a tie, each participant will receive the same amount of points
+
+        // if (challenge.participation_count <= 1) {
+        //     return `You can get up to ${points}pts!`;
+        // } else if (challenge.participation_count < 3) {
+        //     return `${Math.floor(points / challenge.participation_count)}pts each`;
+        // } else if (challenge.participation_count >= 3) {
+        //     return `1st: ${Math.floor(points * 0.5)}pts | 2nd: ${Math.floor(points * 0.3)}pts | 3rd: ${Math.floor(points * 0.2)}pts`;
+        // };
+        
+        return `1st: ${Math.floor(points * 0.5)}pts | 2nd: ${Math.floor(points * 0.3)}pts | 3rd: ${Math.floor(points * 0.2)}pts`;
+    }
 
     return (
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
@@ -184,7 +203,11 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
 
                 <div className="challenge-card-section">
                     <h2 className="challenge-card-name">{challenge.name}</h2>
-                    <p className="challenge-card-dates">{new Date(challenge.start_date_time).toLocaleDateString()} - {new Date(challenge.end_date_time).toLocaleDateString()}</p>
+                    <div className="challenge-card-dates">
+                        <span>{new Date(challenge.start_date_time).toLocaleDateString()}</span>
+                        —
+                        <span>{new Date(challenge.end_date_time).toLocaleDateString()}</span>
+                    </div>
                 </div>
 
                 <div className="challenge-card-author-holder">
@@ -196,7 +219,7 @@ export default function ChallengeCard({ sortBy, challenge, index }) {
                     <p className="points">{challenge.available_points}pts</p>
                 </div>
                 <div className={`points-details-holder ${showPointsDetails ? 'shown' : ''}`}>
-                    <p className={`points-details ${showPointsDetails ? 'shown' : ''}`}>You can get up to {challenge.available_points} points!</p>
+                    <p className={`points-details ${showPointsDetails ? 'shown' : ''}`}>{calculatePoints(challenge.available_points)}</p>
                 </div>
 
                 <div className="challenge-card-tags-holder">

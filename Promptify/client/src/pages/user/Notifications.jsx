@@ -6,6 +6,7 @@
 // general imports
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
@@ -26,6 +27,7 @@ import NotificationTable from "../../components/user/NotificationTable.jsx";
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
 export default function Notifications() {
+    const socket = io(import.meta.env.VITE_BACKEND_URL); // connect to the server's socket
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
@@ -44,6 +46,16 @@ export default function Notifications() {
     const [unreadNotifications, setUnreadNotifications] = useState([]);
     const [readNotifications, setReadNotifications] = useState([]);
     const [deletedNotifications, setDeletedNotifications] = useState([]);
+
+    if (user) {
+        socket.on('receive-notification', (data) => {
+            if (data.userId === user.id && data.status === "unread") {
+                setUnreadNotifications([...unreadNotifications, data]);
+            } else if (data.userId === user.id && data.status !== "unread") {
+                setUnreadNotifications(unreadNotifications.filter(notification => notification.notificationId !== data.notificationId));
+            }
+        });
+    };
     
     async function fetchNotifications() {
         try {

@@ -9,6 +9,7 @@
     z-index: 1000;
 
     height: 11.7vh;
+    min-height: max-content;
 
     display: grid;
     grid-template-columns: minmax(200px, 20vw) 2fr;
@@ -177,7 +178,7 @@
 }
 
 .account-links .account-link {
-    border: 2px solid var(--dark-text);
+    border: 2px solid var(--verdigris);
     border-radius: 5px;
     background-color: var(--black-olive);
     color: var(--light-olive);
@@ -188,6 +189,7 @@
 .account-links .account-link:hover {
     background-color: var(--verdigris);
     color: var(--black-olive);
+    border-color: var(--black-olive);
 }
 
 .nav-link-text {

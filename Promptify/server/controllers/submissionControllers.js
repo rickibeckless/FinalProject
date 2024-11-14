@@ -62,6 +62,8 @@ export const createSubmission = async (req, res) => {
         const word_count = content.split(' ').length;
         const character_count = content.length;
 
+        console.log(req.body);
+
         const results = await pool.query('INSERT INTO submissions (author_id, challenge_id, title, summary, content, genre, word_count, character_count, started_at, submitted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *', [userId, challengeId, title, summary, content, genre, word_count, character_count, started_at, submitted_at]);
 
         if (results.rows.length === 0) {

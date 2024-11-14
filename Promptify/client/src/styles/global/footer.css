@@ -5,6 +5,7 @@
     padding: 1.5rem 0;
     text-align: center;
     height: 16vh;
+    min-height: max-content;
 }
 
 #footer-navbar ul {

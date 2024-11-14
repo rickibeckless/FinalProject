@@ -33,6 +33,14 @@
     align-items: center;
 }
 
+.challenge-card-dates {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+}
+
 .challenge-card-name {
     font-size: 1.4rem;
     color: var(--black-olive);
@@ -117,7 +125,7 @@
 }
 
 .points-details-holder.shown {
-    width: 16rem;
+    width: 18rem;
 }
 
 .points-details-holder .points-details {

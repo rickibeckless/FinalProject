@@ -1,8 +1,16 @@
+/* Home Section Styles */
+
 .home-section {
     min-height: 85vh;
     margin: 1vw 4vw 4vw;
     padding: 2vw;
 }
+
+.home-section > * {
+    margin-bottom: 2vw;
+}
+
+/* Hero Section Styles */
 
 #hero {
     display: grid;
@@ -13,7 +21,7 @@
 
     border-radius: 5px;
     border: 2px solid #083c68;
-    background-color: #fedb4152;
+    background-color: var(--transparent-naples-yellow);
 }
 
 #hero-left {
@@ -51,5 +59,77 @@
     object-fit: cover;
     object-position: center;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 10px 0px #00000033;
+}
+
+/* Section List Styles */
+.home-section .home-section-header {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--black-olive);
+    text-align: center;
+
+    font-family: var(--font-family-cutive-mono);
+}
+
+.home-section .section-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 4vw;
+    justify-items: center;
+    align-items: center;
+}
+
+/* Section Card Styles */
+.section-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+
+    height: 60vh;
+    padding: 1rem;
+
+    border-radius: 5px;
+    border: 2px solid #083c68;
+    box-shadow: 0 4px 10px #0000001a;
+
+    font-family: var(--font-family-cutive-mono);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+
+    transition: all 0.3s;
+}
+
+.section-card:nth-child(even) {
+    background-color: var(--transparent-olive);
+}
+
+.section-card:nth-child(odd) {
+    background-color: var(--transparent-naples-yellow);
+}
+
+.section-card:hover {
+    transform: scale(1.05);
+    box-shadow: 2px 2px 12px 2px #4c4c4c70;
+}
+
+.section-card p {
+    font-size: 1.05rem;
+    font-weight: 300;
+}
+
+.section-card ul {
+    font-size: 1rem;
+    font-weight: 400;
+    margin: 0.5rem auto;
+    list-style: inside square;
+
+    width: 80%;
+}
+
+.section-card ul li {
+    margin: 0.5rem;
+    text-align: left;
 }

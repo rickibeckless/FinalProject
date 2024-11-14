@@ -41,17 +41,20 @@ export default function NotificationTable({ selectedNotifications, toggleNotific
                         <td onClick={(e) => toggleNotification(e)}>{notification.title}</td>
                         <td>{notification.date_created}</td>
                         <td>
-                            {notification.status !== 'read' && (
+                            {notification.status === 'unread' && (
                                 <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'read')}>Mark as Read</button>
                             )}
-                            {notification.status !== 'unread' && (
+                            {notification.status === 'read' && (
                                 <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Mark as Unread</button>
                             )}
                             {notification.status !== 'delete' && (
                                 <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'delete')}>Delete</button>
                             )}
                             {notification.status === 'delete' && (
-                                <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'permanently_delete')}>Permanently Delete</button>
+                                <>
+                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'unread')}>Restore</button>
+                                    <button type="button" className="notification-action" onClick={() => markNotification(notification.id, 'permanently_delete')}>Permanently Delete</button>
+                                </>
                             )}
                         </td>
                     </tr>

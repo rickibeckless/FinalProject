@@ -250,6 +250,7 @@ export default function JoinChallenge() {
         clearInterval(timer);
         const now = new Date();
         const formattedDateTime = now.toISOString();
+        console.log(formattedDateTime);
         setEndDateTime(formattedDateTime);
 
         const submission = {

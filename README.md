@@ -57,7 +57,8 @@ Each user has a personalized profile that showcases their writing, including com
 Users can create and participate in a variety of writing challenges and prompts. Challenges can cover different styles (poetry, short-story), genres (creative, fantasy, non-fiction, thriller), and limitations (timed writing, required phrases, word or character count restrictions).
 - *challenges are automatically ended, and final votes are calculated, with notifications sent to the winning users.*
 
-[gif goes here]
+#### Challenge Creation/GET Gif
+![challenge creation gif](./project_demos/features/create_challenge.gif)
 
 ### ✅ Challenge Labels/Tagging
 
@@ -65,15 +66,17 @@ Users can create and participate in a variety of writing challenges and prompts.
 
 To enhance discoverability, all challenges are labeled with skill levels (Beginner, Intermediate, Advanced), genre tags, and (if applicable) a limitation tag. This system allows users to quickly find prompts that align with their interests and skill sets.
 
-[gif goes here]
+#### Challenge Tags Gif
+![challenge tags gif](./project_demos/features/challenge_filters.gif)
 
-### Time-Restricted Challenges
+### ✅ Time-Restricted Challenges
 
 Challenges are given time limits that specify when the challenge begins and how long it will be active. Users participating in the challenge must submit their responses within the allotted timeframe. After the challenge ends, there will be a short time for final votes before the winner is declared.
 
-[gif goes here]
+#### Timed Challenge Gif
+![timed challenge gif](./project_demos/features/timed_challenge.gif)
 
-### Commenting and Voting System
+### ✅ Commenting and Voting System
 
 > This feature incorporates a many-to-many relationship with a join table (votes) between users and submissions, meeting database relationship requirements.
 
@@ -85,7 +88,7 @@ Engagement is encouraged through a voting system where users can upvote their fa
 
 [gif goes here]
 
-### User Notifications
+### ✅ User Notifications
 
 To keep users informed and engaged, the app provides personalized notifications for new challenges, comments and votes on their submissions, and when a challenge they participated in final votes are published.
 - *users can choose what new challenges to be notified of, by default they are not notified of new challenges.*

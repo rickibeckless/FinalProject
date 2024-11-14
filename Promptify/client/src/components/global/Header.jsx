@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
+import { io } from 'socket.io-client'; // used to connect to the server's socket
 import AuthContext from "../../context/AuthProvider.jsx";
 import SignUpModal from "./modals/SignUp.jsx";
 import LoginModal from "./modals/Login.jsx";
@@ -16,6 +17,7 @@ import BoxQuestionImg from "../../assets/box_question.svg";
 import UserProfileImg from "../../assets/imgs/blank_profile_picture.png";
 
 export default function Header() {
+    const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false }); // connect to the server's socket
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -28,8 +30,42 @@ export default function Header() {
 
     const [userWelcome, setUserWelcome] = useState("Welcome");
     const [userProfileImage, setUserProfileImage] = useState(UserProfileImg);
-    const [userNotifications, setUserNotifications] = useState([]);
     const [unreadNotifications, setUnreadNotifications] = useState([]);
+
+    // if (user) {
+    //     socket.on('receive-notification', (data) => {
+    //         if (data.userId === user.id && data.status === "unread") {
+    //             setUnreadNotifications([...unreadNotifications, data]);
+    //         } else if (data.userId === user.id && data.status !== "unread") {
+    //             setUnreadNotifications(unreadNotifications.filter(notification => notification.notificationId !== data.notificationId));
+    //         }
+    //     });
+    // };
+
+    useEffect(() => {
+        if (user) {
+            socket.connect();
+
+            const handleReceiveNotification = (data) => {
+                if (data.userId === user.id) {
+                    setUnreadNotifications((prevNotifications) => {
+                        if (data.status === "unread") {
+                            return [...prevNotifications, data];
+                        } else {
+                            return prevNotifications.filter(notification => notification.notificationId !== data.notificationId);
+                        }
+                    });
+                }
+            };
+
+            socket.on('receive-notification', handleReceiveNotification);
+
+            return () => {
+                socket.off('receive-notification', handleReceiveNotification);
+                socket.disconnect();
+            };
+        }
+    }, [user]);
 
     useEffect(() => { // runs once when the page loads
         setLoading(false); // set to false when done loading
@@ -47,10 +83,9 @@ export default function Header() {
 
         if (user) {
             setUserProfileImage(user.profile_picture_url);
-            setUserNotifications(user.notifications);
             setUnreadNotifications(user.notifications.filter(notification => notification.status === "unread"));
         };
-    }, []); // the empty array means this effect will only run once
+    }, [user]);
 
     useEffect(() => {
         setOpenNavDropdown(null);
@@ -185,7 +220,7 @@ export default function Header() {
                                 </li>
                             </li>
                             <div className="user-nav-image-holder">
-                                {userNotifications && userNotifications.length > 0 && 
+                                {unreadNotifications && unreadNotifications.length > 0 && 
                                     <div className="user-nav-notifications">
                                         <p>{unreadNotifications.length}</p>
                                     </div>

@@ -1,12 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=League+Script&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap');
 
 /* Global Font Families */
 :root {
     --font-family-poppins: 'Poppins', Arial, Helvetica, sans-serif;
     --font-family-league-script: 'League Script', cursive;
     --font-family-cutive-mono: 'Cutive Mono', monospace;
+    --font-family-dancing-script: 'Dancing Script', cursive;
 }
 
 /* Global Reset Styles */
@@ -16,6 +18,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: var(--font-family-poppins);
+    scrollbar-color: var(--sandy-brown) transparent;
 }
 
 body,

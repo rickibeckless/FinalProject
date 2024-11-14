@@ -1,4 +1,5 @@
 import { pool } from '../config/database.js';
+import { io } from '../server.js';
 import { v4 as uuidv4 } from 'uuid';
 
 const notificationCheck = async (results, res) => {
@@ -103,14 +104,6 @@ export const getNotificationsByNotificationId = async (req, res) => {
     };
 }
 
-export const editNotification = async (req, res) => {
-    try {
-        
-    } catch (error) {
-        
-    };
-};
-
 export const updateNotificationStatus = async (req, res) => {
     try {
         const { userId, notificationId, status } = req.params;
@@ -168,6 +161,8 @@ export const updateNotificationStatus = async (req, res) => {
             return res.status(404).json({ error: 'Notification not found' });
         };
 
+        io.emit('receive-notification', { userId, notificationId, status });
+
         res.status(200).json({ message: 'Notification status updated' });
     } catch (error) {
         console.error('Error updating notification status:', error);
@@ -209,6 +204,7 @@ export const sendNotificationToUser = async (req, res) => {
             `, [JSON.stringify(notification), recipientId]);
 
             await notificationCheck(results, res);
+            io.emit('receive-notification', { userId: recipientId, notification, status: 'unread' });
         };
 
         res.status(201).json({ message: 'Notification sent' });

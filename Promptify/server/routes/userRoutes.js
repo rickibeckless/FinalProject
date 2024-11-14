@@ -66,7 +66,7 @@ router.get("/auth/github/callback", passport.authenticate("github", {
 );
 
 router.patch("/:id/edit", requireRole(['admin', 'author']), editUser); // PATCH user
-router.patch("/:id/:challengeId/bookmark", requireRole(['admin', 'author']), bookmarkChallenge); // PATCH bookmark challenge
+router.patch("/:id/:challengeId/bookmark", requireRole(['author']), bookmarkChallenge); // PATCH bookmark challenge
 
 router.delete("/:id/delete", requireRole(['admin', 'author']), deleteUser); // DELETE user
 
