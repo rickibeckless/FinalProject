@@ -2,7 +2,7 @@ import express from "express";
 import { 
     getSubmissionsByUserId, 
     getSubmissionsByChallengeId, 
-    getSubmissionByUserIdAndChallengeId, 
+    getSubmissionBySubmissionId, 
     createSubmission, 
     editSubmission, 
     deleteSubmission 
@@ -15,7 +15,7 @@ const router = express.Router();
 
 router.get("/user/:userId", getSubmissionsByUserId); // GET all submissions by user ID
 router.get("/challenge/:challengeId", getSubmissionsByChallengeId); // GET all submissions by challenge ID
-router.get("/user/:userId/challenge/:challengeId", getSubmissionByUserIdAndChallengeId); // GET submission by user ID and challenge ID
+router.get("/:submissionId", getSubmissionBySubmissionId); // GET submission by user ID and challenge ID
 
 router.post("/:userId/:challengeId/create", createSubmission); // POST new submission
 

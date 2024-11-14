@@ -24,6 +24,7 @@ import CreateChallenge from './pages/challenges/CreateChallenge.jsx';
 import ChallengeArchive from './pages/challenges/ChallengeArchive.jsx';
 import Challenge from './pages/challenges/Challenge.jsx';
 import JoinChallenge from './pages/challenges/JoinChallenge.jsx';
+import Submission from './pages/challenges/Submission.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 // footer pages
@@ -52,6 +53,8 @@ const router = createBrowserRouter([
             { path: '/challenges/archive', element: <ChallengeArchive /> },
             { path: '/challenges/:challengeId', element: <Challenge /> },
             { path: '/challenges/:challengeId/join', element: <JoinChallenge /> },
+
+            { path: '/submissions/:submissionId', element: <Submission /> },
 
             { path: '/:username', element: <User /> },
             { path: '/:username/challenges', element: <UserChallenges /> },

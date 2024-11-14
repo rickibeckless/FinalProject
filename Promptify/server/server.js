@@ -78,5 +78,5 @@ app.use('/api/upvotes', upvoteRoutes);
 app.use('/api/notifications', notificationRoutes);
 
 server.listen(PORT, () => {
-    console.log(`Server is running on 'http://localhost:${PORT}'`);
+    console.log(`Server is running on '${process.env.BACKEND_URL}'`);
 });

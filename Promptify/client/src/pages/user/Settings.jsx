@@ -18,6 +18,7 @@ import MessagePopup from "../../components/global/MessagePopup.jsx";
 
 import SignUpModal from "../../components/global/modals/SignUp.jsx";
 import LoginModal from "../../components/global/modals/Login.jsx";
+import DeleteUserModal from "../../components/user/DeleteUserModal.jsx";
 
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
@@ -32,6 +33,10 @@ export default function Settings() {
 
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
+
+    const [tab, setTab] = useState("profile-info");
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         if (token) {
@@ -60,7 +65,9 @@ export default function Settings() {
             setShowSignUpModal(!showSignUpModal);
         } else if (type === "login") {
             setShowLoginModal(!showLoginModal);
-        };
+        } else if (type === "delete") {
+            setShowDeleteModal(!showDeleteModal);
+        }
     };
 
     return (
@@ -75,49 +82,52 @@ export default function Settings() {
                 <aside id="table-of-contents">
                     <h2>Table of Contents</h2>
                     <ul>
-                        <li><Link to="#profile-info">Profile Information</Link></li>
-                        <li><Link to="#notifications">Notifications</Link></li>
-                        <li><Link to="#profile-delete">Delete Profile</Link></li>
+                        <li onClick={() => setTab("profile-info")}>Profile Information</li>
+                        <li onClick={() => setTab("notifications")}>Notifications</li>
+                        <li onClick={() => setTab("profile-delete")}>Delete Profile</li>
                     </ul>
                 </aside>
 
                 {user ? (
                     <section id="settings-content">
-                        <div id="profile-info">
-                            <h2>Profile Information</h2>
-                            <div className="profile-info-item">
-                                <h3>Username</h3>
-                                <p>{user?.username}</p>
+                        {tab === "notifications" ? (
+                            <div id="notifications">
+                                <h2>Notifications</h2>
+                                <div className="profile-info-item">
+                                    <h3>Email Notifications</h3>
+                                    <p>Receive email notifications for new challenges, reminders, and more.</p>
+                                </div>
+                                <div className="profile-info-item">
+                                    <h3>Push Notifications</h3>
+                                    <p>Receive push notifications for new challenges, reminders, and more.</p>
+                                </div>
                             </div>
-                            <div className="profile-info-item">
-                                <h3>Email</h3>
-                                <p>{user?.email}</p>
+                        ) : tab === "profile-delete" ? (
+                            <div id="profile-delete">
+                                <h2>Delete Profile</h2>
+                                <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
+                                <button className="btn btn-danger" onClick={() => toggleModal("delete")}>Delete Profile</button>
                             </div>
-                        </div>
-
-                        <div id="notifications">
-                            <h2>Notifications</h2>
-                            <div className="profile-info-item">
-                                <h3>Email Notifications</h3>
-                                <p>Receive email notifications for new challenges, reminders, and more.</p>
+                        ) : (
+                            <div id="profile-info">
+                                <h2>Profile Information</h2>
+                                <div className="profile-info-item">
+                                    <h3>Username</h3>
+                                    <p>{user?.username}</p>
+                                </div>
+                                <div className="profile-info-item">
+                                    <h3>Email</h3>
+                                    <p>{user?.email}</p>
+                                </div>
                             </div>
-                            <div className="profile-info-item">
-                                <h3>Push Notifications</h3>
-                                <p>Receive push notifications for new challenges, reminders, and more.</p>
-                            </div>
-                        </div>
-
-                        <div id="profile-delete">
-                            <h2>Delete Profile</h2>
-                            <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
-                            <button className="btn btn-danger">Delete Profile</button>
-                        </div>
+                        )}
                     </section>
                 ) : <p>Please log in or create an account to view and edit your settings.</p>}
             </main>
 
             {showSignUpModal && <SignUpModal toggleModal={toggleModal} />}
             {showLoginModal && <LoginModal toggleModal={toggleModal} />}
+            {showDeleteModal && <DeleteUserModal toggleModal={toggleModal} />}
         </>
     );
 };

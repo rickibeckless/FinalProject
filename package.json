@@ -1,0 +1,17 @@
+{
+  "name": "promptify",
+  "version": "1.0.0",
+  "description": "CodePath WEB103 Final Project: Promptify",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run start\"",
+    "build": "cd client && npm install && npm run build",
+    "start": "cd server && npm install && npm run start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
