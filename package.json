@@ -4,9 +4,9 @@
   "description": "CodePath WEB103 Final Project: Promptify",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run start\"",
-    "build": "cd client && npm install && npm run build",
-    "start": "cd server && npm install && npm run start"
+    "dev": "concurrently \"cd promptify/client && npm run dev\" \"cd promptify/server && npm run start\"",
+    "build": "cd promptify/client && npm install && npm run build",
+    "start": "cd promptify/server && npm install && npm run start"
   },
   "keywords": [],
   "author": "",
