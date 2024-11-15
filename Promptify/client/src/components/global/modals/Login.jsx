@@ -91,7 +91,7 @@ export default function LoginModal({ toggleModal }) {
 
     const loginWithGithub = async () => {
         const popup = window.open(
-            '/api/users/auth/github',
+            'https://promptify-ur5z.onrender.com/api/users/auth/github', // changed to deployed URL
             'GitHub Login',
             'width=800,height=600'
         );
