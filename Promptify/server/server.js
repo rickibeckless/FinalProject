@@ -3,6 +3,8 @@ import './config/dotenv.js';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { 
     defaultRoutes, 
     userRoutes, 
@@ -17,6 +19,9 @@ import { authSession, passport } from './middleware/auth.js';
 const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : process.env.FRONTEND_URL;
 
@@ -66,8 +71,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('public'));
-}
+    //app.use(express.static('public'));
+
+    app.use(express.static(path.join(__dirname, 'public')));
+
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    });
+};
 
 app.use('/api/admin/default', defaultRoutes);
 app.use('/api/users', userRoutes);

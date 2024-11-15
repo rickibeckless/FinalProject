@@ -107,9 +107,12 @@ export default function AllChallenges() {
     useEffect(() => {
         async function fetchChallenges() {
             const response = await fetch(`/api/challenges`);
-            const data = await response.json();
+            let data = await response.json(); // changed to let to allow for filtering
 
             if (response.ok) {
+                // only show challenges that status !== "ended" as those will be in the challenge archive
+                data = data.filter((challenge) => challenge.status !== "ended");
+
                 setChallenges(data);
                 setLoading(false);
             } else {
@@ -145,8 +148,8 @@ export default function AllChallenges() {
         } else if (sortBy === "end-date") {
             sortedArray.sort((a, b) => {
                 return sortOrder === "asc"
-                    ? new Date(a.end_date_time) - new Date(b.end_date_time)
-                    : new Date(b.end_date_time) - new Date(a.end_date_time)
+                    ? new Date(b.end_date_time) - new Date(a.end_date_time)
+                    : new Date(a.end_date_time) - new Date(b.end_date_time)
                     ;
             });
         } else if (sortBy === "start-date") {
