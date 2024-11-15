@@ -2,9 +2,9 @@ import { pool } from '../config/database.js';
 import bcrypt from 'bcryptjs';
 import fs from 'fs';
 
-const users = JSON.parse(fs.readFileSync('./data/defaultData/defaultUsers.json', 'utf8'));
-const users_two = JSON.parse(fs.readFileSync('./data/defaultData/mock_user_data(2).json', 'utf8'));
-const challenges = JSON.parse(fs.readFileSync('./data/defaultData/defaultChallenges.json', 'utf8'));
+// const users = JSON.parse(fs.readFileSync('./data/defaultData/defaultUsers.json', 'utf8'));
+// const users_two = JSON.parse(fs.readFileSync('./data/defaultData/mock_user_data(2).json', 'utf8'));
+// const challenges = JSON.parse(fs.readFileSync('./data/defaultData/defaultChallenges.json', 'utf8'));
 // const submissions = JSON.parse(fs.readFileSync('./data/defaultData/defaultSubmissions.json', 'utf8'));
 // const upvotes = JSON.parse(fs.readFileSync('./data/defaultData/defaultUpvotes.json', 'utf8'));
 // const comments = JSON.parse(fs.readFileSync('./data/defaultData/defaultComments.json', 'utf8'));
@@ -251,6 +251,7 @@ export const checkAndSetBaseData = async (req, res) => {
 };
 
 export const createDefaultUsers = async (req, res) => {
+    /*
     try {
         const all_users = [...users, ...users_two];
         
@@ -299,9 +300,11 @@ export const createDefaultUsers = async (req, res) => {
         console.error('Error details:', error.detail);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
+    */
 };
 
 export const createDefaultChallenges = async (req, res) => {
+    /*
     try {
         for (const challenge of challenges) {
             // check if challenge name or id already exists
@@ -362,4 +365,5 @@ export const createDefaultChallenges = async (req, res) => {
         console.error('Error creating default challenges:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
+    */
 };
