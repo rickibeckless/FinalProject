@@ -12,6 +12,7 @@ import {
     deleteUser 
 } from "../controllers/userControllers.js";
 import { requireRole } from "../middleware/auth.js";
+import { environmentUrl } from "../server.js";
 
 const router = express.Router();
 
@@ -58,7 +59,7 @@ router.get("/auth/github/callback", passport.authenticate("github", {
         const token = req.user.token;
         res.send(`
             <script>
-                window.opener.postMessage({ token: "${token}" }, "${process.env.FRONTEND_URL}");
+                window.opener.postMessage({ token: "${token}" }, "${environmentUrl}");
                 window.close();
             </script>
         `);

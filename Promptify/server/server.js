@@ -18,34 +18,30 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
 
+export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : process.env.FRONTEND_URL;
+
 export const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,
+        origin: environmentUrl,
         methods: ['GET', 'POST'],
         credentials: true,
     },
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected');
-
     socket.on('send-notification', (data) => {
-        console.log(data);
         io.emit('receive-notification', data);
     });
 
     socket.on('send-challenge', (data) => {
-        console.log(data);
         io.emit('receive-challenge', data);
     });
 
     socket.on('send-submission', (data) => {
-        console.log(data);
         io.emit('receive-submission', data);
     });
 
     socket.on('send-upvote', (data) => {
-        console.log(data);
         io.emit('receive-upvote', data);
     });
 
@@ -55,12 +51,12 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        console.log('a user disconnected');
+        // cleanup could go here
     });
 });
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin: environmentUrl,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true,
 }));
@@ -68,6 +64,10 @@ app.use(express.json());
 app.use(authSession);
 app.use(passport.initialize());
 app.use(passport.session());
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('public'));
+}
 
 app.use('/api/admin/default', defaultRoutes);
 app.use('/api/users', userRoutes);

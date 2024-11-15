@@ -4,6 +4,7 @@ import {
     getSubmissionsByChallengeId, 
     getSubmissionBySubmissionId, 
     createSubmission, 
+    getSubmissionByUserIdAndChallengeId,
     editSubmission, 
     deleteSubmission 
 } from "../controllers/submissionControllers.js";
@@ -15,7 +16,8 @@ const router = express.Router();
 
 router.get("/user/:userId", getSubmissionsByUserId); // GET all submissions by user ID
 router.get("/challenge/:challengeId", getSubmissionsByChallengeId); // GET all submissions by challenge ID
-router.get("/:submissionId", getSubmissionBySubmissionId); // GET submission by user ID and challenge ID
+router.get("/:submissionId", getSubmissionBySubmissionId); // GET submission by submission ID
+router.get("/user/:userId/challenge/:challengeId", getSubmissionByUserIdAndChallengeId); // GET submission by user ID and challenge ID
 
 router.post("/:userId/:challengeId/create", createSubmission); // POST new submission
 

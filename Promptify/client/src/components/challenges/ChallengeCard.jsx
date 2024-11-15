@@ -36,6 +36,7 @@ export default function ChallengeCard({ challenge }) {
     const [formattedDate, setFormattedDate] = useState(null);
     const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
     const [showPointsDetails, setShowPointsDetails] = useState(false);
+    const [submission, setSubmission] = useState(null);
 
     const navigate = useNavigate(); // used to navigate to a different page
 
@@ -128,6 +129,7 @@ export default function ChallengeCard({ challenge }) {
 
                 if (data.length > 0) {
                     setUserInChallenge(true);
+                    setSubmission(data[0]);
                 };
             };
         };
@@ -142,7 +144,7 @@ export default function ChallengeCard({ challenge }) {
             const response = await fetch(`/api/users/${user.id}/${challenge.id}/bookmark`, {
                 method: "PATCH",
                 headers: {
-                    role: user ? "author" : "none",
+                    role: user ? "user" : "none",
                 },
             });
 
@@ -241,7 +243,7 @@ export default function ChallengeCard({ challenge }) {
                     {challenge.participation_count === 1 ? (<p className="challenge-card-participants">{challenge.participation_count} participant</p>) : (<p className="challenge-card-participants">{challenge.participation_count} participants</p>)}
                     {user && inProgress && author?.id !== user?.id && (
                         (userInChallenge ? (
-                            <Link to={`/${user.username}/challenges/${challenge.id}`} className="challenge-card-button">View Submission</Link>
+                            <Link to={`/submissions/${submission?.id}`} className="challenge-card-button">View Submission</Link>
                         ) : (
                             <Link to={`/challenges/${challenge.id}/join`} className="challenge-card-button">Join Challenge</Link>
                         ))

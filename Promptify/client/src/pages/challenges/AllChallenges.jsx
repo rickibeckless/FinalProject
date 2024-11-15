@@ -248,7 +248,7 @@ export default function AllChallenges() {
                                 </div>
                             </form>
 
-                            <form id="search-challenges-form" className="challenges-form">
+                            <form id="sort-challenges-form" className="challenges-form">
                                 <div className="filter-challenges-form-input-holder">
                                     <label htmlFor="sort-by">Sort By:</label>
                                     <select id="sort-by" name="sort-by" onChange={(e) => handleSort(e, "by")}>

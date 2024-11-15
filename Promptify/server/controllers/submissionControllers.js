@@ -42,6 +42,19 @@ export const getSubmissionBySubmissionId = async (req, res) => {
     };
 };
 
+export const getSubmissionByUserIdAndChallengeId = async (req, res) => {
+    try {
+        const { userId, challengeId } = req.params;
+
+        const results = await pool.query('SELECT * FROM submissions WHERE author_id = $1 AND challenge_id = $2', [userId, challengeId]);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error fetching submission for challenge by challenge and user id:', error);
+        res.status(500).json({ error: 'An unexpected error occurred when fetching submission for challenge by challenge and user id' });
+    }
+};
+
 export const createSubmission = async (req, res) => {
     try {
         const { userId, challengeId } = req.params;

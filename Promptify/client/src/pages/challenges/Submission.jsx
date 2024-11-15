@@ -38,6 +38,7 @@ export default function Submission() {
         };
     };
 
+    /*
     useEffect(() => {
         async function fetchSubmission() {
             const response = await fetch(`/api/submissions/${submissionId}`);
@@ -45,10 +46,6 @@ export default function Submission() {
 
             if (response.ok) {
                 setSubmission(data[0]);
-                fetchAuthor();
-                fetchComments();
-                fetchUpvotes();
-                setLoading(false);
             } else {
                 console.error(data.error);
             };
@@ -93,7 +90,63 @@ export default function Submission() {
         };
 
         fetchSubmission();
-    }, [submission]);
+        fetchAuthor();
+        fetchComments();
+        fetchUpvotes();
+        setLoading(false);
+    }, []); */
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                // First, fetch submission
+                const submissionResponse = await fetch(`/api/submissions/${submissionId}`);
+                const submissionData = await submissionResponse.json();
+    
+                if (submissionResponse.ok) {
+                    setSubmission(submissionData[0]);
+    
+                    // Fetch author after submission is fetched
+                    const authorResponse = await fetch(`/api/users/${submissionData[0].author_id}`);
+                    const authorData = await authorResponse.json();
+                    if (authorResponse.ok) setAuthor(authorData[0]);
+    
+                    // Fetch comments after submission is fetched
+                    const commentsResponse = await fetch(`/api/comments/submission/${submissionId}`);
+                    const commentsData = await commentsResponse.json();
+                    if (commentsResponse.ok) {
+                        const commentsWithInfo = await Promise.all(commentsData.map(async comment => {
+                            const userResponse = await fetch(`/api/users/${comment.user_id}`);
+                            const userData = await userResponse.json();
+                            const author = userData[0].username;
+                            const childrenComments = commentsData.filter(childComment => childComment.parent_comment_id === comment.id);
+    
+                            return {
+                                ...comment,
+                                author,
+                                childrenComments
+                            };
+                        }));
+                        setComments(commentsWithInfo);
+                    }
+    
+                    // Fetch upvotes after submission is fetched
+                    const upvotesResponse = await fetch(`/api/upvotes/submission/${submissionData[0].id}`);
+                    const upvotesData = await upvotesResponse.json();
+                    if (upvotesResponse.ok) setUpvotes(upvotesData);
+                } else {
+                    console.error(submissionData.error);
+                }
+    
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+    
+        fetchData();
+    }, [submissionId]);    
 
     const handleUpvote = async (e) => {
         e.preventDefault();
@@ -118,7 +171,6 @@ export default function Submission() {
     };
 
     const submitComment = async () => {
-        // /user/:userId/submission/:submissionId/create
         const response = await fetch(`/api/comments/user/${user.id}/submission/${submissionId}/create`, {
             method: "POST",
             headers: {
