@@ -24,7 +24,7 @@ export default function User() {
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
 
-    const { target_user_id } = useParams();
+    const { username } = useParams();
     const [target_user, setTargetUser] = useState([]);
 
     const navigate = useNavigate(); // used to navigate to a different page
@@ -35,7 +35,7 @@ export default function User() {
 
     return (
         <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
-            <PageTitle title={`${target_user.username} | Promptify`} />
+            <PageTitle title={`${username} | Promptify`} />
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
@@ -44,7 +44,7 @@ export default function User() {
                 <section id="profile-info">
                     <div className="profile-info-item">
                         <h2>Username</h2>
-                        <p>{target_user?.username}</p>
+                        <p>{username}</p>
                     </div>
                     <div className="profile-info-item">
                         <h2>Email</h2>

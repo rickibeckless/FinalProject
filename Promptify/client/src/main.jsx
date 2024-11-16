@@ -41,7 +41,7 @@ const router = createBrowserRouter([
             { path: '/', element: <Home /> },
             { path: '/admin', element: <AdminDashboard /> },
             { path: '/profile', element: <Profile /> },
-            {  path: '/notifications', element: <Notifications /> },
+            { path: '/notifications', element: <Notifications /> },
             { path: '/settings', element: <Settings /> },
 
             { path: '/about', element: <About /> },
@@ -58,7 +58,6 @@ const router = createBrowserRouter([
 
             { path: '/:username', element: <User /> },
             { path: '/:username/challenges', element: <UserChallenges /> },
-            { path: '/:username/challenges/:challengeId', element: <Challenge /> }, // will be used for user challenge submission <Submission />
 
             { path: '*', element: <NotFound /> },
             { path: '/404', element: <NotFound /> },

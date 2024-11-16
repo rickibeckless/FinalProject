@@ -4,7 +4,7 @@ CodePath WEB103 Final Project
 
 Designed and developed by: Ricki Beckless
 
-🔗 Link to deployed app:
+🔗 Link to deployed app: https://promptify-ur5z.onrender.com
 
 ## About
 
