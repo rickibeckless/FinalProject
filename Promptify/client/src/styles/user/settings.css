@@ -1,0 +1,147 @@
+/* Settings Page Styles */
+#settings-body {
+    background-color: #ffffff;
+    padding: 2rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem;
+    min-height: calc(100vh - 27vh);
+}
+
+#settings-body h1 {
+    font-size: 2rem;
+    color: var(--verdigris);
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#table-of-contents {
+    background-color: var(--light-olive);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#table-of-contents h2 {
+    font-size: 1.5rem;
+    color: var(--black-olive);
+    margin-bottom: 1rem;
+}
+
+#table-of-contents ul {
+    list-style: none;
+    padding: 0;
+}
+
+#table-of-contents li {
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--black-olive);
+    transition: background-color 0.3s ease;
+}
+
+#table-of-contents li:hover {
+    background-color: var(--verdigris);
+    color: var(--light-text);
+}
+
+/* Settings Content Section */
+#settings-content {
+    padding: 1.5rem;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Info Section */
+#profile-section-info h2 {
+    font-size: 1.8rem;
+    color: var(--verdigris);
+    margin-bottom: 1rem;
+}
+
+.profile-section-info-item {
+    margin-bottom: 1.5rem;
+}
+
+.profile-section-info-item h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black-olive);
+}
+
+.profile-section-info-item p {
+    font-size: 1rem;
+    color: var(--dark-text);
+    opacity: 0.8;
+}
+
+/* Notifications Section */
+#notifications h2 {
+    font-size: 1.8rem;
+    color: var(--verdigris);
+    margin-bottom: 1rem;
+}
+
+.profile-section-info-item {
+    margin-bottom: 1.5rem;
+}
+
+.profile-section-info-item h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--black-olive);
+}
+
+.profile-section-info-item p {
+    font-size: 1rem;
+    color: var(--dark-text);
+    opacity: 0.8;
+}
+
+/* Profile Deletion Section */
+#profile-delete {
+    margin-top: 2rem;
+}
+
+#profile-delete h2 {
+    font-size: 1.8rem;
+    color: var(--verdigris);
+    margin-bottom: 1rem;
+}
+
+#profile-delete p {
+    font-size: 1rem;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+}
+
+#profile-delete .btn-danger {
+    background-color: var(--paynes-gray);
+    color: var(--light-text);
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#profile-delete .btn-danger:hover {
+    background-color: var(--black-olive);
+}
+
+@media (max-width: 768px) {
+    #settings-body {
+        grid-template-columns: 1fr;
+    }
+
+    #table-of-contents {
+        padding: 1rem;
+    }
+
+    #settings-content {
+        padding: 1rem;
+    }
+}

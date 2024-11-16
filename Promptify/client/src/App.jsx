@@ -19,7 +19,7 @@ function App() {
         <>
             <Header />
             <Outlet />
-            <button id="scroll-top-btn" type="button" onClick={scrollToTop}>
+            <button id="scroll-top-btn" type="button" title="Scroll To Top" onClick={scrollToTop}>
                 <FontAwesomeIcon icon={faCircleUp} />
             </button>
             <Footer />

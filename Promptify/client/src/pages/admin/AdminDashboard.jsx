@@ -31,6 +31,9 @@ export default function AdminDashboard() {
 
     const navigate = useNavigate(); // used to navigate to a different page
 
+    const [newUsers, setNewUsers] = useState([]);
+    const [showNewUserForm, setShowNewUserForm] = useState(false);
+
     const [users, setUsers] = useState({});
     const [showNotificationForm, setShowNotificationForm] = useState(false);
     const [openNotificationDropdown, setOpenNotificationDropdown] = useState(false);
@@ -149,6 +152,25 @@ export default function AdminDashboard() {
 
     const toggleNotificationForm = () => {
         setShowNotificationForm(!showNotificationForm);
+        setShowNewUserForm(false);
+    };
+
+    const toggleUserForm = () => {
+        setShowNewUserForm(!showNewUserForm);
+        setShowNotificationForm(false);
+
+        if (newUsers.length === 0) {
+            addNewUserForm();
+        }
+    };
+
+    const handleRemoveUserForm = (index) => {
+        const updatedUsers = newUsers.filter((user, i) => i !== index);
+        setNewUsers(updatedUsers);
+
+        if (updatedUsers.length === 0) {
+            setShowNewUserForm(false);
+        }
     };
 
     const toggleNotificationDropdown = () => {
@@ -205,6 +227,41 @@ export default function AdminDashboard() {
         };
     };
 
+    const addNewUserForm = () => {
+        setNewUsers([...newUsers, { username: '', email: '', password: '', about: '', profile_picture_url: '' }]);
+    };
+
+    const handleUserChange = (index, e) => {
+        const { name, value } = e.target;
+        const updatedUsers = newUsers.map((user, i) => (i === index ? { ...user, [name]: value } : user));
+        setNewUsers(updatedUsers);
+    };
+
+    const handleSubmitAllUsers = async () => {
+        try {
+            const response = await fetch('/api/admin/default/batch/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    role: user.is_admin ? 'admin' : 'user',
+                },
+                body: JSON.stringify(newUsers),
+            });
+
+            const data = await response.json();
+            if (data.error) {
+                setMessage(data.error);
+            } else {
+                setMessage(data.message);
+                setNewUsers([]); // Clear forms on successful submission
+                setShowNewUserForm(false);
+            }
+        } catch (error) {
+            console.error(error);
+            setMessage('An error occurred. Please try again.');
+        }
+    };
+
     return (
         <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
             <PageTitle title="Admin Dashboard | Promptify" />
@@ -214,60 +271,136 @@ export default function AdminDashboard() {
             <main id="admin-dashboard-body" className="container">
                 <h1>Admin Dashboard</h1>
 
-                <button type="button" onClick={handleResetFullDatabase}>Reset Full Database</button>
-                <button type="button" onClick={handleSeedDefaultUsers}>Seed Default Users</button>
-                <button type="button" onClick={handleSeedDefaultChallenges}>Seed Default Challenges</button>
+                <div className="admin-dashboard-action-btns">
+                    <button type="button" onClick={handleResetFullDatabase}>Reset Full Database</button>
+                    <button type="button" onClick={handleSeedDefaultUsers}>Seed Default Users</button>
+                    <button type="button" onClick={handleSeedDefaultChallenges}>Seed Default Challenges</button>
 
-                <button type="button" onClick={() => toggleNotificationForm()}>New Notification</button>
-                
+                    <button type="button" onClick={() => toggleNotificationForm()}>New Notification</button>
+                    <button type="button" onClick={() => toggleUserForm()}>Add Users</button>
+                </div>
+
                 {showNotificationForm && (
-                    <form id="notification-form" onSubmit={handleSendNotification}>
-                        <div className="form-input-holder">
-                            <label htmlFor="title">Title:</label>
-                            <input type="text" id="title" name="title" value={notificationForm.title} onChange={handleNotificationChange} />
-                        </div>
+                    <>
+                        <form id="notification-form" className="admin-dashboard-form">
+                            <div className="form-input-holder">
+                                <label htmlFor="title">Title:</label>
+                                <input type="text" id="title" name="title" value={notificationForm.title} onChange={handleNotificationChange} />
+                            </div>
 
-                        <div className="form-input-holder">
-                            <label htmlFor="type">Type:</label>
-                            <select id="type" name="type" value={notificationForm.type} onChange={handleNotificationChange}>
-                                <option value="general">General (New Feature, Update, Bug Fix)</option>
-                                <option value="challenge_activity">Challenge Activity (Start, End, Deleted, Bookmarked)</option>
-                                <option value="review_update">Review Update (Daily, Weekly)</option>
-                                <option value="submission_interaction">Submission Interaction (Upvote, Comment, Reply)</option>
-                                <option value="account_update">Account Update</option>
-                                <option value="follow_activity">Follow Activity (New Follower, Author Challenges, Author Submissions)</option>
-                            </select>
-                        </div>
-                        
-                        <div className="form-input-holder">
-                            <label htmlFor="content">Content:</label>
-                            <textarea id="content" name="content" value={notificationForm.content} onChange={handleNotificationChange} />
-                        </div>
+                            <div className="form-input-holder">
+                                <label htmlFor="type">Type:</label>
+                                <select id="type" name="type" value={notificationForm.type} onChange={handleNotificationChange}>
+                                    <option value="general">General (New Feature, Update, Bug Fix)</option>
+                                    <option value="challenge_activity">Challenge Activity (Start, End, Deleted, Bookmarked)</option>
+                                    <option value="review_update">Review Update (Daily, Weekly)</option>
+                                    <option value="submission_interaction">Submission Interaction (Upvote, Comment, Reply)</option>
+                                    <option value="account_update">Account Update</option>
+                                    <option value="follow_activity">Follow Activity (New Follower, Author Challenges, Author Submissions)</option>
+                                </select>
+                            </div>
 
-                        <div className="form-input-holder">
-                            <label htmlFor="to">To:</label>
+                            <div className="form-input-holder">
+                                <label htmlFor="content">Content:</label>
+                                <textarea id="content" name="content" value={notificationForm.content} onChange={handleNotificationChange} />
+                            </div>
 
-                            <button type="button" onClick={toggleNotificationDropdown}>Select Recipients</button>
-                            
-                            {openNotificationDropdown && (
-                                <div id="notification-dropdown">
-                                    <input type="checkbox" id="all" name="all" value="all" onChange={(e) => handleToChange(e)} />
-                                    <label htmlFor="all">All Users</label>
-                                    {users.map(user => (
-                                        <div key={user.id}>
-                                            <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
-                                            <label htmlFor={user.id}>
-                                                <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
-                                                {user.username}
-                                            </label>
+                            <div className="form-input-holder">
+                                <label htmlFor="to">To:</label>
+
+                                {openNotificationDropdown && (
+                                    <div id="notification-dropdown">
+                                        <div className="notification-dropdown-holder">
+                                            <input type="checkbox" id="all" name="all" value="all" onChange={(e) => handleToChange(e)} />
+                                            <label htmlFor="all">All Users</label>
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                                        {users.map(user => (
+                                            <div key={user.id} className="notification-dropdown-holder">
+                                                <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
+                                                <label htmlFor={user.id}>
+                                                    <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
+                                                    {user.username}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
 
-                        <button type="submit">Send Notification</button>
-                    </form>
+                                <button type="button" className="admin-dashboard-add-btn" onClick={toggleNotificationDropdown}>Select Recipients</button>
+                            </div>
+                        </form>
+
+                        <button id="notification-form-submit-btn" type="submit" onClick={(e) => handleSendNotification(e)}>Send Notification</button>
+                    </>
+                )}
+
+                {showNewUserForm && (
+                    <>
+                        {newUsers.map((newUser, index) => (
+                            <form id="new-user-form" className="admin-dashboard-form" key={index}>
+                                <div className="form-input-holder">
+                                    <label htmlFor={`username-${index}`}>Username:</label>
+                                    <input
+                                        type="text"
+                                        id={`username-${index}`}
+                                        name="username"
+                                        value={newUser.username}
+                                        onChange={(e) => handleUserChange(index, e)}
+                                    />
+                                </div>
+
+                                <div className="form-input-holder">
+                                    <label htmlFor={`email-${index}`}>Email:</label>
+                                    <input
+                                        type="email"
+                                        id={`email-${index}`}
+                                        name="email"
+                                        value={newUser.email}
+                                        onChange={(e) => handleUserChange(index, e)}
+                                    />
+                                </div>
+
+                                <div className="form-input-holder">
+                                    <label htmlFor={`password-${index}`}>Password:</label>
+                                    <input
+                                        type="password"
+                                        id={`password-${index}`}
+                                        name="password"
+                                        value={newUser.password}
+                                        onChange={(e) => handleUserChange(index, e)}
+                                    />
+                                </div>
+
+                                <div className="form-input-holder">
+                                    <label htmlFor={`about-${index}`}>About:</label>
+                                    <textarea
+                                        id={`about-${index}`}
+                                        name="about"
+                                        value={newUser.about}
+                                        onChange={(e) => handleUserChange(index, e)}
+                                    />
+                                </div>
+
+                                <div className="form-input-holder">
+                                    <label htmlFor={`profile_picture_url-${index}`}>Profile Picture URL:</label>
+                                    <input
+                                        type="text"
+                                        id={`profile_picture_url-${index}`}
+                                        name="profile_picture_url"
+                                        value={newUser.profile_picture_url}
+                                        onChange={(e) => handleUserChange(index, e)}
+                                    />
+                                </div>
+
+                                <button type="button" onClick={() => handleRemoveUserForm(index)}>Remove User</button>
+                            </form>
+                        ))}
+
+                        <div id="new-user-form-btns">
+                            <button type="button" className="admin-dashboard-add-btn" onClick={addNewUserForm}>Add New User</button>
+                            <button type="button" onClick={handleSubmitAllUsers}>Submit All Users</button>
+                        </div>
+                    </>
                 )}
             </main>
         </>

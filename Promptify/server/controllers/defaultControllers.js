@@ -1,5 +1,6 @@
 import { pool } from '../config/database.js';
 import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 
 // const users = JSON.parse(fs.readFileSync('./data/defaultData/defaultUsers.json', 'utf8'));
@@ -246,6 +247,60 @@ export const checkAndSetBaseData = async (req, res) => {
 
     } catch (error) {
         console.error('Error checking and setting base data:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const batchCreateUsers = async (req, res) => {
+    try {
+        const newUsers = req.body;
+
+        for (const user of newUsers) {
+            const check = await pool.query('SELECT * FROM users WHERE email = $1 OR username = $2', [user.email, user.username]);
+
+            if (check.rows.length > 0) {
+                return res.status(400).json({ error: 'User already exists' });
+            };
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(user.password, salt);
+
+            const welcomeNotification = {
+                id: uuidv4(),
+                title: "Welcome to Promptify!",
+                content: "We're excited to have you on board. Let's get started!",
+                type: "account_info",
+                status: "unread",
+                date_created: new Date().toISOString(),
+                date_deleted: null
+            };
+
+            const results = await pool.query('INSERT INTO users (email, password, username, profile_picture_url, about, notifications, following) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *', [user.email, hashedPassword, user.username, user.profile_picture_url, user.about, JSON.stringify([welcomeNotification]), 1]);
+            const botUser = await pool.query('SELECT * FROM users WHERE id = $1', ['11111111-aaaa-aaaa-aaaa-111111111111']);
+            const newBotUserFollowCount = botUser.rows[0].followers + 1;
+            
+            await pool.query(
+                'INSERT INTO user_followers (follower_id, following_id) VALUES ($1, $2)',
+                [results.rows[0].id, botUser.rows[0].id]
+            );
+
+            await pool.query('UPDATE users SET followers = $1 WHERE id = $2', [newBotUserFollowCount, botUser.rows[0].id]);
+        };
+
+        res.status(201).json({ message: 'Batch users created' });
+    } catch (error) {
+        console.error('Error creating batch users:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const batchCreateChallenges = async (req, res) => {
+    try {
+        const { challenges } = req.body;
+
+        console.log(challenges);
+    } catch (error) {
+        console.error('Error creating batch challenges:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
 };

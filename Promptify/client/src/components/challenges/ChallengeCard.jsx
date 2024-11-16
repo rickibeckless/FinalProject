@@ -37,6 +37,7 @@ export default function ChallengeCard({ challenge }) {
     const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
     const [showPointsDetails, setShowPointsDetails] = useState(false);
     const [submission, setSubmission] = useState(null);
+    const [showFollowPopup, setShowFollowPopup] = useState(false);
 
     const navigate = useNavigate(); // used to navigate to a different page
 
@@ -68,12 +69,13 @@ export default function ChallengeCard({ challenge }) {
         let timeToEnd = new Date(challenge.end_date_time) - now;
 
         setFormattedDate(new Date(challenge.end_date_time).toLocaleString());
+        let timeInterval;
 
         const updateCountdown = (time, status) => {
             let days, hours, minutes;
             const formatTwoDigits = (num) => String(num).padStart(2, '0');
 
-            const timeInterval = setInterval(() => {
+            timeInterval = setInterval(() => {
                 time -= 1000;
                 days = Math.floor(time / (1000 * 60 * 60 * 24));
                 hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -81,6 +83,7 @@ export default function ChallengeCard({ challenge }) {
 
                 if (time <= 0) {
                     clearInterval(timeInterval);
+                    setCountdown(status === "upcoming" ? "Challenge Started" : "Challenge Ended");
                     return;
                 };
 
@@ -137,7 +140,23 @@ export default function ChallengeCard({ challenge }) {
         fetchAuthor();
         checkIfBookmarked();
         checkIfUserInChallenge();
+
+        return () => {
+            clearInterval(timeInterval);
+        };
     }, [challenge, navigate]);
+
+    const handleFollow = async (type) => {
+        if (user) {
+            if (type === "user") {
+                // follow user
+            } else if (type === "genre") {
+                // follow genre
+            } else if (type === "skill_level") {
+                // follow skill level
+            };
+        };
+    };
 
     const handleBookmark = async () => {
         if (user) {

@@ -17,6 +17,7 @@ export default function AllChallenges() {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("end-date");
     const [sortOrder, setSortOrder] = useState("desc");
+    const [showEnded, setShowEnded] = useState(false);
 
     const baseFilters = (bool) => ({
         limitations: {
@@ -107,12 +108,9 @@ export default function AllChallenges() {
     useEffect(() => {
         async function fetchChallenges() {
             const response = await fetch(`/api/challenges`);
-            let data = await response.json(); // changed to let to allow for filtering
+            let data = await response.json();
 
             if (response.ok) {
-                // only show challenges that status !== "ended" as those will be in the challenge archive
-                data = data.filter((challenge) => challenge.status !== "ended");
-
                 setChallenges(data);
                 setLoading(false);
             } else {
@@ -122,6 +120,10 @@ export default function AllChallenges() {
 
         fetchChallenges();
     }, []);
+
+    const handleShowEnded = (e) => {
+        setShowEnded(e.target.checked);
+    };    
 
     const handleSort = (e, type) => {
         e.preventDefault();
@@ -161,8 +163,12 @@ export default function AllChallenges() {
             });
         };
 
-        return sortedArray;
-    }, [challenges, sortBy, sortOrder]);
+        if (showEnded) {
+            return sortedArray;
+        } else {
+            return sortedArray.filter((challenge) => challenge.status !== "ended");
+        }
+    }, [challenges, sortBy, sortOrder, showEnded]);
 
     const filterChallenges = (challenges) => {
         return challenges.filter((challenge) => {
@@ -187,7 +193,10 @@ export default function AllChallenges() {
                                     return challenge.status === "in-progress";
                                 } else if (filter === "scoring") {
                                     return challenge.status === "scoring";
-                                }
+                                } 
+                                // else if (filter === "ended") {
+                                //     return challenge.status === "ended";
+                                // }
                             } else if (filterCategory === "genre") {
                                 if (filter === "nonFiction") {
                                     return challenge.genre === "non-fiction";
@@ -267,6 +276,14 @@ export default function AllChallenges() {
                                         <option value="desc">Descending</option>
                                         <option value="asc">Ascending</option>
                                     </select>
+                                </div>
+
+                                <div className="limits-holder">
+                                    <label>
+                                        <input type="checkbox" name="show-ended" value="show-ended" onChange={handleShowEnded} checked={showEnded} />
+                                        <span className="custom-checkbox"></span>
+                                        Show Ended 
+                                    </label>
                                 </div>
                             </form>
 

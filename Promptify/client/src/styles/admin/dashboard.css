@@ -1,4 +1,131 @@
-.quick {
-    width: 1rem;
-    height: 1rem;
+#admin-dashboard-body {
+    color: var(--dark-text);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#admin-dashboard-body h1 {
+    color: var(--paynes-gray);
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+#admin-dashboard-body .admin-dashboard-action-btns {
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1.5rem;
+}
+
+#admin-dashboard-body button {
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    border: none;
+    border-radius: 5px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#admin-dashboard-body button:hover {
+    background-color: var(--sandy-brown);
+}
+
+#admin-dashboard-body button:active {
+    background-color: var(--naples-yellow);
+}
+
+#admin-dashboard-body .admin-dashboard-form {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--paynes-gray);
+    border-radius: 6px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#admin-dashboard-body .admin-dashboard-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--paynes-gray);
+}
+
+#admin-dashboard-body .admin-dashboard-form select,
+#admin-dashboard-body .admin-dashboard-form input,
+#admin-dashboard-body .admin-dashboard-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--pale-cyan);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    background-color: var(--light-text);
+    color: var(--dark-text);
+}
+
+#admin-dashboard-body .admin-dashboard-form select:focus,
+#admin-dashboard-body .admin-dashboard-form input:focus,
+#admin-dashboard-body .admin-dashboard-form textarea:focus {
+    border-color: var(--verdigris);
+    outline: none;
+    box-shadow: 0 0 4px var(--verdigris);
+}
+
+#admin-dashboard-body .admin-dashboard-form textarea {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 200px;
+}
+
+#admin-dashboard-body #notification-form #notification-dropdown {
+    width: 30%;
+    
+    
+    .notification-dropdown-holder {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 1rem;
+        
+        input {
+            width: 1rem;
+            height: 1rem;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+
+            img {
+                width: 1.5rem;
+                height: 1.5rem;
+                border-radius: 5px;
+                object-fit: cover;
+            }
+        }
+    }
+}
+
+#admin-dashboard-body .admin-dashboard-form button {
+    border-radius: 5px;
+    padding: .5rem .75rem;
+    font-size: .85rem;
+}
+
+#admin-dashboard-body #notification-form-submit-btn,
+#admin-dashboard-body #new-user-form button {
+    display: block;
+    margin-left: auto;
+}
+
+#admin-dashboard-body #new-user-form-btns {
+    display: flex;
+    justify-content: space-evenly;
 }

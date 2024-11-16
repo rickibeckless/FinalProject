@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { format } from 'date-fns';
 import AuthContext from "../../context/AuthProvider.jsx";
 import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
@@ -31,10 +32,10 @@ export default function CreateChallenge() {
         prompt: '',
         skill_level: '',
         limitations: {
-            time_limit: { min: '', max: '' },
-            word_limit: { min: '', max: '' },
-            character_limit: { min: '', max: '' },
-            required_phrase: ''
+            time_limit: { min: null, max: null },
+            word_limit: { min: null, max: null },
+            character_limit: { min: null, max: null },
+            required_phrase: []
         },
         start_date_time: '',
         end_date_time: '',
@@ -89,7 +90,9 @@ export default function CreateChallenge() {
     useEffect(() => {
         const now = new Date();
         const formattedDateTime = now.toISOString().slice(0, 16);
-        setCurrentDateTime(formattedDateTime);
+        const formattedDate = format(now, "yyyy-MM-dd'T'HH:mm");
+        console.log(formattedDate);
+        setCurrentDateTime(formattedDate);
     }, []);
 
     const handleChange = (e) => {

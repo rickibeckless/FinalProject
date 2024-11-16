@@ -47,7 +47,7 @@ export default function Home() {
 
                         <div className="hero-buttons account-links">
                             <Link className="account-link" to="/challenges">Current Challenges</Link>
-                            <Link className="account-link" to="#">User Ranks</Link>
+                            {/* <Link className="account-link" to="#">User Ranks</Link> */}
                         </div>
                     </div>
                     <div id="hero-right">
@@ -149,12 +149,12 @@ export default function Home() {
                                 activity and success on the platform.
                             </p>
                         </li>
-                        <li className="section-card">Leader-Board Rankings
+                        {/* <li className="section-card">Leader-Board Rankings
                             <p>
                                 See where you stand against other users with the live leader-board, which displays
                                 users ranked by points. Compete with others and climb the ranks to showcase your skills.
                             </p>
-                        </li>
+                        </li> */}
                         <li className="section-card">Achievement Badges
                             <p>
                                 Collect badges as you reach key milestones, such as winning challenges, gathering

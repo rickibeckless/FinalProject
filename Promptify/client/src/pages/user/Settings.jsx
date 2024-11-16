@@ -16,12 +16,19 @@ import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 // message popup for errors, warnings, and successes
 import MessagePopup from "../../components/global/MessagePopup.jsx";
 
+// modals for page
 import SignUpModal from "../../components/global/modals/SignUp.jsx";
 import LoginModal from "../../components/global/modals/Login.jsx";
 import DeleteUserModal from "../../components/user/DeleteUserModal.jsx";
 
+import ProfileSection from "../../components/user/settings/ProfileSection.jsx";
+import NotificationSection from "../../components/user/settings/NotificationSection.jsx";
+
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
+
+// styles for the page
+import "../../styles/user/settings.css";
 
 export default function Settings() {
     const { user } = useContext(AuthContext); // context used for authentication
@@ -34,7 +41,7 @@ export default function Settings() {
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [tab, setTab] = useState("profile-info");
+    const [tab, setTab] = useState("profile-section-info");
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -76,13 +83,12 @@ export default function Settings() {
             {loading ? <LoadingScreen /> : null}
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
-            <main id="profile-body" className="container">
-                <h1>Settings</h1>
-
+            <main id="settings-body" className="container">
                 <aside id="table-of-contents">
+                <h1>Settings</h1>
                     <h2>Table of Contents</h2>
                     <ul>
-                        <li onClick={() => setTab("profile-info")}>Profile Information</li>
+                        <li onClick={() => setTab("profile-section-info")}>Profile Information</li>
                         <li onClick={() => setTab("notifications")}>Notifications</li>
                         <li onClick={() => setTab("profile-delete")}>Delete Profile</li>
                     </ul>
@@ -91,17 +97,7 @@ export default function Settings() {
                 {user ? (
                     <section id="settings-content">
                         {tab === "notifications" ? (
-                            <div id="notifications">
-                                <h2>Notifications</h2>
-                                <div className="profile-info-item">
-                                    <h3>Email Notifications</h3>
-                                    <p>Receive email notifications for new challenges, reminders, and more.</p>
-                                </div>
-                                <div className="profile-info-item">
-                                    <h3>Push Notifications</h3>
-                                    <p>Receive push notifications for new challenges, reminders, and more.</p>
-                                </div>
-                            </div>
+                            <NotificationSection user={user} />
                         ) : tab === "profile-delete" ? (
                             <div id="profile-delete">
                                 <h2>Delete Profile</h2>
@@ -109,17 +105,7 @@ export default function Settings() {
                                 <button className="btn btn-danger" onClick={() => toggleModal("delete")}>Delete Profile</button>
                             </div>
                         ) : (
-                            <div id="profile-info">
-                                <h2>Profile Information</h2>
-                                <div className="profile-info-item">
-                                    <h3>Username</h3>
-                                    <p>{user?.username}</p>
-                                </div>
-                                <div className="profile-info-item">
-                                    <h3>Email</h3>
-                                    <p>{user?.email}</p>
-                                </div>
-                            </div>
+                            <ProfileSection user={user} />
                         )}
                     </section>
                 ) : <p>Please log in or create an account to view and edit your settings.</p>}

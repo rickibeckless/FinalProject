@@ -8,6 +8,7 @@ import {
     createUserWithConventional, 
     loginUserWithConventional, 
     editUser, 
+    editUserNotificationSettings,
     bookmarkChallenge, 
     deleteUser 
 } from "../controllers/userControllers.js";
@@ -67,6 +68,7 @@ router.get("/auth/github/callback", passport.authenticate("github", {
 );
 
 router.patch("/:id/edit", requireRole(['admin', 'user']), editUser); // PATCH user
+router.patch("/:id/edit/notification", requireRole(['user']), editUserNotificationSettings); // PATCH user notification settings
 router.patch("/:id/:challengeId/bookmark", requireRole(['user']), bookmarkChallenge); // PATCH bookmark challenge
 
 router.delete("/:id/delete", requireRole(['admin', 'user']), deleteUser); // DELETE user

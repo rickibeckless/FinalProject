@@ -116,6 +116,40 @@ export const getChallengeById = async (req, res) => {
     };
 };
 
+export const getChallengesByGenre = async (req, res) => {
+    try {
+        const results = await pool.query('SELECT * FROM challenges WHERE genre = $1', [req.params.genre]);
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'Challenges not found' });
+        };
+
+        await challengeCheck(results, res);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error fetching challenges by genre:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const getChallengesBySkillLevel = async (req, res) => {
+    try {
+        const results = await pool.query('SELECT * FROM challenges WHERE skill_level = $1', [req.params.skill_level]);
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'Challenges not found' });
+        };
+
+        await challengeCheck(results, res);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error fetching challenges by skill level:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
 export const createChallenge = async (req, res) => {
     try {
         const { 
@@ -148,26 +182,65 @@ export const createChallenge = async (req, res) => {
             difficultyMultiplier = 2;
         };
 
+        const notNullCheck = (value) => { 
+            return (
+                value !== null &&
+                value !== undefined &&
+                value !== "" &&
+                value !== 0 &&
+                value !== "0" &&
+                !(Array.isArray(value) && value.length === 0) &&
+                !(typeof value === 'object' && Object.keys(value).length === 0) &&
+                value !== "[]" &&
+                value !== "{}"
+            );
+        };        
+
         if (limitations.time_limit) {
-            if (limitations.time_limit.min !== "" || limitations.time_limit.max !== "") {
+            if (notNullCheck(limitations.time_limit.min) || notNullCheck(limitations.time_limit.max)) {
                 requirementBonus += 10;
             };
+
+            /*
+                if (limitations.time_limit.min !== "" || limitations.time_limit.max !== "") {
+                    requirementBonus += 10;
+                };
+            */
         };
         if (limitations.word_limit) {
-            if (limitations.word_limit.min !== "" || limitations.word_limit.max !== "") {
+            if (notNullCheck(limitations.word_limit.min) || notNullCheck(limitations.word_limit.max)) {
                 requirementBonus += 10;
             };
+
+            /*
+                if (limitations.word_limit.min !== "" || limitations.word_limit.max !== "") {
+                    requirementBonus += 10;
+                };
+            */
         };
         if (limitations.character_limit) {
-            if (limitations.character_limit.min !== "" || limitations.character_limit.max !== "") {
+            if (notNullCheck(limitations.character_limit.min) || notNullCheck(limitations.character_limit.max)) {
                 requirementBonus += 10;
             };
+            
+            /*
+                if (limitations.character_limit.min !== "" || limitations.character_limit.max !== "") {
+                    requirementBonus += 10;
+                };
+            */
         };
         if (limitations.required_phrase) {
-            if (limitations.required_phrase !== "") {
+            if (notNullCheck(limitations.required_phrase)) {
                 requirementBonus += 10;
             };
         };
+        /*
+            if (limitations.required_phrase) {
+                if (limitations.required_phrase !== "") {
+                    requirementBonus += 10;
+                };
+            };
+        */
 
         available_points = (available_points * difficultyMultiplier) + timeConstraintBonus + requirementBonus;
 
@@ -186,7 +259,6 @@ export const createChallenge = async (req, res) => {
         * - to users who are following the challenge skill level (excluding the author)
         *   - `A new challenge ${challenge.name} has been created for ${challenge.skill_level} writers. Check it out!`
         */
-
 
         res.status(201).json(results.rows);
     } catch (error) {

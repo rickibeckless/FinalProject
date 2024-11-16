@@ -12,7 +12,8 @@ import {
     submissionRoutes,
     commentRoutes,
     upvoteRoutes,
-    notificationRoutes
+    notificationRoutes,
+    userFollowersRoutes
 } from './routes/data.js';
 import { authSession, passport } from './middleware/auth.js';
 
@@ -87,6 +88,7 @@ app.use('/api/submissions', submissionRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/upvotes', upvoteRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/user-followers', userFollowersRoutes);
 
 server.listen(PORT, () => {
     console.log(`Server is running on '${process.env.BACKEND_URL}'`);

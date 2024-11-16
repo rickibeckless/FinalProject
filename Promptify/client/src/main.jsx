@@ -50,7 +50,7 @@ const router = createBrowserRouter([
 
             { path: '/challenges', element: <AllChallenges /> },
             { path: '/challenges/create', element: <CreateChallenge /> },
-            { path: '/challenges/archive', element: <ChallengeArchive /> },
+            // { path: '/challenges/archive', element: <ChallengeArchive /> },
             { path: '/challenges/:challengeId', element: <Challenge /> },
             { path: '/challenges/:challengeId/join', element: <JoinChallenge /> },
 

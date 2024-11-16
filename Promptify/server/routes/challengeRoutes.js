@@ -2,6 +2,8 @@ import express from "express";
 import { 
     getChallenges, 
     getChallengeById, 
+    getChallengesByGenre,
+    getChallengesBySkillLevel,
     createChallenge, 
     editChallenge, 
     deleteChallenge 
@@ -14,6 +16,8 @@ const router = express.Router();
 
 router.get("/", getChallenges); // GET all challenges
 router.get("/:id", getChallengeById); // GET challenges by ID
+router.get("/genre/:genre", getChallengesByGenre); // GET challenges by genre
+router.get("/skill-level/:skillLevel", getChallengesBySkillLevel); // GET challenges by skill level
 
 router.post("/create", createChallenge); // POST new challenge
 router.patch("/:id/edit", requireRole(['admin', 'author']), editChallenge); // PATCH edit challenge

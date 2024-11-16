@@ -141,26 +141,42 @@ export default function Header() {
                         <li>Challenges</li>
 
                         <li className={`challenge-nav-dropdown dropdown ${openNavDropdown === "challenges" ? "active" : ""}`}>
-                            {location.pathname !== "/challenges" && 
+                            {/* 
+                            
+                            the following is commented out because the archive page is not yet implemented, and
+                                it would have looked weird to have a dropdown with nothing in it, as would have
+                                been the case if the challenges link was only visible if not on the challenges page.
+                            to fix this, the challenges link is now always visible. This doesn't affect the user and
+                                doesn't cause rerenders as I'm using Link
+
+                            {location.pathname !== "/challenges" &&
                                 <li className="nav-link">
                                     <Link className="user-nav-link" to="/challenges">
                                         <img src={GlobeImg} alt="globe icon" />
                                         <span className="nav-link-text">Current Challenges</span>
                                     </Link>
                                 </li>
-                            }
-                            {location.pathname !== "/challenges/archive" && 
+                            } */}
+
+                            <li className="nav-link">
+                                <Link className="user-nav-link" to="/challenges">
+                                    <img src={GlobeImg} alt="globe icon" />
+                                    <span className="nav-link-text">Current Challenges</span>
+                                </Link>
+                            </li>
+
+                            {/* {location.pathname !== "/challenges/archive" && 
                                 <li className="nav-link">
                                     <Link className="user-nav-link" to="/challenges/archive">
                                         <img src={BoxGridImg} alt="box grid icon" />
                                         <span className="nav-link-text">Challenge Archive</span>
                                     </Link>
                                 </li>
-                            }
+                            } */}
 
                             {user && (
                                 <>
-                                    {location.pathname !== "/challenges/create" && 
+                                    {location.pathname !== "/challenges/create" &&
                                         <li className="nav-link">
                                             <Link className="user-nav-link" to="/challenges/create">
                                                 <img src={AddImg} alt="add icon" />
@@ -168,7 +184,7 @@ export default function Header() {
                                             </Link>
                                         </li>
                                     }
-                                    {location.pathname !== `/${user.username}/challenges` && 
+                                    {location.pathname !== `/${user.username}/challenges` &&
                                         <li className="nav-link">
                                             <Link className="user-nav-link" to={`/${user.username}/challenges`}>
                                                 <img src={BoxQuestionImg} alt="box question icon" />
@@ -198,7 +214,7 @@ export default function Header() {
                                         </Link>
                                     </li>
                                 }
-                                {location.pathname !== "/profile" && 
+                                {location.pathname !== "/profile" &&
                                     <li className="nav-link">
                                         <Link className="user-nav-link" to="/profile">
                                             <img src={PersonImg} alt="person icon" />
@@ -206,7 +222,7 @@ export default function Header() {
                                         </Link>
                                     </li>
                                 }
-                                {location.pathname !== "/settings" && 
+                                {location.pathname !== "/settings" &&
                                     <li className="nav-link">
                                         <Link className="user-nav-link" to="/settings">
                                             <img src={SettingsImg} alt="settings icon" />
@@ -215,12 +231,12 @@ export default function Header() {
                                     </li>
                                 }
                                 <li className="logout-btn mild-danger-red nav-link user-nav-link" onClick={() => logout()}>
-                                    <img src={LogoutImg} alt="logout icon" /> 
+                                    <img src={LogoutImg} alt="logout icon" />
                                     <span className="nav-link-text">Logout</span>
                                 </li>
                             </li>
                             <div className="user-nav-image-holder">
-                                {unreadNotifications && unreadNotifications.length > 0 && 
+                                {unreadNotifications && unreadNotifications.length > 0 &&
                                     <div className="user-nav-notifications">
                                         <p>{unreadNotifications.length}</p>
                                     </div>
@@ -231,7 +247,7 @@ export default function Header() {
                     }
                 </nav>
             </header>
-        
+
             {showSignUpModal && <SignUpModal toggleModal={toggleModal} />}
             {showLoginModal && <LoginModal toggleModal={toggleModal} />}
         </>

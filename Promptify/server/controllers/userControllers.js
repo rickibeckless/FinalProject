@@ -139,17 +139,41 @@ export const loginUserWithConventional = async (req, res) => {
 
 export const editUser = async (req, res) => {
     try {
-        const { username, email, about, skill_level, profile_picture_url } = req.body;
+        const { id } = req.params;
+        const profileInfo = req.body;
 
-        const results = await pool.query('UPDATE users SET username = $1, email = $2, about = $3, skill_level = $4, profile_picture_url = $5 WHERE id = $6 RETURNING *', [username, email, about, skill_level, profile_picture_url, req.params.id]);
-        
-        if (results.rows.length === 0) {
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+
+        if (user.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
         };
+        
+        const results = await pool.query('UPDATE users SET email = $1, username = $2, profile_picture_url = $3, about = $4, bookmarked_challenges = $5, following_genres = $6, following = $7 WHERE id = $8 RETURNING *', [profileInfo.email, profileInfo.username, profileInfo.profile_picture_url, profileInfo.about, profileInfo.bookmarked_challenges, profileInfo.following_genres, profileInfo.following, id]);
 
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error editing user:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const editUserNotificationSettings = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+
+        if (user.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        };
+
+        const { notificationSettings } = req.body;
+
+        const results = await pool.query('UPDATE users SET notifications_settings = $1 WHERE id = $2 RETURNING *', [notificationSettings, id]);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error editing user notification settings:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
 };
