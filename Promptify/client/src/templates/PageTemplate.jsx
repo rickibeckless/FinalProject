@@ -27,6 +27,7 @@ import { FetchContext } from "../context/FetchProvider.jsx"; // context used to 
 import '../utils/validators.js'; // note: this validator is for the classes pages url validation
 
 export default function PageTemplate() {
+    const environment = import.meta.env.VITE_NODE_ENV; // 'development' or 'production'
     const socket = io(import.meta.env.VITE_BACKEND_URL); // connect to the server's socket
     const { user, login, logout } = useContext(AuthContext); // context used for authentication
     const { fetchWithRetry } = useContext(FetchContext); // context used to fetch data from the server

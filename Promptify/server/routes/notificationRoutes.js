@@ -4,7 +4,8 @@ import {
     getNotificationsByUserId,
     getNotificationsByNotificationId,
     updateNotificationStatus,
-    sendNotificationToUser
+    sendNotificationToUser,
+    sendSeveralNotificationsToUsers
 } from "../controllers/notificationControllers.js";
 import { requireRole } from "../middleware/auth.js";
 
@@ -18,6 +19,7 @@ router.get("/:userId/:notificationId", getNotificationsByNotificationId); // GET
 
 router.patch("/:userId/:notificationId/:status", updateNotificationStatus); // PATCH notification by user ID and notification ID
 
-router.post("/new", requireRole(['admin']), sendNotificationToUser); // POST notification by author ID
+router.post("/new", requireRole(['admin', 'auto']), sendNotificationToUser); // POST notification
+router.post("/new/several", requireRole(['admin', 'auto']), sendSeveralNotificationsToUsers); // POST several notifications
 
 export default router;

@@ -17,6 +17,15 @@ export default function Challenge() {
     const [submissions, setSubmissions] = useState([]);
     const { challengeId } = useParams();
 
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [challengeForm, setChallengeForm] = useState({
+        name: "",
+        description: "",
+        prompt: "",
+        genre: "",
+        skillLevel: "",
+    });
+
     const navigate = useNavigate(); // used to navigate to a different page
 
     useEffect(() => {
@@ -48,6 +57,8 @@ export default function Challenge() {
         fetchChallenge();
         fetchSubmissions();
     }, [user, challenge]);
+
+    
 
     return (
         <>

@@ -10,6 +10,7 @@ import LoginImg from "../../../assets/login.svg";
 import GithubImg from "../../../assets/github.svg";
 
 export default function SignUpModal({ toggleModal }) {
+    const environment = import.meta.env.VITE_NODE_ENV; // 'development' or 'production'
     const { login } = useContext(AuthContext);
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
@@ -83,7 +84,7 @@ export default function SignUpModal({ toggleModal }) {
 
     const signupWithGithub = async () => {
         const popup = window.open(
-            'https://promptify-ur5z.onrender.com/api/users/auth/github', // changed to deployed URL
+            environment === 'development' ? '/api/users/auth/github' : 'https://promptify-ur5z.onrender.com/api/users/auth/github',
             'GitHub Sign Up',
             'width=800,height=600'
         );

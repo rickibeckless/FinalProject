@@ -200,6 +200,28 @@ export const bookmarkChallenge = async (req, res) => {
     };
 };
 
+export const followGenre = async (req, res) => {
+    try {
+        const { id, genre } = req.params;
+
+        const user = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+        const followingGenres = user.rows[0].following_genres;
+        let updatedFollowingGenres;
+
+        if (followingGenres.includes(genre)) {
+            updatedFollowingGenres = followingGenres.filter(followingGenre => followingGenre !== genre);
+        } else {
+            updatedFollowingGenres = [...followingGenres, genre];
+        };
+
+        const results = await pool.query('UPDATE users SET following_genres = $1 WHERE id = $2 RETURNING *', [updatedFollowingGenres, id]);
+        return res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error following genre:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
 export const deleteUser = async (req, res) => {
     try {
         const user = await pool.query('SELECT * FROM users WHERE id = $1', [req.params.id]);

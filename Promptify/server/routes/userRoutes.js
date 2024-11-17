@@ -10,6 +10,7 @@ import {
     editUser, 
     editUserNotificationSettings,
     bookmarkChallenge, 
+    followGenre,
     deleteUser 
 } from "../controllers/userControllers.js";
 import { requireRole } from "../middleware/auth.js";
@@ -70,6 +71,7 @@ router.get("/auth/github/callback", passport.authenticate("github", {
 router.patch("/:id/edit", requireRole(['admin', 'user']), editUser); // PATCH user
 router.patch("/:id/edit/notification", requireRole(['user']), editUserNotificationSettings); // PATCH user notification settings
 router.patch("/:id/:challengeId/bookmark", requireRole(['user']), bookmarkChallenge); // PATCH bookmark challenge
+router.patch("/:id/:genre/follow", requireRole(['user']), followGenre); // PATCH follow genre
 
 router.delete("/:id/delete", requireRole(['admin', 'user']), deleteUser); // DELETE user
 

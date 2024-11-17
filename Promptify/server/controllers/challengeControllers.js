@@ -1,4 +1,7 @@
 import { pool } from '../config/database.js';
+import { io } from '../server.js';
+import { v4 as uuidv4 } from 'uuid';
+import fetch from 'node-fetch';
 
 const challengeCheck = async (results, res) => {
     try {
@@ -260,6 +263,68 @@ export const createChallenge = async (req, res) => {
         *   - `A new challenge ${challenge.name} has been created for ${challenge.skill_level} writers. Check it out!`
         */
 
+        const notifications = [];
+
+        const authorResults = await pool.query('SELECT * FROM users WHERE id = $1', [author_id]);
+        const author = authorResults.rows[0];
+        const authorNotification = {
+            title: "New Challenge Created!",
+            content: `Your challenge ${results.rows[0].name} has been created!`,
+            type: "challenge_activity",
+            to: [author_id]
+        };
+        notifications.push(...notifications, authorNotification);
+
+        const authorFollowersResults = await pool.query('SELECT * FROM user_followers WHERE following_id = $1', [author_id]);
+        let authorFollowers = authorFollowersResults.rows.filter(follower => follower.notifications_settings.allow_following_user_notifications);
+        const authorFollowersIds = authorFollowers.map(follower => follower.user_id);
+        for (const followerId of authorFollowersIds) {
+            const followerNotification = {
+                title: "New Challenge From Someone You Follow!",
+                content: `A new challenge ${results.rows[0].name} has been created by ${author.username}. Check it out!`,
+                type: "challenge_activity",
+                to: [followerId]
+            };
+            notifications.push(...notifications, followerNotification);
+        };
+
+        const genreFollowersResults = await pool.query('SELECT * FROM users WHERE following_genres @> $1', [[genre]]);
+        let genreFollowers = genreFollowersResults.rows.filter(user => user.id !== author_id);
+        genreFollowers = genreFollowers.filter(user => user.notifications_settings.allow_following_genre_notifications);
+        const genreFollowersIds = genreFollowers.map(user => user.id);
+        for (const followerId of genreFollowersIds) {
+            const followerNotification = {
+                title: "New Challenge In A Genre You Follow!",
+                content: `A new challenge ${results.rows[0].name} has been created in the ${genre} genre. Check it out!`,
+                type: "challenge_activity",
+                to: [followerId]
+            };
+            notifications.push(...notifications, followerNotification);
+        };
+
+        const skillLevelFollowersResults = await pool.query('SELECT * FROM users WHERE skill_level = $1', [skill_level]);
+        let skillLevelFollowers = skillLevelFollowersResults.rows.filter(user => user.id !== author_id);
+        skillLevelFollowers = skillLevelFollowers.filter(user => user.notifications_settings.allow_skill_level_notifications);
+        const skillLevelFollowersIds = skillLevelFollowers.map(user => user.id);
+        for (const followerId of skillLevelFollowersIds) {
+            const followerNotification = {
+                title: "New Challenge In Your Skill Level!",
+                content: `A new challenge ${results.rows[0].name} has been created for ${skill_level} writers. Check it out!`,
+                type: "challenge_activity",
+                to: [followerId]
+            };
+            notifications.push(...notifications, followerNotification);
+        };
+
+        await fetch('http://localhost:8080/api/notifications/new/several', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                role: 'auto'
+            },
+            body: JSON.stringify(notifications)
+        });
+
         res.status(201).json(results.rows);
     } catch (error) {
         console.error('Error creating challenge:', error);
@@ -269,6 +334,18 @@ export const createChallenge = async (req, res) => {
 
 export const editChallenge = async (req, res) => {
     try {
+        const challengeId = req.params.id;
+
+        const challengeResults = await pool.query('SELECT * FROM challenges WHERE id = $1', [challengeId]);
+
+        if (challengeResults.rows.length === 0) {
+            return res.status(404).json({ error: 'Challenge not found' });
+        };
+
+        if (challengeResults.rows[0].status !== 'upcoming') {
+            return res.status(403).json({ error: 'Challenge is not editable' });
+        };
+
         const { 
             name, 
             description, 
@@ -280,7 +357,8 @@ export const editChallenge = async (req, res) => {
             limitations 
         } = req.body;
 
-        const results = await pool.query('UPDATE challenges SET name = $1, description = $2, prompt = $3, start_date_time = $4, end_date_time = $5, skill_level = $6, genre = $7, limitations = $8 WHERE id = $9 RETURNING *', [name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, req.params.id]);
+        const results = await pool.query('UPDATE challenges SET name = $1, description = $2, prompt = $3, start_date_time = $4, end_date_time = $5, skill_level = $6, genre = $7, limitations = $8 WHERE id = $9 RETURNING *', [name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, challengeId]);
+        
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error updating challenge:', error);

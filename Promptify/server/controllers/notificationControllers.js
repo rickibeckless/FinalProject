@@ -183,7 +183,7 @@ export const sendNotificationToUser = async (req, res) => {
             recipientIds.push(...results.map(user => user.id));
         } else {
             recipientIds.push(...to);
-        };
+        };            
 
         const notification = {
             id: uuidv4(),
@@ -196,6 +196,11 @@ export const sendNotificationToUser = async (req, res) => {
         };
 
         for (const recipientId of recipientIds) {
+            const user = await pool.query('SELECT * FROM users WHERE id = $1', [recipientId]);
+
+            if (user.rows.length === 0) continue;
+            if (user.rows[0].notifications_settings.allow_notifications === false) continue;
+            
             const results = await pool.query(`
                 UPDATE users
                 SET notifications = notifications || $1
@@ -212,4 +217,55 @@ export const sendNotificationToUser = async (req, res) => {
         console.error('Error sending notification:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
+};
+
+export const sendSeveralNotificationsToUsers = async (req, res) => {
+    try {
+        const notifications = req.body;
+        if (!Array.isArray(notifications)) {
+            return res.status(400).json({ error: 'Notifications payload should be an array' });
+        };
+
+        for (const notification of notifications) {
+            const { title, content, type, to } = notification;
+            let recipientIds = [];
+            recipientIds.push(...to);
+
+            const notificationObject = {
+                id: uuidv4(),
+                title,
+                content,
+                type,
+                status: 'unread',
+                date_created: new Date().toISOString(),
+                date_deleted: null,
+            };
+
+            for (const recipientId of recipientIds) {
+                const user = await pool.query('SELECT * FROM users WHERE id = $1', [recipientId]);
+
+                if (user.rows.length === 0) continue;
+                if (!user.rows[0].notifications_settings.allow_notifications) continue;
+
+                const results = await pool.query(
+                    `UPDATE users
+                    SET notifications = notifications || $1
+                    WHERE id = $2`,
+                    [JSON.stringify(notificationObject), recipientId]
+                );
+
+                await notificationCheck(results, res);
+                io.emit('receive-notification', {
+                    userId: recipientId,
+                    notification: notificationObject,
+                    status: 'unread',
+                });
+            };
+        };
+
+        res.status(201).json({ message: 'Notifications sent successfully' });
+    } catch (error) {
+        console.error('Error sending notifications:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    }
 };
