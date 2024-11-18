@@ -18,3 +18,22 @@
     gap: 1rem;
     padding: 1rem;
 }
+
+/* Responsive Designs */
+@media screen and (max-width: 900px) {
+    .container.left-aside-right-section {
+        grid-template-columns: 1fr 3fr;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container.left-aside-right-section {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas: "left-aside" "right-section";
+    }
+
+    .container.left-aside-right-section .right-section {
+        padding: 0;
+    }
+}

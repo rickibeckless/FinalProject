@@ -29,6 +29,16 @@
     padding: 5%;
 }
 
+#filter-challenges-button {
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 3rem;
+    height: 2rem;
+    margin: 0 auto 1rem;
+}
+
 .limits-holder label {
     display: flex;
     flex-direction: row-reverse;
@@ -142,7 +152,11 @@ fieldset.filter-challenges {
 }
 
 /* Responsive designs */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+    #all-challenges-body {
+        margin: 0 5vw;
+    }
+
     #all-challenges-body h1 {
         font-size: 1.75rem;
     }

@@ -70,3 +70,47 @@
     width: 1.5rem;
     margin-right: 0.5rem;
 }
+
+/* Responsive Designs */
+@media (max-width: 768px) {
+    #footer-navbar ul {
+        flex-direction: column;
+        row-gap: 1rem;
+        column-gap: 0;
+    }
+
+    #footer-navbar a {
+        font-size: 0.9rem;
+    }
+
+    #footer-cr-statement {
+        font-size: 0.8rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
+    #footer-cr-statement img {
+        width: 1.2rem;
+        margin-right: 0.3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #footer-navbar ul {
+        flex-direction: column;
+        row-gap: 0.8rem;
+    }
+
+    #footer-navbar a {
+        font-size: 0.8rem;
+    }
+
+    #footer-cr-statement {
+        font-size: 0.7rem;
+        flex-direction: column;
+    }
+
+    #footer-cr-statement img {
+        margin-bottom: 0.3rem;
+    }
+}

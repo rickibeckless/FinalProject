@@ -7,13 +7,15 @@ import ChallengeCard from "../../components/challenges/ChallengeCard.jsx";
 import ChallengeFilers from "../../components/challenges/ChallengeFilters.jsx";
 import "../../styles/challenges/all-challenges.css";
 
+import FilterImg from "../../assets/filter.svg";
+
 export default function AllChallenges() {
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
 
     const [challenges, setChallenges] = useState(null);
-    const [showFiltersModal, setShowFiltersModal] = useState(window.innerWidth >= 900);
-    const [showFiltersModalButton, setShowFiltersModalButton] = useState(window.innerWidth <= 900);
+    const [showFiltersModal, setShowFiltersModal] = useState(window.innerWidth >= 767);
+    const [showFiltersModalButton, setShowFiltersModalButton] = useState(window.innerWidth <= 767);
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState("end-date");
     const [sortOrder, setSortOrder] = useState("desc");
@@ -88,6 +90,8 @@ export default function AllChallenges() {
         }
 
         if (filters !== baseFilters(false)) setIsFiltered(true);
+        // if showFiltersModal is true, then close it
+        if (showFiltersModal) setShowFiltersModal(false);
     };
 
     const handleSearch = (e) => {
@@ -96,8 +100,8 @@ export default function AllChallenges() {
 
     useEffect(() => {
         const handleResize = () => {
-            setShowFiltersModal(window.innerWidth >= 900);
-            setShowFiltersModalButton(window.innerWidth <= 900);
+            setShowFiltersModal(window.innerWidth >= 767);
+            setShowFiltersModalButton(window.innerWidth <= 767);
         };
 
         window.addEventListener('resize', handleResize);
@@ -123,6 +127,8 @@ export default function AllChallenges() {
 
     const handleShowEnded = (e) => {
         setShowEnded(e.target.checked);
+
+        if (showFiltersModal) setShowFiltersModal(false);
     };    
 
     const handleSort = (e, type) => {
@@ -249,7 +255,11 @@ export default function AllChallenges() {
 
             <main id="all-challenges-body" className="container left-aside-right-section">
                 <aside className="left-aside" id="all-challenges-left">
-                    {showFiltersModalButton && <button id="filter-challenges-button" onClick={handleFilterModal}>Filter Challenges</button>}
+                    {showFiltersModalButton && 
+                        <button id="filter-challenges-button" title="Filter Challenges" className="challenge-card-button" onClick={handleFilterModal}>
+                            <img src={FilterImg} alt="Filter Challenges" />
+                        </button>
+                    }
 
                     {showFiltersModal &&
                         <>
