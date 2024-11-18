@@ -95,7 +95,11 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
+    #footer-navbar {
+        height: min-content;
+    }
+    
     #footer-navbar ul {
         flex-direction: column;
         row-gap: 0.8rem;
