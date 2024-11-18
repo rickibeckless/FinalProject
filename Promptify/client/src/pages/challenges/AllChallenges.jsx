@@ -10,7 +10,7 @@ import "../../styles/challenges/all-challenges.css";
 import FilterImg from "../../assets/filter.svg";
 
 export default function AllChallenges() {
-    const environmentUrl = import.meta.env.NODE_ENV === "production" ? "https://promptify-ur5z.onrender.com" : "http://localhost:8080";
+    const environmentUrl = import.meta.env.VITE_NODE_ENV === "production" ? "https://promptify-ur5z.onrender.com" : "http://localhost:8080";
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
 
