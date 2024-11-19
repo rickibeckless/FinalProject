@@ -55,50 +55,14 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Profile Info Section */
-#profile-section-info h2 {
+.settings-section-header {
     font-size: 1.8rem;
     color: var(--verdigris);
-    margin-bottom: 1rem;
-}
-
-.profile-section-info-item {
+    font-weight: bold;
+    text-align: left;
     margin-bottom: 1.5rem;
-}
-
-.profile-section-info-item h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--black-olive);
-}
-
-.profile-section-info-item p {
-    font-size: 1rem;
-    color: var(--dark-text);
-    opacity: 0.8;
-}
-
-/* Notifications Section */
-#notifications h2 {
-    font-size: 1.8rem;
-    color: var(--verdigris);
-    margin-bottom: 1rem;
-}
-
-.profile-section-info-item {
-    margin-bottom: 1.5rem;
-}
-
-.profile-section-info-item h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--black-olive);
-}
-
-.profile-section-info-item p {
-    font-size: 1rem;
-    color: var(--dark-text);
-    opacity: 0.8;
+    border-bottom: 2px solid var(--verdigris);
+    padding-bottom: 0.5rem;
 }
 
 /* Profile Deletion Section */
@@ -135,6 +99,7 @@
 @media (max-width: 768px) {
     #settings-body {
         grid-template-columns: 1fr;
+        padding: 1rem;
     }
 
     #table-of-contents {

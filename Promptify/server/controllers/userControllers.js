@@ -247,28 +247,6 @@ export const deleteUser = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         };
 
-        // const userChallenges = await pool.query('SELECT * FROM challenges WHERE author_id = $1', [req.params.id]);
-        // const userSubmissions = await pool.query('SELECT * FROM submissions WHERE author_id = $1', [req.params.id]);
-        // const userComments = await pool.query('SELECT * FROM comments WHERE user_id = $1', [req.params.id]);
-
-        // if (userChallenges.rows.length > 0) {
-        //     for (const challenge of userChallenges.rows) {
-        //         await pool.query('UPDATE challenges SET author_id = $1 WHERE id = $2', ['55555555-aaaa-aaaa-aaaa-555555555555', challenge.id]);
-        //     };
-        // };
-
-        // if (userSubmissions.rows.length > 0) {
-        //     for (const submission of userSubmissions.rows) {
-        //         await pool.query('UPDATE submissions SET author_id = $1 WHERE id = $2', ['55555555-aaaa-aaaa-aaaa-555555555555', submission.id]);
-        //     };
-        // };
-
-        // if (userComments.rows.length > 0) {
-        //     for (const comment of userComments.rows) {
-        //         await pool.query('UPDATE comments SET user_id = $1 WHERE id = $2', ['55555555-aaaa-aaaa-aaaa-555555555555', comment.id]);
-        //     };
-        // };
-
         const results = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [req.params.id]);
 
         res.status(200).json(results.rows);

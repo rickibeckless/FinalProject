@@ -5,7 +5,7 @@
 
 // general imports
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
@@ -37,16 +37,22 @@ export default function Settings() {
     const token = localStorage.getItem("token");
 
     const navigate = useNavigate(); // used to navigate to a different page
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const tabQuery = queryParams.get('tab');
+    const edit = queryParams.get('edit');
 
     const [showSignUpModal, setShowSignUpModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    const [tab, setTab] = useState("profile-section-info");
-    const [showEditModal, setShowEditModal] = useState(false);
+    const [tab, setTab] = useState("profile-section");
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     useEffect(() => {
         if (token) {
+            if (tabQuery === "profile") {
+                setTab("profile-section");
+            }
             setLoading(false);
         } else {
             setLoading(false);
@@ -62,7 +68,10 @@ export default function Settings() {
                 setShowLoginModal(false);
             } else if (previousType === "close") {
                 document.body.classList.remove("modal-open");
-                navigate("/");
+
+                if (type !== "delete") {
+                    navigate("/");
+                }
             };
         } else {
             document.body.classList.remove("modal-open");
@@ -88,7 +97,7 @@ export default function Settings() {
                 <h1>Settings</h1>
                     <h2>Table of Contents</h2>
                     <ul>
-                        <li onClick={() => setTab("profile-section-info")}>Profile Information</li>
+                        <li onClick={() => setTab("profile-section")}>Profile Information</li>
                         <li onClick={() => setTab("notifications")}>Notifications</li>
                         <li onClick={() => setTab("profile-delete")}>Delete Profile</li>
                     </ul>
@@ -100,12 +109,12 @@ export default function Settings() {
                             <NotificationSection user={user} />
                         ) : tab === "profile-delete" ? (
                             <div id="profile-delete">
-                                <h2>Delete Profile</h2>
+                                <h2 className="settings-section-header">Delete Profile</h2>
                                 <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
                                 <button className="btn btn-danger" onClick={() => toggleModal("delete")}>Delete Profile</button>
                             </div>
                         ) : (
-                            <ProfileSection user={user} />
+                            <ProfileSection user={user} edit={edit} />
                         )}
                     </section>
                 ) : <p>Please log in or create an account to view and edit your settings.</p>}

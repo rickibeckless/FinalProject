@@ -216,7 +216,7 @@ export default function User() {
 
             <main id="user-body" className="container">
                 {userIsTarget && 
-                    <button type="button" title="Edit Profile" className="edit-user-btn" onClick={() => navigate("/settings")}>
+                    <button type="button" title="Edit Profile" className="edit-user-btn" onClick={() => navigate("/settings?tab=profile&edit=true")}>
                         <img src={personEdit} alt="Edit Profile" />
                     </button>
                 }

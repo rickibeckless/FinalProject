@@ -87,7 +87,6 @@ Engagement is encouraged through a voting system where users can upvote their fa
 - *while users can upvote a submission, they cannot downvote.*
 - *both signed-in users and guests can vote on a submission, but guest votes will not be used to determine the winner.*
 
-
 #### Commenting and Voting Gif
 ![commenting and voting gif](./project_demos/features/give_feedback.gif)
 

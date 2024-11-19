@@ -16,7 +16,10 @@ import MessagePopup from "../../global/MessagePopup.jsx";
 
 import CloseImg from "../../../assets/close.svg";
 
-export default function ProfileSection({ user }) {
+// styles for the page
+import "../../../styles/user/settings/profile-section.css";
+
+export default function ProfileSection({ user, edit }) {
     const [message, setMessage] = useState("");
     const navigate = useNavigate();
     const [profileInfo, setProfileInfo] = useState({
@@ -75,38 +78,12 @@ export default function ProfileSection({ user }) {
 
             getBookmarkedChallengesNames();
             getFollowingUsersNames();
+
+            if (edit) {
+                setShowEditForm(true);
+            };
         };
     }, [user]);
-
-    // console.log("profileInfo: ", profileInfo);
-    // console.log("bookmarkedChallengesNames: ", bookmarkedChallengesNames);
-    // console.log("followingUsersNames: ", followingUsersNames);
-
-    /*
-        Allow user to edit their profile info, which looks like:
-
-        {
-            "username": "ricki_b",
-            "profile_picture_url": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-            "about": "This user has not set up an about yet.",
-            "bookmarked_challenges": [
-                "77777777-bbbb-bbbb-bbbb-777777777777",
-                "850869aa-c3d1-48a5-80fe-ddf42ab41cde",
-                "66666666-bbbb-bbbb-bbbb-666666666666"
-            ],
-            "following_genres": [],
-            "following": 1,
-        }
-
-        Here, they will be able to see their bookmarked challenges by the challenge name,
-            and they will be able to remove them by selecting an "x" next to the challenge name.
-
-        They will also be able to see the genres they are following, and they will be able to
-            remove them by selecting an "x" next to the genre name.
-
-        They will also be able to see the users they are following, and they will be able to
-            unfollow them by selecting an "x" next to the username.
-    */
 
     const handleChange = (e) => {
         setProfileInfo({ ...profileInfo, [e.target.name]: e.target.value });
@@ -130,6 +107,7 @@ export default function ProfileSection({ user }) {
             if (response.ok) {
                 setMessage("Profile updated successfully!");
                 setShowEditForm(false);
+                navigate("/settings");
             } else {
                 setMessage(data.error);
             };
@@ -153,6 +131,7 @@ export default function ProfileSection({ user }) {
         });
 
         setShowEditForm(false);
+        navigate("/settings");
     };
 
     const handleRemove = async (type, id, name) => {
@@ -175,7 +154,7 @@ export default function ProfileSection({ user }) {
         <>
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
-            <section className="settings-section" id="profile-section-info">
+            <section className="settings-section" id="profile-section">
                 <h2 className="settings-section-header">Profile Information</h2>
 
                 {showEditForm ? (
@@ -208,24 +187,32 @@ export default function ProfileSection({ user }) {
                         <div className="form-input-holder">
                             <label htmlFor="bookmarked-challenges">Bookmarked Challenges</label>
                             <ul id="bookmarked-challenges-list">
-                                {bookmarkedChallengesNames.map((challenge, index) => (
-                                    <li key={index}>
-                                        <span>{challenge}</span>
-                                        <button type="button" className="btn btn-danger" onClick={() => handleRemove("bookmarked_challenges", profileInfo.bookmarked_challenges[index], challenge)}>x</button>
-                                    </li>
-                                ))}
+                                {bookmarkedChallengesNames.length > 0 ? (
+                                    bookmarkedChallengesNames.map((challenge, index) => (
+                                        <li key={index}>
+                                            <span>{challenge}</span>
+                                            <button type="button" onClick={() => handleRemove("bookmarked_challenges", profileInfo.bookmarked_challenges[index], challenge)}>x</button>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>No Bookmarked Challenges</li>
+                                )}
                             </ul>
                         </div>
 
                         <div className="form-input-holder">
                             <label htmlFor="following-genres">Following Genres</label>
                             <ul id="following-genres-list">
-                                {profileInfo.following_genres.map((genre, index) => (
-                                    <li key={index}>
-                                        <span>{genre}</span>
-                                        <button type="button" className="btn btn-danger" onClick={() => handleRemove("following_genres", profileInfo.following_genres[index], genre)}>x</button>
-                                    </li>
-                                ))}
+                                {profileInfo.following_genres.length > 0 ? (
+                                    profileInfo.following_genres.map((genre, index) => (
+                                        <li key={index}>
+                                            <span>{genre}</span>
+                                            <button type="button" onClick={() => handleRemove("following_genres", profileInfo.following_genres[index], genre)}>x</button>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>No Following Genres</li>
+                                )}
                             </ul>
                         </div>
 
@@ -243,7 +230,7 @@ export default function ProfileSection({ user }) {
                             </ul>
                         </div>
 
-                        <button type="submit" className="btn btn-primary">Save Changes</button>
+                        <button type="submit" className="submit-edit-form-btn">Save Changes</button>
                     </form>
                 ) : (
                     <div id="profile-section-info">
@@ -259,18 +246,26 @@ export default function ProfileSection({ user }) {
                             <div id="bookmarked-challenges">
                                 <h4>Bookmarked Challenges</h4>
                                 <ul>
-                                    {bookmarkedChallengesNames.map((challenge, index) => (
-                                        <li key={index}>{challenge}</li>
-                                    ))}
+                                    {bookmarkedChallengesNames.length > 0 ? (
+                                        bookmarkedChallengesNames.map((challenge, index) => (
+                                            <li key={index}>{challenge}</li>
+                                        ))
+                                    ) : (
+                                        <li>No Bookmarked Challenges</li>
+                                    )}
                                 </ul>
                             </div>
 
                             <div id="following-genres">
                                 <h4>Following Genres</h4>
                                 <ul>
-                                    {profileInfo.following_genres.map((genre, index) => (
-                                        <li key={index}>{genre}</li>
-                                    ))}
+                                    {profileInfo.following_genres.length > 0 ? (
+                                        profileInfo.following_genres.map((genre, index) => (
+                                            <li key={index}>{genre}</li>
+                                        ))
+                                    ) : (
+                                        <li>No Following Genres</li>
+                                    )}
                                 </ul>
                             </div>
 
@@ -284,7 +279,7 @@ export default function ProfileSection({ user }) {
                             </div>
                         </div>
 
-                        <button className="btn btn-primary" onClick={() => setShowEditForm(true)}>Edit Profile</button>
+                        <button className="edit-profile-btn challenge-card-button" onClick={() => setShowEditForm(true)}>Edit Profile</button>
                     </div>
                 )}
             </section>

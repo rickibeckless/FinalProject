@@ -59,7 +59,7 @@
     display: none;
 }
 
-.limits-holder label .custom-checkbox {
+label .custom-checkbox {
     position: relative;
     display: inline-block;
     width: 1rem;
@@ -69,7 +69,7 @@
     background-color: #ffffff;
 }
 
-.limits-holder label .custom-checkbox::before {
+label .custom-checkbox::before {
     content: "";
     display: block;
     position: absolute;
@@ -83,12 +83,12 @@
     transition: background-color 0.1s ease, border-color 0.1s ease;
 }
 
-.limits-holder label input[type="checkbox"]:checked ~ .custom-checkbox::before {
+label input[type="checkbox"]:checked ~ .custom-checkbox::before {
     background-color: var(--verdigris);
     border-color: var(--verdigris);
 }
 
-.limits-holder label input[type="checkbox"]:checked ~ .custom-checkbox::after {
+label input[type="checkbox"]:checked ~ .custom-checkbox::after {
     content: "✔";
     position: absolute;
     top: 0;

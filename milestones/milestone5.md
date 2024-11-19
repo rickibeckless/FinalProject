@@ -62,7 +62,7 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 - [X] A subset of pages require the user to log in before accessing the content
   - [X] Users can log in and log out via GitHub OAuth with Passport.js
-- [ ] Restrict available user options dynamically, such as restricting available purchases based on a user's currency
+- [X] Restrict available user options dynamically, such as restricting available purchases based on a user's currency
 - [ ] Show a spinner while a page or page element is loading
 - [ ] Disable buttons and inputs during the form submission process
 - [ ] Disable buttons after they have been clicked

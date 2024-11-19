@@ -1,0 +1,115 @@
+/* Notification Settings Styles */
+#notifications {
+    background-color: #f8fafc;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px #0000001a;
+    margin-bottom: 2rem;
+}
+
+#notifications h2 {
+    font-size: 1.8rem;
+    color: var(--verdigris);
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+}
+
+.profile-info-item {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.profile-info-item:hover {
+    box-shadow: 0 4px 10px #00000026;
+    transform: translateY(-2px);
+}
+
+.profile-info-item label {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+
+    cursor: pointer;
+    font-size: 1.1rem;
+    color: var(--black-olive);
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.profile-info-item input[type="checkbox"] {
+    display: none;
+}
+
+.profile-info-item p {
+    font-size: 0.95rem;
+    color: var(--dark-text);
+    opacity: 0.85;
+    margin-top: 0.5rem;
+}
+
+.settings-btn {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.settings-save-btn {
+    background-color: var(--verdigris);
+    color: #ffffff;
+    margin-right: 1rem;
+}
+
+.settings-save-btn:hover {
+    background-color: var(--paynes-gray);
+}
+
+.settings-default-btn {
+    background-color: var(--light-olive);
+    color: var(--black-olive);
+    margin-right: 1rem;
+}
+
+.settings-default-btn:hover {
+    background-color: var(--verdigris);
+    color: #ffffff;
+}
+
+.settings-cancel-btn {
+    background-color: var(--light-text);
+    color: var(--dark-text);
+}
+
+.settings-cancel-btn:hover {
+    background-color: var(--verdigris);
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    #notifications {
+        padding: 1rem;
+    }
+
+    .profile-info-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-info-item label {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .settings-btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
