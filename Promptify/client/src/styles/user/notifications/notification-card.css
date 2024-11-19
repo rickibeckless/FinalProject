@@ -1,0 +1,24 @@
+/* Notification Card */
+.notification-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-card-header {
+    margin-bottom: 1rem;
+}
+
+.notification-card-header h3 {
+    font-size: 1.5rem;
+}
+
+.notification-card-header p {
+    font-size: 1rem;
+    color: var(--paynes-gray);
+}
+
+.notification-card-body p {
+    font-size: 1rem;
+    color: var(--black-olive);
+    line-height: 1.6;
+}

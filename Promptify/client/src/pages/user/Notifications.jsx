@@ -26,6 +26,9 @@ import NotificationTable from "../../components/user/NotificationTable.jsx";
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
+// styling for page will be imported here
+import "../../styles/user/notifications/notifications.css"; // styling for the notifications page
+
 export default function Notifications() {
     const socket = io(import.meta.env.VITE_BACKEND_URL); // connect to the server's socket
     const { user } = useContext(AuthContext); // context used for authentication
@@ -126,8 +129,7 @@ export default function Notifications() {
         setShowNotification(false);
     };
 
-    const toggleNotification = (e) => {
-        const notificationTitle = e.target.innerText;
+    const toggleNotification = (notificationTitle) => {
         const notification = notifications.find(notification => notification.title === notificationTitle);
 
         if (notification) {
@@ -175,28 +177,30 @@ export default function Notifications() {
                             <button type="button" className="notification-tab" value="deleted" onClick={(e) => handleTabChange(e)}>Deleted ({deletedNotifications.length})</button>
                         </div>
 
-                        <section className="left-notification-holder">
-                            <section id={`${tab}-notifications-section`}>
-                                <h2>{tab === "unread" ? "Unread" : tab === "read" ? "Read" : "Deleted"} Notifications</h2>
-                                <NotificationTable 
-                                    selectedNotifications={
-                                        tab === "unread" ? unreadNotifications 
-                                        : tab === "read" ? readNotifications 
-                                        : deletedNotifications
-                                    } 
-                                    toggleNotification={toggleNotification} 
-                                    markNotification={markNotification}
-                                />
+                        <div className="notification-sections">
+                            <section className="left-notification-holder">
+                                <section id={`${tab}-notifications-section`}>
+                                    <h2>{tab === "unread" ? "Unread" : tab === "read" ? "Read" : "Deleted"} Notifications</h2>
+                                    <NotificationTable 
+                                        selectedNotifications={
+                                            tab === "unread" ? unreadNotifications 
+                                            : tab === "read" ? readNotifications 
+                                            : deletedNotifications
+                                        } 
+                                        toggleNotification={toggleNotification} 
+                                        markNotification={markNotification}
+                                    />
+                                </section>
                             </section>
-                        </section>
 
-                        <section className="right-notification-holder">
-                            {showNotification ? (
-                                <NotificationCard notificationId={notificationId} toggleNotification={toggleNotification} />
-                            ) : (
-                                <p>Select a notification to view details</p>
-                            )}
-                        </section>
+                            <section className="right-notification-holder">
+                                {showNotification ? (
+                                    <NotificationCard notificationId={notificationId} toggleNotification={toggleNotification} />
+                                ) : (
+                                    <p>Select a notification to view details</p>
+                                )}
+                            </section>
+                        </div>
                     </>
                 ) : <p>Please log in or create an account to view your notifications.</p>}
             </main>

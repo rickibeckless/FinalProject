@@ -203,47 +203,22 @@ export const createChallenge = async (req, res) => {
             if (notNullCheck(limitations.time_limit.min) || notNullCheck(limitations.time_limit.max)) {
                 requirementBonus += 10;
             };
-
-            /*
-                if (limitations.time_limit.min !== "" || limitations.time_limit.max !== "") {
-                    requirementBonus += 10;
-                };
-            */
         };
         if (limitations.word_limit) {
             if (notNullCheck(limitations.word_limit.min) || notNullCheck(limitations.word_limit.max)) {
                 requirementBonus += 10;
             };
-
-            /*
-                if (limitations.word_limit.min !== "" || limitations.word_limit.max !== "") {
-                    requirementBonus += 10;
-                };
-            */
         };
         if (limitations.character_limit) {
             if (notNullCheck(limitations.character_limit.min) || notNullCheck(limitations.character_limit.max)) {
                 requirementBonus += 10;
             };
-            
-            /*
-                if (limitations.character_limit.min !== "" || limitations.character_limit.max !== "") {
-                    requirementBonus += 10;
-                };
-            */
         };
         if (limitations.required_phrase) {
             if (notNullCheck(limitations.required_phrase)) {
                 requirementBonus += 10;
             };
         };
-        /*
-            if (limitations.required_phrase) {
-                if (limitations.required_phrase !== "") {
-                    requirementBonus += 10;
-                };
-            };
-        */
 
         available_points = (available_points * difficultyMultiplier) + timeConstraintBonus + requirementBonus;
 
@@ -251,17 +226,6 @@ export const createChallenge = async (req, res) => {
             'INSERT INTO challenges (author_id, name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, available_points) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *',
             [author_id, name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, available_points]
         );
-
-        /** need to send several notifications:
-        * - to the author of the challenge
-        *   - `Your challenge ${challenge.name} has been created! It is now live and ready for submissions.` or `Your challenge ${challenge.name} has been created! It will be live on ${challenge.start_date_time}.`
-        * - to users who follow the author
-        *   - `A new challenge ${challenge.name} has been created by ${author.username}. Check it out!`
-        * - to users who are following the challenge genre (excluding the author)
-        *   - `A new challenge ${challenge.name} has been created in the ${challenge.genre} genre. Check it out!`
-        * - to users who are following the challenge skill level (excluding the author)
-        *   - `A new challenge ${challenge.name} has been created for ${challenge.skill_level} writers. Check it out!`
-        */
 
         const notifications = [];
 

@@ -46,7 +46,7 @@
     width: 100%;
 }
 
-#hero-left .hero-buttons a {
+#hero-left .hero-buttons .account-link {
     border: none;
     font-size: 1.2rem;
 
@@ -132,4 +132,31 @@
 .section-card ul li {
     margin: 0.5rem;
     text-align: left;
+}
+
+/* Responsive Designs */
+@media screen and (max-width: 768px) {
+    #hero {
+        grid-template-columns: 1fr;
+    }
+
+    #hero-left {
+        order: 2;
+    }
+
+    #hero-right-img {
+        order: 1;
+    }
+
+    .home-section {
+        margin: 1vw 2vw 2vw;
+    }
+
+    .section-list {
+        grid-template-columns: 1fr;
+    }
+
+    .section-card {
+        height: 50vh;
+    }
 }

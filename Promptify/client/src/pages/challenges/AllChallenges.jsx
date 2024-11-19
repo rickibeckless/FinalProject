@@ -10,7 +10,6 @@ import "../../styles/challenges/all-challenges.css";
 import FilterImg from "../../assets/filter.svg";
 
 export default function AllChallenges() {
-    const environmentUrl = import.meta.env.VITE_NODE_ENV === "production" ? "https://promptify-ur5z.onrender.com" : "http://localhost:8080";
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
 
@@ -112,7 +111,7 @@ export default function AllChallenges() {
 
     useEffect(() => {
         async function fetchChallenges() {
-            const response = await fetch(`${environmentUrl}/api/challenges`);
+            const response = await fetch(`/api/challenges`);
             let data = await response.json();
 
             if (response.ok) {
@@ -129,7 +128,7 @@ export default function AllChallenges() {
     const handleShowEnded = (e) => {
         setShowEnded(e.target.checked);
 
-        if (showFiltersModal) setShowFiltersModal(false);
+        if (window.innerWidth <= 767 && showFiltersModal) setShowFiltersModal(false);
     };    
 
     const handleSort = (e, type) => {

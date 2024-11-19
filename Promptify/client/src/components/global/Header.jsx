@@ -16,6 +16,8 @@ import GlobeImg from "../../assets/globe.svg";
 import BoxQuestionImg from "../../assets/box_question.svg";
 import UserProfileImg from "../../assets/imgs/blank_profile_picture.png";
 
+import PromptifyLogo2 from "../../assets/android-chrome-192x192.png";
+
 export default function Header() {
     const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false }); // connect to the server's socket
     const location = useLocation();
@@ -23,6 +25,8 @@ export default function Header() {
     const [loading, setLoading] = useState(true);
 
     const { user, logout } = useContext(AuthContext);
+
+    const [showModifiedLogo, setShowModifiedLogo] = useState(window.innerWidth <= 767);
 
     const [openNavDropdown, setOpenNavDropdown] = useState(null);
     const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -32,32 +36,31 @@ export default function Header() {
     const [userProfileImage, setUserProfileImage] = useState(UserProfileImg);
     const [unreadNotifications, setUnreadNotifications] = useState([]);
 
-    // if (user) {
-    //     socket.on('receive-notification', (data) => {
-    //         if (data.userId === user.id && data.status === "unread") {
-    //             setUnreadNotifications([...unreadNotifications, data]);
-    //         } else if (data.userId === user.id && data.status !== "unread") {
-    //             setUnreadNotifications(unreadNotifications.filter(notification => notification.notificationId !== data.notificationId));
-    //         }
-    //     });
-    // };
-
     useEffect(() => {
         if (user) {
             socket.connect();
 
-            const handleReceiveNotification = (data) => {
-                if (data.userId === user.id) {
+            const handleReceiveNotification = (notificationPayload) => {
+                if (notificationPayload.userId === user.id) {
+                    const { data, status } = notificationPayload;
+            
                     setUnreadNotifications((prevNotifications) => {
-                        if (data.status === "unread") {
-                            return [...prevNotifications, data];
+                        const notificationId = data.id || notificationPayload.id;
+            
+                        if (status === "unread") {
+                            const exists = prevNotifications.some(notification => notification.id === notificationId);
+                            if (exists) {
+                                return prevNotifications;
+                            }
+            
+                            return [...prevNotifications, { ...data, id: notificationId }];
                         } else {
-                            return prevNotifications.filter(notification => notification.notificationId !== data.notificationId);
+                            return prevNotifications.filter(notification => notification.id !== notificationId);
                         }
                     });
                 }
             };
-
+            
             socket.on('receive-notification', handleReceiveNotification);
 
             return () => {
@@ -90,6 +93,16 @@ export default function Header() {
     useEffect(() => {
         setOpenNavDropdown(null);
     }, [location]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setShowModifiedLogo(window.innerWidth <= 767);
+        };
+
+        window.addEventListener('resize', handleResize);
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const toggleModal = (type, previousType) => {
         if (previousType) {
@@ -157,6 +170,15 @@ export default function Header() {
                                     </Link>
                                 </li>
                             } */}
+
+                            {showModifiedLogo && location.pathname !== "/" && 
+                                <li className="nav-link">
+                                    <Link className="user-nav-link" to="/">
+                                        <img src={PromptifyLogo2} alt="promptify logo" />
+                                        <span className="nav-link-text">Promptify</span>
+                                    </Link>
+                                </li>
+                            }
 
                             <li className="nav-link">
                                 <Link className="user-nav-link" to="/challenges">

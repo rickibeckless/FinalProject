@@ -303,7 +303,7 @@
     }
 
     .user-nav .dropdown.active {
-        left: -80vw;
+        left: -76vw;
         width: 92vw;
     }
 }

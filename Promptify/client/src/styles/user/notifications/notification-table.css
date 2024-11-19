@@ -1,0 +1,52 @@
+/* Notification Tables */
+#unread-notifications-section, #read-notifications-section, #deleted-notifications-section {
+    background-color: #fefefe;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px #0000001a;
+}
+
+.left-notification-holder table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.left-notification-holder table th, .left-notification-holder table td {
+    padding: 0.75rem;
+    text-align: center;
+}
+
+.td-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.left-notification-holder table th, .left-notification-holder table td button {
+    margin-right: 0.5rem;
+    padding: .5rem;
+}
+
+.left-notification-holder table th, .left-notification-holder table td button:last-of-type {
+    margin-right: 0;
+}
+
+.left-notification-holder table th {
+    background-color: var(--naples-yellow);
+    font-weight: bold;
+}
+
+.left-notification-holder table tr:nth-child(even) {
+    background-color: var(--light-text);
+}
+
+.left-notification-holder table tr {
+    transition: all .1s ease;
+}
+
+.left-notification-holder table tbody tr:hover {
+    background-color: var(--transparent-olive);
+    color: var(--black-olive);
+    cursor: pointer;
+}

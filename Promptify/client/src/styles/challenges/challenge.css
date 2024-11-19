@@ -4,3 +4,144 @@
     background-color: #ffffff;
     color: var(--black-olive);
 }
+
+.challenge-section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--light-olive);
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--paynes-gray);
+    text-align: center;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+    
+    margin-bottom: .5rem;
+    padding: .5rem;
+
+    border-radius: 5px;
+
+    transition: all .3s ease-in-out;
+}
+
+.detail-row:hover {
+    background-color: var(--transparent-olive);
+    transform: scale(1.01);
+}
+
+.detail-row.long {
+    flex-direction: column;
+
+    .detail-content {
+        transition: all .3s ease-in-out;
+    }
+}
+
+.detail-row.long:hover .detail-content {
+    border-left: 4px solid var(--paynes-gray);
+    padding-left: 1rem;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: var(--paynes-gray);
+}
+
+.detail-content {
+    color: var(--dark-text);
+}
+
+.detail-content.author-link {
+    color: var(--verdigris);
+    text-decoration: none;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.status-badge {
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.status-in-progress {
+    background-color: var(--paynes-gray);
+    color: var(--light-text);
+}
+
+.status-ended {
+    background-color: var(--success-green);
+    color: var(--light-text);
+}
+
+.status-upcoming {
+    background-color: var(--naples-yellow);
+    color: var(--dark-text);
+}
+
+.no-submissions-message {
+    font-style: italic;
+    color: var(--mild-danger-red);
+}
+
+#challenge-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    .bookmark-holder {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    #edit-challenge-button.disabled {
+        color: var(--light-text);
+        cursor: not-allowed;
+        opacity: 80%;
+
+        &:hover {
+            transform: none;
+        }
+    }
+}
+
+.challenge-submissions-call-to-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.points-info {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+
+    transition: width 0.15s ease-in-out;
+
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    justify-items: center;
+    align-items: center;
+}
+
+.points-info.active {
+    width: calc(90vw - 6rem);
+    overflow: visible;
+    height: 6rem;
+    opacity: 1;
+}

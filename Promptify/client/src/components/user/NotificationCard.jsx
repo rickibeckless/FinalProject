@@ -19,7 +19,7 @@ import MessagePopup from "../global/MessagePopup.jsx";
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
 // styling for page will be imported here
-//import "../../styles/users/notification-card.css"; // styling for the notification card
+import "../../styles/user/notifications/notification-card.css"; // styling for the notification card
 
 // import any images or assets here
 
@@ -42,11 +42,13 @@ export default function NotificationCard({ notificationId, toggleNotification })
         fetchNotification();
     }, [notificationId]);
 
+    const formattedDate = new Date(notification?.date_created).toLocaleString();
+
     return (
         <div className="notification-card">
             <div className="notification-card-header">
                 <h3>{notification?.title}</h3>
-                <p>{notification?.date_created}</p>
+                <p>{formattedDate}</p>
             </div>
             <div className="notification-card-body">
                 <p>{notification?.content}</p>

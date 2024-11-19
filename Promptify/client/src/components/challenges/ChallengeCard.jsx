@@ -23,6 +23,8 @@ import "../../styles/challenges/challenge-card.css"; // styling for the challeng
 // import any images or assets here
 import BookmarkImg from "../../assets/bookmark.svg";
 import BookmarkFilledImg from "../../assets/bookmark_filled.svg";
+import StarImg from "../../assets/star.svg";
+import StarFilledImg from "../../assets/star_filled.svg";
 import AuthorImg from "../../assets/imgs/blank_profile_picture.png";
 
 export default function ChallengeCard({ challenge }) {
@@ -37,7 +39,7 @@ export default function ChallengeCard({ challenge }) {
     const [bookmarkedChallenge, setBookmarkedChallenge] = useState(false);
     const [showPointsDetails, setShowPointsDetails] = useState(false);
     const [submission, setSubmission] = useState(null);
-    const [showFollowPopup, setShowFollowPopup] = useState(false);
+    const [followedGenre, setFollowedGenre] = useState(false);
 
     const navigate = useNavigate(); // used to navigate to a different page
 
@@ -125,6 +127,16 @@ export default function ChallengeCard({ challenge }) {
             };
         };
 
+        async function checkGenreFollowed() {
+            if (user) {
+                if (user.following_genres.includes(challenge.genre)) {
+                    setFollowedGenre(true);
+                } else {
+                    setFollowedGenre(false);
+                };
+            };
+        };
+
         async function checkIfUserInChallenge() {
             if (user) {
                 const response = await fetch(`/api/submissions/user/${user.id}/challenge/${challenge.id}`);
@@ -139,6 +151,7 @@ export default function ChallengeCard({ challenge }) {
         
         fetchAuthor();
         checkIfBookmarked();
+        checkGenreFollowed();
         checkIfUserInChallenge();
 
         return () => {
@@ -148,12 +161,19 @@ export default function ChallengeCard({ challenge }) {
 
     const handleFollow = async (type) => {
         if (user) {
-            if (type === "user") {
-                // follow user
-            } else if (type === "genre") {
-                // follow genre
-            } else if (type === "skill_level") {
-                // follow skill level
+            if (type === "genre") {
+                const response = await fetch(`/api/users/${user.id}/${challenge.genre}/follow`, {
+                    method: "PATCH",
+                    headers: {
+                        role: user ? "user" : "none",
+                    },
+                });
+
+                if (response.ok) {
+                    setFollowedGenre(!followedGenre);
+                } else {
+                    console.error("Error following genre");
+                };
             };
         };
     };
@@ -168,7 +188,6 @@ export default function ChallengeCard({ challenge }) {
             });
 
             if (response.ok) {
-                const data = await response.json();
                 setBookmarkedChallenge(!bookmarkedChallenge);
             } else {
                 console.error("Error bookmarking challenge");
@@ -203,7 +222,9 @@ export default function ChallengeCard({ challenge }) {
         // };
         
         return `1st: ${Math.floor(points * 0.5)}pts | 2nd: ${Math.floor(points * 0.3)}pts | 3rd: ${Math.floor(points * 0.2)}pts`;
-    }
+    };
+
+    const genreNames = ["fantasy", "general", "poetry", "non-fiction", "thriller"];
 
     return (
         <li className={`challenge-card ${user && userInChallenge ? 'active' : ''}`}>
@@ -245,7 +266,22 @@ export default function ChallengeCard({ challenge }) {
 
                 <div className="challenge-card-tags-holder">
                     {tags.map((tag) => (
-                        <span key={tag} value={tag} className="challenge-card-tag">{tag}</span>
+                        genreNames.includes(tag) ? (
+                            <span key={tag} value={tag} className="challenge-card-tag genre-tag" onClick={() => handleFollow("genre")}>
+                                {followedGenre ? (
+                                    <button className="followed-genre" title="Unfollow Genre" type="button">
+                                        <img className="followed-genre-img" src={StarFilledImg} alt="followed genre" />
+                                    </button>
+                                ) : (
+                                    <button className="follow-genre" title="Follow Genre" type="button">
+                                        <img className="follow-genre-img" src={StarImg} alt="follow genre" />
+                                    </button>
+                                )}
+                                {tag}
+                            </span>
+                        ) : (
+                            <span key={tag} value={tag} className="challenge-card-tag">{tag}</span>
+                        )
                     ))}
                 </div>
             </div>

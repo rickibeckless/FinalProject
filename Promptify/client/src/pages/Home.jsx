@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useContext } from "react";
+import { Link} from "react-router-dom";
 import PageTitle from "../components/global/PageTitle.jsx";
 import LoadingScreen from "../components/global/LoadingScreen.jsx";
 import MessagePopup from "../components/global/MessagePopup.jsx";
@@ -17,17 +17,17 @@ export default function Home() {
 
     /**
      * @rickibeckless
-     * if the user is logged in, redirect them to their `your challenges` page
-     * get all challenges, splice the first 3, use the challenges card component to display them
-     * write out a list of features and how it works
-     * decide if the how section should be on this page
-     * decide if the last three sections should be a carousel or just a list
      * want to make at least one of the sections a carousel
-     * create a left aside for the user to navigate to the different sections
-     *  - this will be the same kind of aside that will be on the:
-     *      - settings page
-     *      - your challenges page
     */
+
+    const scrollTo = (section) => {
+        const element = document.getElementById(section);
+        const offset = 60;
+        window.scrollTo({
+            top: element.offsetTop - offset,
+            behavior: 'smooth'
+        });
+    };
 
     return (
         <>
@@ -47,6 +47,8 @@ export default function Home() {
 
                         <div className="hero-buttons account-links">
                             <Link className="account-link" to="/challenges">Current Challenges</Link>
+                            <button type="button" className="account-link" onClick={() => scrollTo('home-how-section')}>How It Works</button>
+                            <button type="button" className="account-link" onClick={() => scrollTo('home-features-section')}>App Features</button>
                             {/* <Link className="account-link" to="#">User Ranks</Link> */}
                         </div>
                     </div>
@@ -196,7 +198,7 @@ export default function Home() {
                 </section>
             </main>
 
-            {message && <MessagePopup message={message} />}
+            {message && <MessagePopup message={message} setMessage={setMessage} />}
         </>
     );
 };

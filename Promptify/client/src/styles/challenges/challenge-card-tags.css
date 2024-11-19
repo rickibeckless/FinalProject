@@ -21,6 +21,30 @@
     background-color: #dfe7ed;
 }
 
+/* Genre Tag Styles */
+.challenge-card-tag.genre-tag {
+    position: relative;
+    cursor: pointer;
+
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    
+        img {
+            cursor: pointer;
+
+            width: 1.2rem;
+            height: 1.2rem;
+
+            position: absolute;
+            top: -9px;
+            right: -9px;
+        }
+    }
+}
+
+
 /* Individual Tag Colors */
 
 /* genre tags */
