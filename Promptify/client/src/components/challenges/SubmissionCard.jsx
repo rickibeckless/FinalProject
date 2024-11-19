@@ -127,38 +127,22 @@ export default function SubmissionCard({ challenge, submission }) {
             <div className="submission-card-header">
                 {/**
                 * TODO:
-                * - Add submission title
-                * - Add submission author
-                * - Add submission date
-                * - Add submission tags (genre, word count, character count)
                 * - Add submission total time
                 */}
                 <h3>{submission.title}</h3>
-                <p>{author.username}</p>
-                <p>{new Date(submission.submitted_at).toLocaleString()}</p>
+                <Link to={`/@${author.username}`}>{author.username}</Link>
+                <p>{new Date(submission.submitted_at).toLocaleDateString()}</p>
                 <p>{submission.genre}</p>
                 <p>{submission.word_count} words</p>
                 <p>{submission.character_count} characters</p>
             </div>
 
             <div className="submission-card-content-holder">
-                {/**
-                * TODO:
-                * - Show submission description
-                * - Show spliced submission content
-                */}
                 <p className="submission-card-summary">{submission.summary}</p>
                 <p className="submission-card-content">{removeHTMLTags(splicedContent)}</p>
             </div>
 
             <div className="submission-card-footer">
-                {/**
-                * TODO: 
-                * - Add button to view submission
-                * - Show total number of upvotes and comments
-                * - Show top 3 comments
-                * - Add input field to submit a comment
-                */}
                 <Link to={`/submissions/${submission.id}`} className="button">View Submission</Link>
                 <div className="submission-card-stats-holder">
                     <div className="stat-count-holder" title={upvotes.length === 1 ? `${upvotes.length} Upvote` : `${upvotes.length} Upvotes`}>
@@ -191,9 +175,9 @@ export default function SubmissionCard({ challenge, submission }) {
                         
                         {comments.slice(0, 3).map(comment => (
                             <li className="submission-card-comment" key={comment.id}>
-                                <h4>{comment.author}</h4>
-                                <p>{new Date(comment.date_created).toLocaleString()}</p>
-                                <p>{comment.content}</p>
+                                <Link to={`/@${comment.author}`}>{comment.author}</Link>
+                                <p>{new Date(comment.date_created).toLocaleDateString()}</p>
+                                <p className="submission-card-comment-content">{comment.content}</p>
                             </li>
                         ))}
                     </ul>

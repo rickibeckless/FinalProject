@@ -56,7 +56,8 @@ export default function ChallengeCard({ challenge }) {
         const filteredLimitationTags = limitationTags.filter(Boolean);
 
         const participationCountTags = [
-            challenge.participation_count <= 10 && "0-10",
+            challenge.participation_count === 0 && "0",
+            challenge.participation_count >=1 && challenge.participation_count <= 10 && "1-10",
             challenge.participation_count <= 50 && challenge.participation_count > 10 && "11-50",
             challenge.participation_count <= 100 && challenge.participation_count > 50 && "51-100",
             challenge.participation_count > 100 && "100+",

@@ -39,7 +39,7 @@ Users can easily create an account which allows them to participate in writing c
 #### Signup Gif
 ![signup gif](./project_demos/features/user_signup.gif)
 
-### User Profiles
+### ✅ User Profiles
 
 > Profiles implement a one-to-many relationship (users to submissions), highlighting the database schema requirements.
 
@@ -48,7 +48,8 @@ Users can easily create an account which allows them to participate in writing c
 Each user has a personalized profile that showcases their writing, including completed challenges, submissions, and received feedback. The user profile will also be where the badges a user has earned will be displayed. Some additional profile features include creating a short "About Me" and profile pictures.
 - *users earn badges for creating challenges, completing challenges, receiving votes, and providing feedback (comments and votes).*
 
-[gif goes here]
+#### User Profile Gif
+![user profile gif](./project_demos/features/user_profile.gif)
 
 ### ✅ Writing Challenges
 
@@ -86,14 +87,17 @@ Engagement is encouraged through a voting system where users can upvote their fa
 - *while users can upvote a submission, they cannot downvote.*
 - *both signed-in users and guests can vote on a submission, but guest votes will not be used to determine the winner.*
 
-[gif goes here]
+
+#### Commenting and Voting Gif
+![commenting and voting gif](./project_demos/features/give_feedback.gif)
 
 ### ✅ User Notifications
 
 To keep users informed and engaged, the app provides personalized notifications for new challenges, comments and votes on their submissions, and when a challenge they participated in final votes are published.
 - *users can choose what new challenges to be notified of, by default they are not notified of new challenges.*
 
-[gif goes here]
+#### Notifications Gif
+![notifications gif](./project_demos/features/user_notifications.gif)
 
 ## Installation Instructions
 

@@ -1,10 +1,10 @@
-.submission-card {
+/* .submission-card {
     list-style: none;
     margin: 0 8vw;
 }
 
 .submission-card-header {
-    
+
 }
 
 .submission-card-content-holder {
@@ -42,7 +42,216 @@
 
         .submission-card-comment {
             list-style: none;
-            
-        } 
+
+        }
     }
+} */
+
+/* Main Submission List Container */
+.submission-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0;
+    margin: 20px 0;
+    list-style: none;
+}
+
+/* Individual Submission Card */
+.submission-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 15px;
+    margin: 0 8vw;
+    list-style: none;
+}
+
+.submission-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px var(--transparent-olive);
+}
+
+/* Header Section */
+.submission-card-header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    border-bottom: 1px solid var(--verdigris);
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.submission-card-header h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.submission-card-header a {
+    color: var(--verdigris);
+    text-decoration: none;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.submission-card-header p {
+    font-size: 0.9rem;
+    color: var(--paynes-gray);
+    margin: 0;
+}
+
+/* Content Section */
+.submission-card-content-holder {
+    margin-bottom: 15px;
+}
+
+.submission-card-summary {
+    font-size: 0.9rem;
+    color: var(--paynes-gray);
+    line-height: 1.5;
+}
+
+.submission-card-content {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--black-olive);
+    padding: 1rem .5rem;
+}
+
+/* Footer Section */
+.submission-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.submission-card-footer .button {
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: var(--light-text);
+    background-color: var(--verdigris);
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.submission-card-footer .button:hover {
+    background-color: var(--paynes-gray);
+}
+
+/* Stats Section in Footer */
+.submission-card-footer .submission-card-stats-holder {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.stat-count-holder {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-count-holder p {
+    font-size: 0.9rem;
+    color: var(--dark-text);
+    margin: 0;
+}
+
+.stat-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.stat-btn img {
+    width: 1.5rem;
+    height: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.stat-btn:hover img {
+    transform: scale(1.2);
+}
+
+/* Comments Section */
+.submission-card-comments-list {
+    margin: 1rem 2vw;
+    padding: 1rem;
+    list-style: none;
+    background-color: var(--light-text);
+    border-radius: 10px;
+}
+
+.submission-card-comments-list .submission-card-comment {
+    border-top: 1px solid var(--verdigris);
+    padding: 10px 0;
+    list-style: none;
+}
+
+.submission-card-comments-list .submission-card-comment:first-child {
+    border-top: none;
+}
+
+.submission-card-comments-list .submission-card-comment a {
+    color: var(--verdigris);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-style: italic;
+    margin: 0;
+}
+
+.submission-card-comments-list .submission-card-comment p {
+    font-size: 0.85rem;
+    color: var(--paynes-gray);
+    margin: 5px 0 0;
+}
+
+.submission-card-comments-list .submission-card-comment p.submission-card-comment-content {
+    font-size: 0.9rem;
+    color: var(--paynes-gray);
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    transition: all 0.3s ease-in-out;
+}
+
+.submission-card-comments-list .submission-card-comment p.submission-card-comment-content:hover {
+    color: var(--black-olive);
+    padding-left: 1rem;
+    border-left: 4px solid var(--verdigris);
+}
+
+/* Empty State Message */
+.no-submissions-message {
+    font-size: 1rem;
+    color: var(--paynes-gray);
+    text-align: center;
+    margin: 30px 0;
+}
+
+.challenge-submissions-call-to-action .challenge-card-button {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1rem;
+    color: var(--light-text);
+    background: var(--sandy-brown);
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.challenge-submissions-call-to-action .challenge-card-button:hover {
+    background-color: var(--naples-yellow);
 }

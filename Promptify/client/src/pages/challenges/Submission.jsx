@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
+import { io } from 'socket.io-client'; // used to connect to the server's socket
 import AuthContext from "../../context/AuthProvider.jsx";
 import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
@@ -12,6 +13,7 @@ import thumbsUpImg from "../../assets/thumbs_up.svg";
 import thumbsUpFilledImg from "../../assets/thumbs_up_filled.svg";
 
 export default function Submission() {
+    const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false }); // connect to the server's socket
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
@@ -27,6 +29,20 @@ export default function Submission() {
 
     const [openComments, setOpenComments] = useState(false);
 
+    useEffect(() => {
+        socket.connect(); // connect to the server's socket
+
+        socket.on('receive-comment', (data) => {
+            if (data.submission_id === submissionId) {
+                setComments(prevComments => [...prevComments, data]);
+            }
+        });
+
+        return () => {
+            socket.disconnect(); // disconnect from the server's socket
+        };
+    })
+
     async function fetchUpvotes() {
         const response = await fetch(`/api/upvotes/submission/${submission.id}`);
         const data = await response.json();
@@ -38,80 +54,19 @@ export default function Submission() {
         };
     };
 
-    /*
-    useEffect(() => {
-        async function fetchSubmission() {
-            const response = await fetch(`/api/submissions/${submissionId}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                setSubmission(data[0]);
-            } else {
-                console.error(data.error);
-            };
-        };
-
-        async function fetchAuthor() {
-            const response = await fetch(`/api/users/${submission.author_id}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                setAuthor(data[0]);
-            } else {
-                console.error(data.error);
-            };
-        };
-
-        async function fetchComments() {
-            const response = await fetch(`/api/comments/submission/${submissionId}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                const commentsWithInfo = await Promise.all(data.map(async comment => {
-                    const response = await fetch(`/api/users/${comment.user_id}`);
-                    const data = await response.json();
-                    const author = data[0].username;
-
-                    const childrenComments = data.filter(childComment => childComment.parent_comment_id === comment.id);
-
-                    if (response.ok) {
-                        return {
-                            ...comment,
-                            author,
-                            childrenComments
-                        };
-                    }
-                }));
-
-                setComments(commentsWithInfo);
-            } else {
-                console.error(data.error);
-            };
-        };
-
-        fetchSubmission();
-        fetchAuthor();
-        fetchComments();
-        fetchUpvotes();
-        setLoading(false);
-    }, []); */
-
     useEffect(() => {
         async function fetchData() {
             try {
-                // First, fetch submission
                 const submissionResponse = await fetch(`/api/submissions/${submissionId}`);
                 const submissionData = await submissionResponse.json();
     
                 if (submissionResponse.ok) {
                     setSubmission(submissionData[0]);
     
-                    // Fetch author after submission is fetched
                     const authorResponse = await fetch(`/api/users/${submissionData[0].author_id}`);
                     const authorData = await authorResponse.json();
                     if (authorResponse.ok) setAuthor(authorData[0]);
     
-                    // Fetch comments after submission is fetched
                     const commentsResponse = await fetch(`/api/comments/submission/${submissionId}`);
                     const commentsData = await commentsResponse.json();
                     if (commentsResponse.ok) {
@@ -130,7 +85,6 @@ export default function Submission() {
                         setComments(commentsWithInfo);
                     }
     
-                    // Fetch upvotes after submission is fetched
                     const upvotesResponse = await fetch(`/api/upvotes/submission/${submissionData[0].id}`);
                     const upvotesData = await upvotesResponse.json();
                     if (upvotesResponse.ok) setUpvotes(upvotesData);
@@ -191,27 +145,53 @@ export default function Submission() {
         };
     };
 
+    const handleSubNavClick = (section) => {
+        const element = document.getElementById(section);
+        const offset = 80;
+        window.scrollTo({
+            top: element.offsetTop - offset,
+            behavior: 'smooth'
+        });
+    };
+
     return (
         <>
             {loading ? <LoadingScreen /> : null}
             <PageTitle title={`${submission.title} | Promptify`} />
 
             <main id="submission-body" className="container">
+                <section className="submission-nav-section">
+                    <Link to={`/challenges/${submission.challenge_id}`} className="submission-nav-link">Back To Challenge</Link>
+                    <p className="submission-nav-link" onClick={() => handleSubNavClick('feedback')}>Scroll To Feedback</p>
+                </section>
                 <section className="submission-section">
                     <div className="submission-header">
                         <h1>{submission.title}</h1>
-                        <p>{author.username}</p>
-                        <p>{submission.summary}</p>
-                        <p>{submission.word_count} words</p>
-                        <p>{submission.character_count} characters</p>
+                        <Link to={`/@${author.username}`} className="submission-header-username">{author.username}</Link>
+                        <p className="submission-header-summary">{submission.summary}</p>
+                        <div className="submission-header-stats-holder">
+                            <p className="submission-header-stat">{new Date(submission.submitted_at).toLocaleDateString()}</p>
+                            <p className="submission-header-stat">{submission.genre}</p>
+                            <p className="submission-header-stat">{submission.word_count} words</p>
+                            <p className="submission-header-stat">{submission.character_count} characters</p>
+                        </div>
+                        <div className="stat-count-holder" id="upvote-holder" title={upvotes.length === 1 ? `${upvotes.length} Upvote` : `${upvotes.length} Upvotes`}>
+                            <p>{upvotes.length}</p>
+                            <button type="button" className="stat-btn" onClick={handleUpvote}>
+                                <img src={upvotes.find(upvote => upvote.user_id === user?.id) ? thumbsUpFilledImg : thumbsUpImg} alt="Thumbs up icon" />
+                            </button>
+                        </div>
                     </div>
                     
                     <div id="submission-content" dangerouslySetInnerHTML={{ __html: submission.content }}></div>
 
                 </section>
 
-                <section className="submission-feedback">
-                    <h2>Feedback</h2>
+                <section className="submission-feedback" id="feedback">
+                    <h2>
+                        Feedback 
+                        <span className="submission-feedback-count">{comments.length}</span>
+                    </h2>
                     <ul id="feedback-list">
                         {comments.map(comment => (
                             <FeedBackCard key={comment.id} comment={comment} />
@@ -225,7 +205,7 @@ export default function Submission() {
                                 value={newComment.content}
                                 onChange={e => setNewComment({ ...newComment, content: e.target.value })}
                             ></textarea>
-                            <button type="button" onClick={submitComment}>Submit</button>
+                            <button type="button" className="challenge-card-button" onClick={submitComment}>Submit</button>
                         </form>
                     </div>
                 </section>

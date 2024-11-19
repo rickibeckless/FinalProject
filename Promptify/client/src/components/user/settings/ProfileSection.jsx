@@ -165,11 +165,9 @@ export default function ProfileSection({ user }) {
         if (type === "bookmarked_challenges") {
             console.log("Removing bookmarked challenge:", name);
             setBookmarkedChallengesNames(bookmarkedChallengesNames.filter((challenge) => challenge !== name));
-            // do fetch (have to get id from name)
         } else if (type === "following") {
             console.log("Removing following user:", name);
             setFollowingUsersNames(followingUsersNames.filter((user) => user !== name));
-            // do fetch (have to get id from name)
         };
     };
 

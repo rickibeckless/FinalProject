@@ -51,7 +51,8 @@ export default function AllChallenges() {
             advanced: bool
         },
         participationCount: {
-            "0-10": bool,
+            "0": bool,
+            "1-10": bool,
             "10-50": bool,
             "50-100": bool,
             "100+": bool
@@ -226,8 +227,10 @@ export default function AllChallenges() {
                             } else if (filterCategory === "skillLevel") {
                                 return challenge.skill_level === filter;
                             } else if (filterCategory === "participationCount") {
-                                if (filter === "0-10") {
-                                    return challenge.participation_count >= 0 && challenge.participation_count <= 10;
+                                if (filter === "0") {
+                                    return challenge.participation_count === 0;
+                                } else if (filter === "1-10") {
+                                    return challenge.participation_count >= 1 && challenge.participation_count <= 10;
                                 } else if (filter === "10-50") {
                                     return challenge.participation_count > 10 && challenge.participation_count <= 50;
                                 } else if (filter === "50-100") {
@@ -352,7 +355,8 @@ export default function AllChallenges() {
                                     <fieldset className="filter-challenges">
                                         <legend>Participation Count</legend>
                                         <div className="limits-holder">
-                                            <label><input type="checkbox" name="participationCount" value="0-10" onChange={(e) => handleFilters(e)} checked={filters.participationCount["0-10"]} /><span className="custom-checkbox"></span> 0-10</label>
+                                            <label><input type="checkbox" name="participationCount" value="0" onChange={(e) => handleFilters(e)} checked={filters.participationCount["0"]} /><span className="custom-checkbox"></span> 0</label>
+                                            <label><input type="checkbox" name="participationCount" value="1-10" onChange={(e) => handleFilters(e)} checked={filters.participationCount["1-10"]} /><span className="custom-checkbox"></span> 1-10</label>
                                             <label><input type="checkbox" name="participationCount" value="10-50" onChange={(e) => handleFilters(e)} checked={filters.participationCount["10-50"]} /><span className="custom-checkbox"></span> 10-50</label>
                                             <label><input type="checkbox" name="participationCount" value="50-100" onChange={(e) => handleFilters(e)} checked={filters.participationCount["50-100"]} /><span className="custom-checkbox"></span> 50-100</label>
                                             <label><input type="checkbox" name="participationCount" value="100+" onChange={(e) => handleFilters(e)} checked={filters.participationCount["100+"]} /><span className="custom-checkbox"></span> 100+</label>

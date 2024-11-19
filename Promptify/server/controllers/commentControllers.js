@@ -1,4 +1,5 @@
 import { pool } from '../config/database.js';
+import { io } from '../server.js';
 
 export const getAllComments = async (req, res) => {
     try {
@@ -91,6 +92,8 @@ export const createNewComment = async (req, res) => {
 
         const results = await pool.query('INSERT INTO comments (parent_comment_id, user_id, submission_id, content) VALUES ($1, $2, $3, $4) RETURNING *', [parent_comment_id, userId, submissionId, content]);
 
+        io.emit('receive-comment', results.rows[0]);
+
         res.status(201).json(results.rows[0]);
     } catch (error) {
         console.error('Error creating new comment:', error);
@@ -111,6 +114,8 @@ export const updateCommentByCommentId = async (req, res) => {
         const { content } = req.body;
 
         const results = await pool.query('UPDATE comments SET content = $1 WHERE id = $2 RETURNING *', [content, commentId]);
+
+        io.emit('receive-comment', results.rows[0]);
 
         res.status(200).json(results.rows[0]);
     } catch (error) {

@@ -24,7 +24,7 @@ import "../../styles/submissions/feedback-card.css"; // styling for the submissi
 import commentsImg from "../../assets/comments.svg";
 import commentsFilledImg from "../../assets/comments_filled.svg";
 
-export default function FeedBackCard({ comment, childrenComments }) {
+export default function FeedBackCard({ key, comment, childrenComments }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState([]);
     const [openComments, setOpenComments] = useState(false);
@@ -58,7 +58,7 @@ export default function FeedBackCard({ comment, childrenComments }) {
                     </Link>
                 </div>
                 <div className="feedback-card-date">
-                    <span>{comment.created_at}</span>
+                    <span>{new Date(comment.date_created).toLocaleDateString()}</span>
                 </div>
 
             </div>
@@ -73,7 +73,7 @@ export default function FeedBackCard({ comment, childrenComments }) {
                 <div className="feedback-card-comments">
                     <button onClick={toggleComments}>
                         <img src={commentsImg} alt="Comments icon" />
-                        <span>{comment.children_comments_count}</span>
+                        <span>{comment.children_comments_count || 0}</span>
                     </button>
                 </div>
             </div>
