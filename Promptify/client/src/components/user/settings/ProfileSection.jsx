@@ -62,12 +62,13 @@ export default function ProfileSection({ user }) {
             async function getFollowingUsersNames() {
                 let followingUsersNames = [];
 
-                for (let i = 0; i < user.following; i++) {
-                    const response = await fetch(`/api/user-followers/${user.id}/following`);
-                    const data = await response.json();
+                const response = await fetch(`/api/user-followers/${user.id}/following`);
+                const data = await response.json();
 
-                    followingUsersNames.push(data[0].username);
+                for (let i = 0; i < data.length; i++) {
+                    followingUsersNames.push(data[i].username);
                 };
+
 
                 setFollowingUsersNames(followingUsersNames);
             };
@@ -85,8 +86,6 @@ export default function ProfileSection({ user }) {
         Allow user to edit their profile info, which looks like:
 
         {
-            "email": "glbeckless@gmail.com",
-            "password": "$2a$10$BFiFT2NkyS1lH1gfTxrhSOCpU9iiwzvFDWeqxICOPoiz4c7bvzqO6",
             "username": "ricki_b",
             "profile_picture_url": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
             "about": "This user has not set up an about yet.",
@@ -166,9 +165,11 @@ export default function ProfileSection({ user }) {
         if (type === "bookmarked_challenges") {
             console.log("Removing bookmarked challenge:", name);
             setBookmarkedChallengesNames(bookmarkedChallengesNames.filter((challenge) => challenge !== name));
+            // do fetch (have to get id from name)
         } else if (type === "following") {
             console.log("Removing following user:", name);
             setFollowingUsersNames(followingUsersNames.filter((user) => user !== name));
+            // do fetch (have to get id from name)
         };
     };
 

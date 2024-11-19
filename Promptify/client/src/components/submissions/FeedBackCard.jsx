@@ -52,7 +52,7 @@ export default function FeedBackCard({ comment, childrenComments }) {
         <li className="feedback-card">
             <div className="feedback-card-header">
                 <div className="feedback-card-author">
-                    <Link to={`/profile/${author.id}`}>
+                    <Link to={`/@${author.username}`}>
                         <img src={author.profile_picture_url} alt="Author profile picture" />
                         <span>{author.username}</span>
                     </Link>

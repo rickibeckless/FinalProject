@@ -153,6 +153,23 @@ export const getChallengesBySkillLevel = async (req, res) => {
     };
 };
 
+export const getChallengesByUser = async (req, res) => {
+    try {
+        const results = await pool.query('SELECT * FROM challenges WHERE author_id = $1', [req.params.userId]);
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'Challenges not found' });
+        };
+
+        await challengeCheck(results, res);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error fetching challenges by user:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
 export const createChallenge = async (req, res) => {
     try {
         const { 

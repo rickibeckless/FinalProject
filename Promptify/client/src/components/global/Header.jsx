@@ -175,7 +175,7 @@ export default function Header() {
                                 <li className="nav-link">
                                     <Link className="user-nav-link" to="/">
                                         <img src={PromptifyLogo2} alt="promptify logo" />
-                                        <span className="nav-link-text">Promptify</span>
+                                        <span className="nav-link-text">Home</span>
                                     </Link>
                                 </li>
                             }
@@ -236,9 +236,9 @@ export default function Header() {
                                         </Link>
                                     </li>
                                 }
-                                {location.pathname !== "/profile" &&
+                                {location.pathname !== `/@${user.username}` &&
                                     <li className="nav-link">
-                                        <Link className="user-nav-link" to="/profile">
+                                        <Link className="user-nav-link" to={`/@${user.username}`}>
                                             <img src={PersonImg} alt="person icon" />
                                             <span className="nav-link-text">Your Profile</span>
                                         </Link>

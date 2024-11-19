@@ -254,7 +254,7 @@ export default function ChallengeCard({ challenge }) {
 
                 <div className="challenge-card-author-holder">
                     <img className="challenge-card-author-image" src={authorProfilePicture} alt={`${author?.username} profile image`} />
-                    <Link to={`/${author?.username}`} className="challenge-card-author">{author?.username}</Link>
+                    <Link to={`/@${author?.username}`} className="challenge-card-author">{author?.username}</Link>
                 </div>
                 
                 <div className="points-holder" onMouseEnter={() => handlePointsDetails('open')} onMouseLeave={() => handlePointsDetails('close')}>

@@ -61,11 +61,28 @@ export const getUserById = async (req, res) => {
     };
 };
 
+export const getUserByUsername = async (req, res) => {
+    try {
+        const results = await pool.query('SELECT * FROM users WHERE LOWER(username) = LOWER($1)', [req.params.username]);
+
+        if (results.rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        };
+
+        await userCheck(results, res);
+
+        res.status(200).json(results.rows);
+    } catch (error) {
+        console.error('Error fetching user by username:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
 export const createUserWithConventional = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const checkUser = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const checkUser = await pool.query('SELECT * FROM users WHERE email = $1, username = $2', [email, username]);
 
         if (checkUser.rows.length > 0) {
             return res.status(400).json({ error: 'User already exists' });

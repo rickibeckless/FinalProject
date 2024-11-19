@@ -126,8 +126,8 @@ export default function Challenge() {
                     <div id="challenge-details" className="challenge-details">
                         <div className="detail-row">
                             <p className="detail-label">Author:</p>
-                            <Link to={`/${author.username}`} className="detail-content author-link">{author.username}</Link>
-                        </div>                            
+                            <Link to={`/@${author.username}`} className="detail-content author-link">{author.username}</Link>
+                        </div>
                         <div className="detail-row long">
                             <p className="detail-label">Description:</p>
                             <p className="detail-content">{challenge.description}</p>

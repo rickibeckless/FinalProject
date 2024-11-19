@@ -5,6 +5,7 @@ import '../config/dotenv.js';
 import { 
     getUsers, 
     getUserById, 
+    getUserByUsername,
     createUserWithConventional, 
     loginUserWithConventional, 
     editUser, 
@@ -28,6 +29,7 @@ const loginLimiter = rateLimit({
 
 router.get("/", getUsers); // GET all users
 router.get("/:id", getUserById); // GET user by ID
+router.get("/username/:username", getUserByUsername); // GET user by username
 
 router.post("/sign-up", createUserWithConventional); // POST new user
 router.post("/login", loginLimiter, loginUserWithConventional); // POST login

@@ -1,0 +1,196 @@
+/* Container and layout styling */
+#user-body.container {
+    margin: 1vw 10vw 5vw;
+    padding: 2rem;
+    background-color: #f9f9f9;
+}
+
+/* Edit Profile Button */
+#user-body button {
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#user-body button:hover {
+    background-color: var(--paynes-gray);
+}
+
+#user-body .edit-user-btn {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 1000;
+
+    border-radius: 10px;
+    padding: 0.5rem;
+    width: 3rem;
+    font-size: 1.5rem;
+}
+
+/* Profile Overview */
+#profile-overview {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 5vh;
+}
+
+#profile-picture img {
+    width: 20vw;
+    height: 20vw;
+    border-radius: 25%;
+    border: 2px solid var(--paynes-gray);
+}
+
+#profile-details {
+    flex-grow: 1;
+}
+
+#profile-details h1 {
+    margin: 0;
+    font-size: 2rem;
+    color: var(--black-olive);
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#user-body button.user-follow-btn {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 5px;
+
+    img {
+        width: 80%;
+        height: 80%;
+    }
+}
+
+#profile-details #about {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--paynes-gray);
+
+    transition: all 0.3s ease-in-out;
+}
+
+#profile-details #about:hover {
+    border-left: 4px solid var(--verdigris);
+    padding-left: 1rem;
+}
+
+/* Stats Section */
+#profile-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+    background-color: #ffffff;
+    padding: 2rem 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #0000001a;
+}
+
+.stat-item {
+    text-align: center;
+    border: 1px solid var(--paynes-gray);
+    padding: .5rem;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.stat-item h2 {
+    margin-bottom: .5rem;
+    font-size: 1.25rem;
+    color: var(--sandy-brown);
+}
+
+.stat-item p {
+    font-size: 1rem;
+    color: var(--dark-text);
+}
+
+/* Badges Section */
+#profile-badges {
+    margin: 5vh 0;
+    text-align: center;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #0000001a;
+}
+
+#badge-list img {
+    width: 5rem;
+    height: 5rem;
+    margin: 1rem;
+    border: none;
+}
+
+/* Challenges and Submissions Sections */
+#profile-challenges, #profile-submissions {
+    margin: 5vh 0;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px #0000001a;
+}
+
+#profile-challenges h2, #profile-submissions h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    color: var(--black-olive);
+}
+
+#profile-challenges ul, #profile-submissions ul {
+    list-style: none;
+    padding: 0;
+}
+
+#profile-challenges li, #profile-submissions li {
+    margin-bottom: .8rem;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--paynes-gray);
+    font-size: 1rem;
+    color: var(--dark-text);
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+#profile-challenges li a, #profile-submissions li a {
+    color: var(--paynes-gray);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+#profile-challenges li a:hover, #profile-submissions li a:hover {
+    color: var(--verdigris);
+}
+
+#profile-challenges li .li-detail, #profile-submissions li .li-detail {
+    background-color: var(--transparent-naples-yellow);
+    padding: .5rem;
+    border-radius: 5px;
+    text-transform: capitalize;
+}
+
+#profile-challenges li:last-child, #profile-submissions li:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
