@@ -95,16 +95,28 @@
 
 #challenge-actions {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
 
-    .bookmark-holder {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+
+    .challenge-bookmark-option-holder {
         position: relative;
-        top: 0;
-        left: 0;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        .bookmark-holder {
+            position: relative;
+            top: 0;
+            left: 0;
+        }
     }
+
 
     #edit-challenge-button.disabled {
         color: var(--light-text);

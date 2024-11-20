@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { format } from 'date-fns';
+import { format, set } from 'date-fns';
 import AuthContext from "../../context/AuthProvider.jsx";
 import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
@@ -89,9 +89,7 @@ export default function CreateChallenge() {
 
     useEffect(() => {
         const now = new Date();
-        const formattedDateTime = now.toISOString().slice(0, 16);
         const formattedDate = format(now, "yyyy-MM-dd'T'HH:mm");
-        console.log(formattedDate);
         setCurrentDateTime(formattedDate);
     }, []);
 
@@ -169,6 +167,16 @@ export default function CreateChallenge() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+
+        if (challengeForm.limitations.required_phrase.includes('\n')) {
+            setChallengeForm((prevForm) => ({
+                ...prevForm,
+                limitations: {
+                    ...prevForm.limitations,
+                    required_phrase: prevForm.limitations.required_phrase.split('\n')
+                }
+            }));
+        }
 
         try {
             const response = await fetch('/api/challenges/create', {
@@ -371,17 +379,28 @@ export default function CreateChallenge() {
                                             <label htmlFor="required_phrase">Required Phrase</label>
 
                                             {selectedLimitations.includes('required_phrase') && (
+                                                // <div className="limitations-input">
+                                                //     <input
+                                                //         type="text"
+                                                //         id="required_phrase-input"
+                                                //         name="required_phrase"
+                                                //         placeholder="Enter required phrase(s)"
+                                                //         value={challengeForm.limitations.required_phrase || ''}
+                                                //         onFocus={() => handleFocus('required_phrase-input')}
+                                                //         onChange={handleChange}
+                                                //     />
+                                                //     {focusedInput === 'required_phrase-input' && <p>Enclose each phrase in `backticks`</p>}
+                                                // </div>
                                                 <div className="limitations-input">
-                                                    <input
-                                                        type="text"
+                                                    <textarea
                                                         id="required_phrase-input"
                                                         name="required_phrase"
-                                                        placeholder="Enter required phrase(s)"
+                                                        placeholder="Enter required phrase(s), one per line"
                                                         value={challengeForm.limitations.required_phrase || ''}
                                                         onFocus={() => handleFocus('required_phrase-input')}
                                                         onChange={handleChange}
                                                     />
-                                                    {focusedInput === 'required_phrase-input' && <p>Enclose each phrase in `backticks`</p>}
+                                                    {focusedInput === 'required_phrase-input' && <p>Separate each phrase with a new line.</p>}
                                                 </div>
                                             )}
                                         </div>
@@ -465,7 +484,16 @@ export default function CreateChallenge() {
                                         ) : null}
 
                                         {challengeForm.limitations.required_phrase ? (
-                                            <li>Required Phrase(s): {challengeForm.limitations.required_phrase}</li>
+                                            challengeForm.limitations.required_phrase?.includes('\n') ? (
+                                                <>
+                                                    <li>Required Phrases:</li>
+                                                    {challengeForm.limitations.required_phrase.split('\n').map((phrase, index) => (
+                                                        <li key={index}>- {phrase}</li>
+                                                    ))}
+                                                </>
+                                            ) : (
+                                                <li>Required Phrase: {challengeForm.limitations.required_phrase}</li>
+                                            )
                                         ) : null}
                                     </ul>
                                 </div>

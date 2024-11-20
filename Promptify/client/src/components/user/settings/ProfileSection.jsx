@@ -234,11 +234,11 @@ export default function ProfileSection({ user, edit }) {
                     </form>
                 ) : (
                     <div id="profile-section-info">
-                        <div id="profile-picture">
+                        <div id="profile-section-picture">
                             <img src={profileInfo.profile_picture_url} alt="Profile Picture" />
                         </div>
 
-                        <div id="profile-details">
+                        <div id="profile-section-details">
                             <h3>{profileInfo.username}</h3>
                             <p>{profileInfo.email}</p>
                             <p>{profileInfo.about}</p>

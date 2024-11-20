@@ -61,13 +61,15 @@ export default function User() {
 
                     setUserHandle(data[0].username);
 
-                    if (user && user.username.toLowerCase() === userHandle) {
-                        setUserIsTarget(true);
-                    } else {
-                        const followingResponse = await fetch(`/api/user-followers/${user.id}/following/${data[0].id}`);
-                        if (followingResponse.ok) {
-                            const followingData = await followingResponse.json();
-                            setFollowing(followingData.message);
+                    if (user) {
+                        if (user.username.toLowerCase() === userHandle) {
+                            setUserIsTarget(true);
+                        } else {
+                            const followingResponse = await fetch(`/api/user-followers/${user.id}/following/${data[0].id}`);
+                            if (followingResponse.ok) {
+                                const followingData = await followingResponse.json();
+                                setFollowing(followingData.message);
+                            }
                         }
                     }
 
@@ -223,7 +225,7 @@ export default function User() {
 
                 <section id="profile-overview">
                     <div id="profile-picture">
-                        <img src={target_user?.profile_picture_url || "/default-profile.png"} alt={`${userHandle}'s profile`} />
+                        <img src={target_user?.profile_picture_url} alt={`${userHandle}'s profile`} />
                     </div>
                     <div id="profile-details">
                         <h1>
@@ -240,7 +242,8 @@ export default function User() {
                                 )
                             )}
                         </h1>
-                        <p id="about">{target_user?.about || "No bio available."}</p>
+                        <p id="about">{target_user?.about}</p>
+                        <Link className="user-work-btn challenge-card-button" to={`/@${userHandle}/work`}>See Their Work</Link>
                     </div>
                 </section>
 

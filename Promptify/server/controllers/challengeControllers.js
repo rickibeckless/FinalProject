@@ -2,6 +2,7 @@ import { pool } from '../config/database.js';
 import { io } from '../server.js';
 import { v4 as uuidv4 } from 'uuid';
 import fetch from 'node-fetch';
+import { environmentUrl } from '../server.js';
 
 const challengeCheck = async (results, res) => {
     try {
@@ -46,52 +47,153 @@ const challengeCheck = async (results, res) => {
     };
 };
 
+// const challengeScoring = async (challenge, res) => {
+//     try {
+//         console.log("handling scoring for challenge:", challenge);
+
+//         const submissionsResults = await pool.query('SELECT * FROM submissions WHERE challenge_id = $1', [challenge.id]);
+
+//         if (submissionsResults.rows.length === 0) {
+//             return;
+//         };
+
+//         const topSubmissions = submissionsResults.rows.filter(submission => submission.score >= 80);
+//         const topSubmissionsWithUpvotes = topSubmissions.map(submission => {
+//             const upvotesResults = pool.query('SELECT COUNT(*) FROM upvotes WHERE submission_id = $1, guest_account = false', [submission.id]);
+//             return {
+//                 id: submission.id,
+//                 upvotes: upvotesResults.rows[0].count
+//             };
+//         });
+
+//         topSubmissionsWithUpvotes.sort((a, b) => b.upvotes - a.upvotes);
+
+//         const winners = topSubmissionsWithUpvotes.slice(0, 3).map(submission => submission.id);
+//         const first_place = winners[0].author_id;
+//         const second_place = winners[1].author_id;
+//         const third_place = winners[2].author_id;
+
+//         const results = await pool.query('UPDATE challenges SET first_place = $1, second_place = $2, third_place = $3 WHERE id = $4 RETURNING *', [first_place, second_place, third_place, challenge.id]);
+
+//         const notifications = new Set();
+
+//         const addNotification = (notification) => {
+//             notifications.add(notification);
+//         };
+
+//         const authorNotification = {
+//             title: "Challenge Winners Announced!",
+//             content: `The winners of your challenge ${challenge.name} have been announced! Check it out!`,
+//             type: "challenge_activity",
+//             to: [challenge.author_id]
+//         };
+//         addNotification(authorNotification);
+
+//         const winnerNotification = {
+//             title: "You Won A Challenge!",
+//             content: `Congratulations! You have won the challenge ${challenge.name}.`,
+//             type: "challenge_activity",
+//             to: winners
+//         };
+//         addNotification(winnerNotification);
+
+//         const notificationArray = Array.from(notifications);
+//         const batchSize = 1000;
+//         for (let i = 0; i < notificationArray.length; i += batchSize) {
+//             const batch = notificationArray.slice(i, i + batchSize);
+
+//             await fetch(`${environmentUrl}/api/notifications/new/several`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     role: 'auto'
+//                 },
+//                 body: JSON.stringify(batch)
+//             });
+//         };
+
+//         return results.rows;
+//     } catch (error) {
+//         console.error('Error scoring challenge:', error);
+//         res.status(500).json({ error: 'An unexpected error occurred' });
+//     };
+// };
+
 const challengeScoring = async (challenge, res) => {
     try {
-        console.log("handling scoring for challenge:", challenge);
+        const submissionsResults = await pool.query(
+            `
+                SELECT 
+                    s.id, 
+                    s.author_id, 
+                    s.score, 
+                    COUNT(u.id) AS upvotes 
+                FROM submissions s
+                LEFT JOIN upvotes u ON s.id = u.submission_id AND u.guest_account = false
+                WHERE s.challenge_id = $1
+                GROUP BY s.id
+            `,
+            [challenge.id]
+        );
+
+        const submissions = submissionsResults.rows;
+
+        const eligibleSubmissions = submissions.filter(submission => submission.score >= 80);
+
+        eligibleSubmissions.sort((a, b) => b.upvotes - a.upvotes);
+
+        const winners = eligibleSubmissions.slice(0, 3);
+
+        const first_place = winners[0]?.author_id || null;
+        const second_place = winners[1]?.author_id || null;
+        const third_place = winners[2]?.author_id || null;
+
+        const results = await pool.query(`UPDATE challenges SET first_place = $1, second_place = $2, third_place = $3 WHERE id = $4 RETURNING *`,
+            [first_place, second_place, third_place, challenge.id]
+        );
+
+        const notifications = [];
+
+        notifications.push({
+            title: "Challenge Winners Announced!",
+            content: `The winners of your challenge "${challenge.name}" have been announced! Check it out!`,
+            type: "challenge_activity",
+            to: [challenge.author_id],
+        });
+
+        const winnerIds = winners.map(winner => winner.author_id);
+        if (winnerIds.length > 0) {
+            notifications.push({
+                title: "You Won A Challenge!",
+                content: `Congratulations! You have won the challenge "${challenge.name}".`,
+                type: "challenge_activity",
+                to: winnerIds,
+            });
+        }
+
+        const batchSize = 1000;
+        for (let i = 0; i < notifications.length; i += batchSize) {
+            const batch = notifications.slice(i, i + batchSize);
+            await fetch(`${environmentUrl}/api/notifications/new/several`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    role: 'auto',
+                },
+                body: JSON.stringify(batch),
+            });
+        }
+
+        return results.rows;
     } catch (error) {
-        console.error('Error scoring challenge:', error);
-        res.status(500).json({ error: 'An unexpected error occurred' });
-    };
+        console.error("Error scoring challenge:", error);
+        res.status(500).json({ error: "An unexpected error occurred" });
+    }
 };
 
 export const getChallenges = async (req, res) => {
     try {
         const results = await pool.query('SELECT * FROM challenges');
-
-        // const now = new Date();
-        // const updates = [];
-
-        // for (let i = 0; i < results.rows.length; i++) {
-        //     const challenge = results.rows[i];
-        //     let status;
-
-        //     const timeToStart = new Date(challenge.start_date_time) - now;
-        //     const timeToEnd = new Date(challenge.end_date_time) - now;
-        //     const timeToScore = new Date(challenge.end_date_time) + 3600000 - now;
-
-        //     if (timeToStart > 0) {
-        //         status = 'upcoming';
-        //     } else if (timeToEnd > 0) {
-        //         status = 'in-progress';
-        //     } else if (timeToScore > 0) {
-        //         status = 'scoring';
-        //     } else {
-        //         status = 'ended';
-        //     }
-
-        //     const participationResults = await pool.query('SELECT COUNT(*) FROM submissions WHERE challenge_id = $1', [challenge.id]);
-
-        //     updates.push({
-        //         id: challenge.id,
-        //         status: status,
-        //         participationCount: participationResults.rows[0].count
-        //     });
-        // };
-
-        // for (const update of updates) {
-        //     await pool.query('UPDATE challenges SET status = $1, participation_count = $2 WHERE id = $3', [update.status, update.participationCount, update.id]);
-        // };
 
         await challengeCheck(results, res);
 
@@ -105,13 +207,13 @@ export const getChallenges = async (req, res) => {
 export const getChallengeById = async (req, res) => {
     try {
         const results = await pool.query('SELECT * FROM challenges WHERE id = $1', [req.params.id]);
-        
+
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'Challenge not found' });
         };
 
         await challengeCheck(results, res);
-        
+
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error fetching challenge by ID:', error);
@@ -172,18 +274,24 @@ export const getChallengesByUser = async (req, res) => {
 
 export const createChallenge = async (req, res) => {
     try {
-        const { 
-            author_id, 
-            name, 
-            description, 
-            prompt, 
-            start_date_time, 
-            end_date_time, 
-            skill_level, 
-            genre, 
-            limitations 
+        let {
+            author_id,
+            name,
+            description,
+            prompt,
+            start_date_time,
+            end_date_time,
+            skill_level,
+            genre,
+            limitations
         } = req.body;
-                
+
+        if (limitations.required_phrase.includes('\n')) {
+            limitations.required_phrase = limitations.required_phrase.split('\n');
+        } else {
+            limitations.required_phrase = [limitations.required_phrase];
+        };
+
         let available_points = 50;
         let timeConstraintBonus = 0;
         let requirementBonus = 0;
@@ -202,7 +310,7 @@ export const createChallenge = async (req, res) => {
             difficultyMultiplier = 2;
         };
 
-        const notNullCheck = (value) => { 
+        const notNullCheck = (value) => {
             return (
                 value !== null &&
                 value !== undefined &&
@@ -214,7 +322,7 @@ export const createChallenge = async (req, res) => {
                 value !== "[]" &&
                 value !== "{}"
             );
-        };        
+        };
 
         if (limitations.time_limit) {
             if (notNullCheck(limitations.time_limit.min) || notNullCheck(limitations.time_limit.max)) {
@@ -244,35 +352,39 @@ export const createChallenge = async (req, res) => {
             [author_id, name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, available_points]
         );
 
-        const notifications = [];
+        const notifications = new Set();
 
-        const authorResults = await pool.query('SELECT * FROM users WHERE id = $1', [author_id]);
-        const author = authorResults.rows[0];
+        const addNotification = (notification) => {
+            notifications.add(notification);
+        };
+
         const authorNotification = {
             title: "New Challenge Created!",
             content: `Your challenge ${results.rows[0].name} has been created!`,
             type: "challenge_activity",
             to: [author_id]
         };
-        notifications.push(...notifications, authorNotification);
+        addNotification(authorNotification);
 
         const authorFollowersResults = await pool.query('SELECT * FROM user_followers WHERE following_id = $1', [author_id]);
-        let authorFollowers = authorFollowersResults.rows.filter(follower => follower.notifications_settings.allow_following_user_notifications);
-        const authorFollowersIds = authorFollowers.map(follower => follower.user_id);
+        let authorFollowers = await pool.query('SELECT * FROM users WHERE id IN ($1)', [authorFollowersResults.rows.map(f => f.follower_id).join(',')]);
+
+        authorFollowers = authorFollowers.rows.filter(user => user.notifications_settings.allow_following_user_notifications);
+        const authorFollowersIds = authorFollowers.map(follower => follower.id);
         for (const followerId of authorFollowersIds) {
             const followerNotification = {
                 title: "New Challenge From Someone You Follow!",
-                content: `A new challenge ${results.rows[0].name} has been created by ${author.username}. Check it out!`,
+                content: `A new challenge ${results.rows[0].name} has been created by a user you follow. Check it out!`,
                 type: "challenge_activity",
                 to: [followerId]
             };
-            notifications.push(...notifications, followerNotification);
-        };
+            addNotification(followerNotification);
+        }
 
         const genreFollowersResults = await pool.query('SELECT * FROM users WHERE following_genres @> $1', [[genre]]);
-        let genreFollowers = genreFollowersResults.rows.filter(user => user.id !== author_id);
-        genreFollowers = genreFollowers.filter(user => user.notifications_settings.allow_following_genre_notifications);
-        const genreFollowersIds = genreFollowers.map(user => user.id);
+        let genreFollowers = genreFollowersResults.rows.filter(user => user.id !== author_id && user.notifications_settings.allow_following_genre_notifications);
+
+        const genreFollowersIds = genreFollowers.map(user => user.id).filter(id => !notifications.has(id));
         for (const followerId of genreFollowersIds) {
             const followerNotification = {
                 title: "New Challenge In A Genre You Follow!",
@@ -280,13 +392,13 @@ export const createChallenge = async (req, res) => {
                 type: "challenge_activity",
                 to: [followerId]
             };
-            notifications.push(...notifications, followerNotification);
-        };
+            addNotification(followerNotification);
+        }
 
         const skillLevelFollowersResults = await pool.query('SELECT * FROM users WHERE skill_level = $1', [skill_level]);
-        let skillLevelFollowers = skillLevelFollowersResults.rows.filter(user => user.id !== author_id);
-        skillLevelFollowers = skillLevelFollowers.filter(user => user.notifications_settings.allow_skill_level_notifications);
-        const skillLevelFollowersIds = skillLevelFollowers.map(user => user.id);
+        let skillLevelFollowers = skillLevelFollowersResults.rows.filter(user => user.id !== author_id && user.notifications_settings.allow_skill_level_notifications);
+
+        const skillLevelFollowersIds = skillLevelFollowers.map(user => user.id).filter(id => !notifications.has(id));
         for (const followerId of skillLevelFollowersIds) {
             const followerNotification = {
                 title: "New Challenge In Your Skill Level!",
@@ -294,17 +406,24 @@ export const createChallenge = async (req, res) => {
                 type: "challenge_activity",
                 to: [followerId]
             };
-            notifications.push(...notifications, followerNotification);
-        };
+            addNotification(followerNotification);
+        }
 
-        await fetch('http://localhost:8080/api/notifications/new/several', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                role: 'auto'
-            },
-            body: JSON.stringify(notifications)
-        });
+        const notificationArray = Array.from(notifications);
+        const batchSize = 1000;
+
+        for (let i = 0; i < notificationArray.length; i += batchSize) {
+            const batch = notificationArray.slice(i, i + batchSize);
+
+            await fetch(`${environmentUrl}/api/notifications/new/several`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    role: 'auto'
+                },
+                body: JSON.stringify(batch)
+            });
+        };
 
         res.status(201).json(results.rows);
     } catch (error) {
@@ -327,19 +446,19 @@ export const editChallenge = async (req, res) => {
             return res.status(403).json({ error: 'Challenge is not editable' });
         };
 
-        const { 
-            name, 
-            description, 
-            prompt, 
-            start_date_time, 
-            end_date_time, 
-            skill_level, 
-            genre, 
-            limitations 
+        const {
+            name,
+            description,
+            prompt,
+            start_date_time,
+            end_date_time,
+            skill_level,
+            genre,
+            limitations
         } = req.body;
 
         const results = await pool.query('UPDATE challenges SET name = $1, description = $2, prompt = $3, start_date_time = $4, end_date_time = $5, skill_level = $6, genre = $7, limitations = $8 WHERE id = $9 RETURNING *', [name, description, prompt, start_date_time, end_date_time, skill_level, genre, limitations, challengeId]);
-        
+
         res.status(200).json(results.rows);
     } catch (error) {
         console.error('Error updating challenge:', error);

@@ -33,6 +33,20 @@
     color: var(--mild-danger-red);
 }
 
+.danger-red {
+    color: var(--danger-red);
+}
+
+.danger-red-btn {
+    background-color: var(--danger-red) !important;
+    color: var(--light-text);
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: var(--mild-danger-red);
+    }
+}
+
 /* App */
 #scroll-top-btn {
     position: fixed;

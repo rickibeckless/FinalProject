@@ -1,0 +1,121 @@
+/* General Styling */
+#your-challenges-body {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section */
+.your-challenges-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.your-challenges-header-username {
+    font-size: 2rem;
+    color: var(--verdigris);
+    margin: 0;
+}
+
+/* Navigation Tabs */
+.your-challenges-header-list {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    padding: 0;
+    margin: 0;
+}
+
+.your-challenges-header-list li {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--black-olive);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.your-challenges-header-list li:hover {
+    background-color: var(--verdigris);
+    color: #ffffff;
+}
+
+.your-challenges-header-list li.active {
+    background-color: var(--verdigris);
+    color: #ffffff;
+}
+
+/* Body Content Section */
+.your-challenges-body {
+    margin-top: 1rem;
+}
+
+.your-challenges-section > h2 {
+    font-size: 1.8rem;
+    color: var(--black-olive);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Submissions, Challenges, and Bookmarks Sections */
+.submissions-section,
+.bookmarks-section,
+.challenges-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+    margin: 5vw;
+}
+
+/* Responsive Design */
+
+/* For devices with width <= 900px */
+@media (max-width: 900px) {
+    .your-challenges-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .your-challenges-header-list {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .submissions-section,
+    .bookmarks-section,
+    .challenges-section {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+
+    #your-challenges-body {
+        padding: 1.5rem;
+    }
+}
+
+/* For devices with width <= 768px */
+@media (max-width: 768px) {
+    .your-challenges-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .your-challenges-header-username {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+    }
+
+    .your-challenges-header-list {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .submissions-section,
+    .bookmarks-section,
+    .challenges-section {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+}

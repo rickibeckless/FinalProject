@@ -67,12 +67,12 @@ export const getNotificationsByUserId = async (req, res) => {
         const { userId } = req.params;
 
         const results = await pool.query('SELECT notifications FROM users WHERE id = $1', [userId]);
-        
+
         await notificationCheck(results, res);
 
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'User not found' });
-        };        
+        };
 
         res.status(200).json(results.rows);
     } catch (error) {
@@ -91,8 +91,6 @@ export const getNotificationsByNotificationId = async (req, res) => {
             WHERE id = $1 AND notification->>'id' = $2
         `, [userId, notificationId]);
 
-        //await notificationCheck(results, res);
-
         if (results.rows.length === 0) {
             return res.status(404).json({ error: 'Notification not found' });
         };
@@ -107,8 +105,6 @@ export const getNotificationsByNotificationId = async (req, res) => {
 export const updateNotificationStatus = async (req, res) => {
     try {
         const { userId, notificationId, status } = req.params;
-
-        console.log(userId, notificationId, status);
 
         const notification = await pool.query(`
             SELECT notification 
@@ -166,11 +162,69 @@ export const updateNotificationStatus = async (req, res) => {
         let data = notification.rows[0].notification;
 
         io.emit('receive-notification', { userId, data, status });
-        // io.emit('receive-notification', { userId, notificationId, status });
 
         res.status(200).json({ message: 'Notification status updated' });
     } catch (error) {
         console.error('Error updating notification status:', error);
+        res.status(500).json({ error: 'An unexpected error occurred' });
+    };
+};
+
+export const updateAllNotificationsStatus = async (req, res) => {
+    try {
+        const { userId, startStatus, toStatus } = req.params;
+
+        if (toStatus === 'permanently_delete') {
+            const results = await pool.query(`
+                UPDATE users
+                SET notifications = (
+                    SELECT jsonb_agg(notification)
+                    FROM jsonb_array_elements(notifications) AS notification
+                    WHERE notification->>'status' != $2
+                )
+                WHERE id = $1
+                RETURNING notifications;
+            `, [userId, startStatus]);
+
+            await notificationCheck(results, res);
+
+            if (results.rowCount === 0) {
+                return res.status(404).json({ error: 'Notifications not found' });
+            };
+
+            return res.status(200).json({ message: 'Notifications permanently deleted' });
+        };
+
+        const results = await pool.query(`
+            UPDATE users SET notifications = (
+                SELECT jsonb_agg(
+                    CASE
+                        WHEN notification->>'status' = $2 THEN
+                            jsonb_set(notification, '{status}', $3::jsonb)
+                        ELSE notification
+                    END
+                ) 
+                FROM jsonb_array_elements(notifications) AS notification
+            )
+            WHERE id = $1
+            RETURNING notifications;
+        `, [userId, startStatus, JSON.stringify(toStatus)]);
+
+        await notificationCheck(results, res);
+
+        if (results.rowCount === 0) {
+            return res.status(404).json({ error: 'Notifications not found' });
+        };
+
+        let data = results.rows[0].notifications;
+
+        data.forEach(notification => {
+            io.emit('receive-notification', { userId, data: notification, status: toStatus });
+        });
+
+        res.status(200).json({ message: 'Notifications status updated' });
+    } catch (error) {
+        console.error('Error updating all notifications status:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
     };
 };
@@ -188,7 +242,7 @@ export const sendNotificationToUser = async (req, res) => {
             recipientIds.push(...results.map(user => user.id));
         } else {
             recipientIds.push(...to);
-        };            
+        };
 
         const notification = {
             id: uuidv4(),
@@ -205,7 +259,7 @@ export const sendNotificationToUser = async (req, res) => {
 
             if (user.rows.length === 0) continue;
             if (user.rows[0].notifications_settings.allow_notifications === false) continue;
-            
+
             const results = await pool.query(`
                 UPDATE users
                 SET notifications = notifications || $1
@@ -228,6 +282,7 @@ export const sendSeveralNotificationsToUsers = async (req, res) => {
     try {
         const notifications = req.body;
         if (!Array.isArray(notifications)) {
+            console.error('Notifications payload should be an array');
             return res.status(400).json({ error: 'Notifications payload should be an array' });
         };
 
@@ -272,5 +327,5 @@ export const sendSeveralNotificationsToUsers = async (req, res) => {
     } catch (error) {
         console.error('Error sending notifications:', error);
         res.status(500).json({ error: 'An unexpected error occurred' });
-    }
+    };
 };

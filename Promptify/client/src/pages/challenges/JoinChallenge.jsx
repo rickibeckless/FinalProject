@@ -250,7 +250,6 @@ export default function JoinChallenge() {
         clearInterval(timer);
         const now = new Date();
         const formattedDateTime = now.toISOString();
-        console.log(formattedDateTime);
         setEndDateTime(formattedDateTime);
 
         const submission = {
@@ -259,8 +258,12 @@ export default function JoinChallenge() {
             content: submissionForm.content,
             genre: submissionForm.genre,
             started_at: startDateTime,
-            submitted_at: endDateTime
+            submitted_at: now.toISOString(),
+            word_count: wordCount,
+            character_count: characterCount,
         };
+
+        console.log(challenge, submission);
 
         try {
             const response = await fetch(`/api/submissions/${user.id}/${challenge.id}/create`, {

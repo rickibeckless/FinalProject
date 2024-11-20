@@ -133,7 +133,6 @@ export default function Notifications() {
         const notification = notifications.find(notification => notification.title === notificationTitle);
 
         if (notification) {
-            console.log(notification);
             setNotificationId(notification.id);
             setShowNotification(true);
         } else {
@@ -144,6 +143,26 @@ export default function Notifications() {
     const markNotification = async (notificationId, status) => {
         try {
             const response = await fetch(`/api/notifications/${user.id}/${notificationId}/${status}`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                fetchNotifications();
+            } else {
+                throw new Error("An error occurred");
+            };
+        } catch (error) {
+            console.error("Error updating notification status:", error);
+            setMessage("An unexpected error occurred");
+        };
+    };
+
+    const handleMarkAll = async (startStatus, toStatus) => {
+        try {
+            const response = await fetch(`/api/notifications/${user.id}/all/${startStatus}/${toStatus}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -181,6 +200,26 @@ export default function Notifications() {
                             <section className="left-notification-holder">
                                 <section id={`${tab}-notifications-section`}>
                                     <h2>{tab === "unread" ? "Unread" : tab === "read" ? "Read" : "Deleted"} Notifications</h2>
+
+                                    <div className="notification-all-button-holder">
+                                        {(tab === "unread" && unreadNotifications.length > 0) ? (
+                                            <>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("unread", "read")}>Mark All As Read</button>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("unread", "delete")}>Delete All</button>
+                                            </>
+                                        ) : (tab === "read" && readNotifications.length > 0) ? (
+                                            <>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("read", "unread")}>Mark All As Unread</button>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("read", "delete")}>Delete All</button>
+                                            </>
+                                        ) : (tab === "deleted" && deletedNotifications.length > 0) ? (
+                                            <>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("delete", "unread")}>Restore All</button>
+                                                <button type="button" className="mark-all-button challenge-card-button" onClick={() => handleMarkAll("delete", "permanently_delete")}>Permanently Delete All</button>
+                                            </>
+                                        ) : null}
+                                    </div>
+
                                     <NotificationTable 
                                         selectedNotifications={
                                             tab === "unread" ? unreadNotifications 

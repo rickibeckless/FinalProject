@@ -92,7 +92,7 @@ export default function AllChallenges() {
 
         if (filters !== baseFilters(false)) setIsFiltered(true);
         // if showFiltersModal is true, then close it
-        if (showFiltersModal) setShowFiltersModal(false);
+        if (window.innerWidth <= 767 && showFiltersModal) setShowFiltersModal(false);
     };
 
     const handleSearch = (e) => {
@@ -200,10 +200,7 @@ export default function AllChallenges() {
                                     return challenge.status === "in-progress";
                                 } else if (filter === "scoring") {
                                     return challenge.status === "scoring";
-                                } 
-                                // else if (filter === "ended") {
-                                //     return challenge.status === "ended";
-                                // }
+                                }
                             } else if (filterCategory === "genre") {
                                 if (filter === "nonFiction") {
                                     return challenge.genre === "non-fiction";

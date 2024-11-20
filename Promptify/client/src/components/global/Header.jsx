@@ -208,9 +208,9 @@ export default function Header() {
                                     }
                                     {location.pathname !== `/${user.username}/challenges` &&
                                         <li className="nav-link">
-                                            <Link className="user-nav-link" to={`/${user.username}/challenges`}>
+                                            <Link className="user-nav-link" to={`/@${user.username}/work`}>
                                                 <img src={BoxQuestionImg} alt="box question icon" />
-                                                <span className="nav-link-text">Your Challenges</span>
+                                                <span className="nav-link-text">Your Work</span>
                                             </Link>
                                         </li>
                                     }

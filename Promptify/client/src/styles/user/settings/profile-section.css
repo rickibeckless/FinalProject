@@ -5,12 +5,12 @@
 }
 
 /* Profile Picture Styling */
-#profile-picture {
+#profile-section-picture {
     text-align: center;
     margin-bottom: 1.5rem;
 }
 
-#profile-picture img {
+#profile-section-picture img {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -20,12 +20,12 @@
     transition: transform 0.3s ease;
 }
 
-#profile-picture img:hover {
+#profile-section-picture img:hover {
     transform: scale(1.05);
 }
 
 /* Profile Details */
-#profile-details h3 {
+#profile-section-details h3 {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--black-olive);
@@ -33,21 +33,21 @@
     margin-bottom: 0.5rem;
 }
 
-#profile-details p {
+#profile-section-details p {
     font-size: 1rem;
     color: var(--dark-text);
     text-align: center;
     margin-bottom: 0.8rem;
 }
 
-#profile-details p:nth-child(3) {
+#profile-section-details p:nth-child(3) {
     font-style: italic;
     color: var(--black-olive);
     opacity: 0.8;
 }
 
 /* Subsections: Bookmarked, Genres, Following Users */
-#profile-details h4 {
+#profile-section-details h4 {
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--verdigris);
@@ -55,13 +55,13 @@
     margin-bottom: 0.8rem;
 }
 
-#profile-details ul {
+#profile-section-details ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-#profile-details ul li {
+#profile-section-details ul li {
     font-size: 1rem;
     color: var(--dark-text);
     padding: 0.3rem 0;
@@ -69,7 +69,7 @@
     transition: color 0.3s ease;
 }
 
-#profile-details ul li:hover {
+#profile-section-details ul li:hover {
     color: var(--verdigris);
 }
 

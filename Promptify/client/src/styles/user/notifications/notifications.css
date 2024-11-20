@@ -52,6 +52,12 @@
     gap: 1rem;
 }
 
+.notification-all-button-holder {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+}
+
 /* Left Notification Holder (Table View) */
 
 /* Right Notification Holder (Details View) */

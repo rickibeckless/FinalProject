@@ -107,10 +107,10 @@ export default function Challenge() {
             document.body.classList.toggle("modal-open");
         }
 
-        if (challenge.status !== "upcoming" && user.isAdmin === false) {
-            setMessage("Cannot edit a challenge that is in-progress or ended!");
-            return;
-        };
+        // if (challenge.status !== "upcoming" && user.is_admin === false) {
+        //     setMessage("Cannot edit a challenge that is in-progress or ended!");
+        //     return;
+        // };
 
         setOpenEditModal(true);
     };
@@ -179,16 +179,16 @@ export default function Challenge() {
                         </div>
                     </div>
 
-                    {openEditModal && <EditChallenge toggleEditChallenge={toggleEditChallenge} challenge={challenge} />}
+                    {openEditModal && <EditChallenge toggleEditChallenge={toggleEditChallenge} challenge={challenge} author={author} user={user} />}
                 </section>
 
                 <section id="challenge-actions" className="challenge-section">
                     {user ? (
                         <>
-                            {(user.id === challenge.author_id || user.isAdmin) && (
+                            {(user.id === challenge.author_id || user.is_admin) && (
                                 <button
                                     id="edit-challenge-button"
-                                    className={`challenge-card-button ${(challenge.status !== "upcoming" && user.isAdmin === false) ? "disabled" : ""}`}
+                                    className={`challenge-card-button ${(challenge.status !== "upcoming" && user.is_admin === false) ? "disabled" : ""}`}
                                     title={`${challenge.status !== "upcoming" ? "Cannot edit a challenge that is in-progress or ended!" : "Edit this challenge"}`}
                                     type="button"
                                     onClick={() => toggleEditChallenge('edit')}
@@ -199,19 +199,19 @@ export default function Challenge() {
                             
                             {user.id !== challenge.author_id && (
                                 !bookmarkedChallenge ? (
-                                    <>
+                                    <div className="challenge-bookmark-option-holder">
                                         <button className="bookmark-holder" title="Bookmark this challenge for later!" type="button" onClick={handleBookmark}>
                                             <img className="bookmark" src={BookmarkImg} alt="bookmark" />
                                         </button>
                                         <p>Bookmark this challenge to save it for later!</p>
-                                    </>
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className="challenge-bookmark-option-holder">
                                         <button className="bookmark-holder filled" title="Remove bookmark" type="button" onClick={handleBookmark}>
                                             <img className="bookmark filled" src={BookmarkFilledImg} alt="filled bookmark" />
                                         </button>
                                         <p>Challenge bookmarked!</p>
-                                    </>
+                                    </div>
                                 )
                             )}
                         </>
@@ -229,7 +229,6 @@ export default function Challenge() {
                             {submissions.map((submission) => (
                                 <SubmissionCard
                                     key={submission.id}
-                                    challenge={challenge}
                                     submission={submission}
                                 />
                             ))}

@@ -4,6 +4,7 @@ import {
     getNotificationsByUserId,
     getNotificationsByNotificationId,
     updateNotificationStatus,
+    updateAllNotificationsStatus,
     sendNotificationToUser,
     sendSeveralNotificationsToUsers
 } from "../controllers/notificationControllers.js";
@@ -18,6 +19,7 @@ router.get("/:userId", getNotificationsByUserId); // GET all notifications by us
 router.get("/:userId/:notificationId", getNotificationsByNotificationId); // GET notification by user ID and notification ID
 
 router.patch("/:userId/:notificationId/:status", updateNotificationStatus); // PATCH notification by user ID and notification ID
+router.patch("/:userId/all/:startStatus/:toStatus", updateAllNotificationsStatus); // PATCH all notifications by user ID
 
 router.post("/new", requireRole(['admin', 'auto']), sendNotificationToUser); // POST notification
 router.post("/new/several", requireRole(['admin', 'auto']), sendSeveralNotificationsToUsers); // POST several notifications

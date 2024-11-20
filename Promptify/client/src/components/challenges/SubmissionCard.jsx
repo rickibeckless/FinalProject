@@ -27,7 +27,7 @@ import commentsFilledImg from "../../assets/comments_filled.svg";
 import thumbsUpImg from "../../assets/thumbs_up.svg";
 import thumbsUpFilledImg from "../../assets/thumbs_up_filled.svg";
 
-export default function SubmissionCard({ challenge, submission }) {
+export default function SubmissionCard({ submission }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [author, setAuthor] = useState([]);
     const [comments, setComments] = useState([]);

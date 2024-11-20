@@ -1,5 +1,91 @@
 import { pool } from '../config/database.js';
 
+export const checkScore = async (submission) => {
+    try {
+        const totalScore = 100;
+        let score = totalScore;
+
+        const challengeResults = await pool.query('SELECT * FROM challenges WHERE id = $1', [submission.challenge_id]);
+        const challenge = challengeResults.rows[0];
+
+        const challengeLimitations = challenge.limitations;
+        const timeLimit = challengeLimitations.time_limit.min || challengeLimitations.time_limit.max;
+        const wordLimit = challengeLimitations.word_limit.min || challengeLimitations.word_limit.max;
+        const characterLimit = challengeLimitations.character_limit.min || challengeLimitations.character_limit.max;
+        const requiredPhrase = challengeLimitations.required_phrase.length > 0;
+
+        let trueLimits = [];
+
+        if (timeLimit) trueLimits.push(timeLimit);
+        if (wordLimit) trueLimits.push(wordLimit);
+        if (characterLimit) trueLimits.push(characterLimit);
+        if (requiredPhrase) trueLimits.push(requiredPhrase);
+
+        if (trueLimits.length === 0) {
+            return score;
+        };
+
+        const weight = trueLimits.length > 0 ? totalScore / trueLimits.length : 0;
+
+        if (challengeLimitations.time_limit.min) {
+            const timeLimitMin = challengeLimitations.time_limit.min * 60000;
+            const timeDifference = Math.abs(new Date(submission.submitted_at) - new Date(submission.started_at)) / 60000;
+
+            if (timeDifference < timeLimitMin) {
+                score -= weight;
+            }
+        }
+
+        if (challengeLimitations.time_limit.max) {
+            const timeLimitMax = challengeLimitations.time_limit.max * 60000;
+            const timeDifference = Math.abs(new Date(submission.submitted_at) - new Date(submission.started_at)) / 60000;
+
+            if (timeDifference > timeLimitMax) {
+                score -= weight;
+            }
+        }
+
+        if (challengeLimitations.word_limit.min) {
+            if (submission.word_count < challengeLimitations.word_limit.min) {
+                score -= weight;
+            }
+        }
+        if (challengeLimitations.word_limit.max) {
+            if (submission.word_count > challengeLimitations.word_limit.max) {
+                score -= weight;
+            }
+        }
+
+        if (challengeLimitations.character_limit.min) {
+            if (submission.character_count < challengeLimitations.character_limit.min) {
+                score -= weight;
+            }
+        }
+        if (challengeLimitations.character_limit.max) {
+            if (submission.character_count > challengeLimitations.character_limit.max) {
+                score -= weight;
+            }
+        }
+
+        if (challengeLimitations.required_phrase.length > 0) {
+            const dividedWeight = weight / challengeLimitations.required_phrase.length;
+
+            for (let i = 0; i < challengeLimitations.required_phrase.length; i++) {
+                if (!submission.content.includes(challengeLimitations.required_phrase[i])) {
+                    score -= dividedWeight;
+                }
+            }
+        }
+
+        score = Math.max(0, score);
+
+        return score;
+    } catch (error) {
+        console.error('Error checking score:', error);
+        return null;
+    };
+};
+
 export const getSubmissionsByUserId = async (req, res) => {
     try {
         const { userId } = req.params;
@@ -15,7 +101,6 @@ export const getSubmissionsByUserId = async (req, res) => {
 export const getSubmissionsByChallengeId = async (req, res) => {
     try {
         const { challengeId } = req.params;
-
         const results = await pool.query('SELECT * FROM submissions WHERE challenge_id = $1', [challengeId]);
 
         res.status(200).json(results.rows);
@@ -73,15 +158,35 @@ export const createSubmission = async (req, res) => {
             content,
             genre,
             started_at,
-            submitted_at
+            submitted_at,
+            word_count,
+            character_count
         } = req.body;
 
-        const word_count = content.split(' ').length;
-        const character_count = content.length;
+        // const word_count = content.split(' ').length;
+        // const character_count = content.length;
 
-        console.log(req.body);
+        const submission = {
+            challenge_id: challengeId,
+            title,
+            summary,
+            content,
+            genre,
+            word_count,
+            character_count,
+            started_at,
+            submitted_at
+        };
 
-        const results = await pool.query('INSERT INTO submissions (author_id, challenge_id, title, summary, content, genre, word_count, character_count, started_at, submitted_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *', [userId, challengeId, title, summary, content, genre, word_count, character_count, started_at, submitted_at]);
+        const score = await checkScore(submission);
+
+        if (score === null) {
+            return res.status(500).json({ error: 'Error calculating score' });
+        }
+
+        console.log(submission, score)
+
+        const results = await pool.query('INSERT INTO submissions (author_id, challenge_id, title, summary, content, genre, word_count, character_count, started_at, submitted_at, score) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *', [userId, challengeId, title, summary, content, genre, word_count, character_count, started_at, submitted_at, score]);
 
         if (results.rows.length === 0) {
             return res.status(400).json({ error: 'Submission could not be created' });

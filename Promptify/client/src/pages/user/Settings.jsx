@@ -94,7 +94,7 @@ export default function Settings() {
 
             <main id="settings-body" className="container">
                 <aside id="table-of-contents">
-                <h1>Settings</h1>
+                    <h1>Settings</h1>
                     <h2>Table of Contents</h2>
                     <ul>
                         <li onClick={() => setTab("profile-section")}>Profile Information</li>
