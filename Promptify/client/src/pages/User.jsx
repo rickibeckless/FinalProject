@@ -38,11 +38,7 @@ export default function User() {
 
     const { username } = useParams();
 
-    if (!username.startsWith('@')) {
-        return navigate("/404");
-    }
-    
-    const [userHandle, setUserHandle] = useState(username.slice(1).toLowerCase()); 
+    const [userHandle, setUserHandle] = useState(username.slice(1).toLowerCase());
 
     const [target_user, setTargetUser] = useState([]);
     const [targetUserChallenges, setTargetUserChallenges] = useState([]);
@@ -53,6 +49,10 @@ export default function User() {
     const [following, setFollowing] = useState(false);
 
     useEffect(() => {
+        if (!username.startsWith('@')) {
+            return navigate("/404");
+        };
+        
         async function fetchTargetUser() {
             try {
                 const response = await fetch(`/api/users/username/${userHandle}`);
@@ -98,7 +98,7 @@ export default function User() {
                             submission.upvotes = await getSubmissionStats(submission.id, 'upvotes');
                             submission.comments = await getSubmissionStats(submission.id, 'comments');
                         }
-                        
+
                         setTargetUserSubmissions(submissionsData);
                     }
                 } else {
@@ -121,9 +121,9 @@ export default function User() {
 
     const renderLimitations = (limitations) => {
         if (!limitations) return null;
-    
+
         const { time_limit, word_limit, character_limit, required_phrase } = limitations;
-    
+
         return (
             <>
                 {(time_limit?.min || time_limit?.max) && (
@@ -136,7 +136,7 @@ export default function User() {
                 )}
                 {(word_limit?.min || word_limit?.max) && (
                     <span className="li-detail">
-                        {word_limit.min || 0} 
+                        {word_limit.min || 0}
                         {word_limit.max && (
                             - word_limit.max || "No limit"
                         )} words
@@ -144,7 +144,7 @@ export default function User() {
                 )}
                 {(character_limit?.min || character_limit?.max) && (
                     <span className="li-detail">
-                        {character_limit.min || 0} 
+                        {character_limit.min || 0}
                         {character_limit.max && (
                             - character_limit.max || "No limit"
                         )} characters
@@ -217,7 +217,7 @@ export default function User() {
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
             <main id="user-body" className="container">
-                {userIsTarget && 
+                {userIsTarget &&
                     <button type="button" title="Edit Profile" className="edit-user-btn" onClick={() => navigate("/settings?tab=profile&edit=true")}>
                         <img src={personEdit} alt="Edit Profile" />
                     </button>
@@ -303,7 +303,7 @@ export default function User() {
                                     <span className="li-detail">{challenge.skill_level}</span>
                                     <span className="li-detail" title="Participation Count">
                                         {challenge.participation_count}
-                                        {challenge.participation_count === 1 ? " Participant" :  " Participants"}
+                                        {challenge.participation_count === 1 ? " Participant" : " Participants"}
                                     </span>
                                     {renderLimitations(challenge.limitations)}
                                     <span className="li-detail" title="Available Points">{challenge.available_points} Points</span>

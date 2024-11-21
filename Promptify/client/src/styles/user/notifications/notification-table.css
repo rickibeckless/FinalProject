@@ -9,6 +9,16 @@
 .left-notification-holder table {
     width: 100%;
     border-collapse: collapse;
+
+    height: 70vh;
+    overflow-y: auto;
+    display: block;
+}
+
+.left-notification-holder table thead {
+    position: sticky;
+    top: 0;
+    left: 0;
 }
 
 .left-notification-holder table th, .left-notification-holder table td {

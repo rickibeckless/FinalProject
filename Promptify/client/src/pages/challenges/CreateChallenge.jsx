@@ -168,6 +168,8 @@ export default function CreateChallenge() {
         e.preventDefault();
         setLoading(true);
 
+
+
         if (challengeForm.limitations.required_phrase.includes('\n')) {
             setChallengeForm((prevForm) => ({
                 ...prevForm,
@@ -176,7 +178,18 @@ export default function CreateChallenge() {
                     required_phrase: prevForm.limitations.required_phrase.split('\n')
                 }
             }));
-        }
+        };
+
+        // setChallengeForm((prevForm) => ({
+        //     ...prevForm,
+        //     start_date_time: new Date(prevForm.start_date_time).toISOString(),
+        //     end_date_time: new Date(prevForm.end_date_time).toISOString()
+        // }));
+
+        // console.log(challengeForm.start_date_time)
+        // console.log(challengeForm.end_date_time)
+        // console.log(new Date(challengeForm.start_date_time).toISOString())
+        // console.log(new Date(challengeForm.end_date_time).toISOString())
 
         try {
             const response = await fetch('/api/challenges/create', {
@@ -261,14 +274,16 @@ export default function CreateChallenge() {
                                     <div className="limitations-checkboxes">
 
                                         <div className="limitation-checkbox-holder">
-                                            <input
-                                                type="checkbox"
-                                                id="time_limit"
-                                                name="time_limit"
-                                                onFocus={() => handleFocus('time_limit-input')}
-                                                onChange={handleLimitations}
-                                            />
-                                            <label htmlFor="time_limit">Time Limit</label>
+                                            <label htmlFor="time_limit">
+                                                <input
+                                                    type="checkbox"
+                                                    id="time_limit"
+                                                    name="time_limit"
+                                                    onFocus={() => handleFocus('time_limit-input')}
+                                                    onChange={handleLimitations}
+                                                />
+                                                Time Limit
+                                            </label>
 
                                             {selectedLimitations.includes('time_limit') && (
                                                 <div className="limitations-input">
@@ -297,14 +312,16 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input
-                                                type="checkbox"
-                                                id="word_limit"
-                                                name="word_limit"
-                                                onFocus={() => handleFocus('word_limit-input')}
-                                                onChange={handleLimitations}
-                                            />
-                                            <label htmlFor="word_limit">Word Limit</label>
+                                            <label htmlFor="word_limit">
+                                                <input
+                                                    type="checkbox"
+                                                    id="word_limit"
+                                                    name="word_limit"
+                                                    onFocus={() => handleFocus('word_limit-input')}
+                                                    onChange={handleLimitations}
+                                                />
+                                                Word Limit
+                                            </label>
 
                                             {selectedLimitations.includes('word_limit') && (
                                                 <div className="limitations-input">
@@ -333,14 +350,16 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input
-                                                type="checkbox"
-                                                id="character_limit"
-                                                name="character_limit"
-                                                onFocus={() => handleFocus('character_limit-input')}
-                                                onChange={handleLimitations}
-                                            />
-                                            <label htmlFor="character_limit">Character Limit</label>
+                                            <label htmlFor="character_limit">
+                                                <input
+                                                    type="checkbox"
+                                                    id="character_limit"
+                                                    name="character_limit"
+                                                    onFocus={() => handleFocus('character_limit-input')}
+                                                    onChange={handleLimitations}
+                                                />
+                                                Character Limit
+                                            </label>
 
                                             {selectedLimitations.includes('character_limit') && (
                                                 <div className="limitations-input">
@@ -369,28 +388,18 @@ export default function CreateChallenge() {
                                         </div>
 
                                         <div className="limitation-checkbox-holder">
-                                            <input
-                                                type="checkbox"
-                                                id="required_phrase"
-                                                name="required_phrase"
-                                                onFocus={() => handleFocus('required_phrase-input')}
-                                                onChange={handleLimitations}
-                                            />
-                                            <label htmlFor="required_phrase">Required Phrase</label>
+                                            <label htmlFor="required_phrase">
+                                                <input
+                                                    type="checkbox"
+                                                    id="required_phrase"
+                                                    name="required_phrase"
+                                                    onFocus={() => handleFocus('required_phrase-input')}
+                                                    onChange={handleLimitations}
+                                                />
+                                                Required Phrase
+                                            </label>
 
                                             {selectedLimitations.includes('required_phrase') && (
-                                                // <div className="limitations-input">
-                                                //     <input
-                                                //         type="text"
-                                                //         id="required_phrase-input"
-                                                //         name="required_phrase"
-                                                //         placeholder="Enter required phrase(s)"
-                                                //         value={challengeForm.limitations.required_phrase || ''}
-                                                //         onFocus={() => handleFocus('required_phrase-input')}
-                                                //         onChange={handleChange}
-                                                //     />
-                                                //     {focusedInput === 'required_phrase-input' && <p>Enclose each phrase in `backticks`</p>}
-                                                // </div>
                                                 <div className="limitations-input">
                                                     <textarea
                                                         id="required_phrase-input"
@@ -483,7 +492,7 @@ export default function CreateChallenge() {
                                             </li>
                                         ) : null}
 
-                                        {challengeForm.limitations.required_phrase ? (
+                                        {challengeForm.limitations.required_phrase > 0 ? (
                                             challengeForm.limitations.required_phrase?.includes('\n') ? (
                                                 <>
                                                     <li>Required Phrases:</li>
@@ -505,12 +514,12 @@ export default function CreateChallenge() {
 
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="start_date_time">Start Date & Time:</label>
-                                    <p>{challengeForm.start_date_time}</p>
+                                    <p>{new Date(challengeForm.start_date_time).toLocaleString()}</p>
                                 </div>
 
                                 <div className="create-challenge-form-input-holder">
                                     <label htmlFor="end_date_time">End Date & Time:</label>
-                                    <p>{challengeForm.end_date_time}</p>
+                                    <p>{new Date(challengeForm.end_date_time).toLocaleString()}</p>
                                 </div>
                             </div>
                         )}

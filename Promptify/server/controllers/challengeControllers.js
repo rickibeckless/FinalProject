@@ -16,7 +16,8 @@ const challengeCheck = async (results, res) => {
 
             const timeToStart = new Date(challenge.start_date_time) - now;
             const timeToEnd = new Date(challenge.end_date_time) - now;
-            const timeToScore = new Date(challenge.end_date_time) + 3600000 - now;
+            let timeToScore = new Date(challenge.end_date_time) - now;
+            timeToScore = timeToScore + 3600000;
 
             if (timeToStart > 0) {
                 status = 'upcoming';
@@ -24,7 +25,9 @@ const challengeCheck = async (results, res) => {
                 status = 'in-progress';
             } else if (timeToScore > 0) {
                 status = 'scoring';
-                await challengeScoring(challenge, res);
+                if (!challenge.scored) { // only score if the challenge has not been scored yet
+                    await challengeScoring(challenge, res);
+                }
             } else {
                 status = 'ended';
             }
@@ -47,80 +50,16 @@ const challengeCheck = async (results, res) => {
     };
 };
 
-// const challengeScoring = async (challenge, res) => {
-//     try {
-//         console.log("handling scoring for challenge:", challenge);
-
-//         const submissionsResults = await pool.query('SELECT * FROM submissions WHERE challenge_id = $1', [challenge.id]);
-
-//         if (submissionsResults.rows.length === 0) {
-//             return;
-//         };
-
-//         const topSubmissions = submissionsResults.rows.filter(submission => submission.score >= 80);
-//         const topSubmissionsWithUpvotes = topSubmissions.map(submission => {
-//             const upvotesResults = pool.query('SELECT COUNT(*) FROM upvotes WHERE submission_id = $1, guest_account = false', [submission.id]);
-//             return {
-//                 id: submission.id,
-//                 upvotes: upvotesResults.rows[0].count
-//             };
-//         });
-
-//         topSubmissionsWithUpvotes.sort((a, b) => b.upvotes - a.upvotes);
-
-//         const winners = topSubmissionsWithUpvotes.slice(0, 3).map(submission => submission.id);
-//         const first_place = winners[0].author_id;
-//         const second_place = winners[1].author_id;
-//         const third_place = winners[2].author_id;
-
-//         const results = await pool.query('UPDATE challenges SET first_place = $1, second_place = $2, third_place = $3 WHERE id = $4 RETURNING *', [first_place, second_place, third_place, challenge.id]);
-
-//         const notifications = new Set();
-
-//         const addNotification = (notification) => {
-//             notifications.add(notification);
-//         };
-
-//         const authorNotification = {
-//             title: "Challenge Winners Announced!",
-//             content: `The winners of your challenge ${challenge.name} have been announced! Check it out!`,
-//             type: "challenge_activity",
-//             to: [challenge.author_id]
-//         };
-//         addNotification(authorNotification);
-
-//         const winnerNotification = {
-//             title: "You Won A Challenge!",
-//             content: `Congratulations! You have won the challenge ${challenge.name}.`,
-//             type: "challenge_activity",
-//             to: winners
-//         };
-//         addNotification(winnerNotification);
-
-//         const notificationArray = Array.from(notifications);
-//         const batchSize = 1000;
-//         for (let i = 0; i < notificationArray.length; i += batchSize) {
-//             const batch = notificationArray.slice(i, i + batchSize);
-
-//             await fetch(`${environmentUrl}/api/notifications/new/several`, {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     role: 'auto'
-//                 },
-//                 body: JSON.stringify(batch)
-//             });
-//         };
-
-//         return results.rows;
-//     } catch (error) {
-//         console.error('Error scoring challenge:', error);
-//         res.status(500).json({ error: 'An unexpected error occurred' });
-//     };
-// };
-
 const challengeScoring = async (challenge, res) => {
     try {
+        const now = new Date();
+        let timeToScore = new Date(challenge.end_date_time) - now;
+        timeToScore = timeToScore + 3600000;
+
+        if (timeToScore > 600000) { // only score if the challenge has 10 minutes left in the scoring period
+            return;
+        }
+
         const submissionsResults = await pool.query(
             `
                 SELECT 
@@ -148,9 +87,37 @@ const challengeScoring = async (challenge, res) => {
         const second_place = winners[1]?.author_id || null;
         const third_place = winners[2]?.author_id || null;
 
-        const results = await pool.query(`UPDATE challenges SET first_place = $1, second_place = $2, third_place = $3 WHERE id = $4 RETURNING *`,
-            [first_place, second_place, third_place, challenge.id]
+        const results = await pool.query(`UPDATE challenges SET first_place = $1, second_place = $2, third_place = $3, scored = $4 WHERE id = $5 RETURNING *`,
+            [first_place, second_place, third_place, true, challenge.id]
         );
+
+        const points = challenge.available_points;
+
+        const pointsToWinners = winners.map((winner, index) => {
+            if (challenge.participation_count <= 1) {
+                return Math.floor(points);
+            } else if (challenge.participation_count < 3) {
+                return Math.floor(points / challenge.participation_count);
+            } else if (challenge.participation_count >= 3) {
+                if (index === 0) {
+                    return Math.floor(points * 0.5);
+                } else if (index === 1) {
+                    return Math.floor(points * 0.3);
+                } else if (index === 2) {
+                    return Math.floor(points * 0.2);
+                };
+            };
+        });
+
+        for (let i = 0; i < winners.length; i++) {
+            const winner = winners[i];
+            const points = pointsToWinners[i];
+
+            await pool.query(
+                `UPDATE users SET points = points + $1 WHERE id = $2`,
+                [points, winner.author_id]
+            );
+        };
 
         const notifications = [];
 
@@ -286,6 +253,19 @@ export const createChallenge = async (req, res) => {
             limitations
         } = req.body;
 
+        start_date_time = new Date(start_date_time).toISOString();
+        end_date_time = new Date(end_date_time).toISOString();
+
+        const validGenres = ['non-fiction', 'thriller', 'poetry', 'general', 'fantasy'];
+        const validSkillLevels = ['beginner', 'intermediate', 'advanced'];
+
+        if (!validGenres.includes(genre)) {
+            genre = 'general';
+        };
+        if (!validSkillLevels.includes(skill_level)) {
+            skill_level = 'beginner';
+        };
+
         if (limitations.required_phrase.includes('\n')) {
             limitations.required_phrase = limitations.required_phrase.split('\n');
         } else {
@@ -367,7 +347,8 @@ export const createChallenge = async (req, res) => {
         addNotification(authorNotification);
 
         const authorFollowersResults = await pool.query('SELECT * FROM user_followers WHERE following_id = $1', [author_id]);
-        let authorFollowers = await pool.query('SELECT * FROM users WHERE id IN ($1)', [authorFollowersResults.rows.map(f => f.follower_id).join(',')]);
+        let followerIds = authorFollowersResults.rows.map(f => f.follower_id);
+        let authorFollowers = await pool.query('SELECT * FROM users WHERE id = ANY($1)', [followerIds]);
 
         authorFollowers = authorFollowers.rows.filter(user => user.notifications_settings.allow_following_user_notifications);
         const authorFollowersIds = authorFollowers.map(follower => follower.id);

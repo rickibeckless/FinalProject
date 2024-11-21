@@ -13,17 +13,29 @@ const userCheck = async (results, res) => {
             const followers = await pool.query('SELECT COUNT(*) FROM user_followers WHERE following_id = $1', [user.id]);
             const following = await pool.query('SELECT COUNT(*) FROM user_followers WHERE follower_id = $1', [user.id]);
             const completedChallenges = await pool.query('SELECT COUNT(*) FROM submissions WHERE author_id = $1', [user.id]);
-
+            const bookmarkedChallenges = user.bookmarked_challenges;
+            let updatedBookmarkedChallenges = [];
+            for (const challengeId of bookmarkedChallenges) {
+                const challenge = await pool.query('SELECT * FROM challenges WHERE id = $1', [challengeId]);
+                if (challenge.rows.length !== 0) {
+                    updatedBookmarkedChallenges.push(challengeId);
+                }
+            }
+            
             updates.push({
                 id: user.id,
                 followers: followers.rows[0].count,
                 following: following.rows[0].count,
-                completedChallenges: completedChallenges.rows[0].count
+                completedChallenges: completedChallenges.rows[0].count,
+                bookmarkedChallenges: updatedBookmarkedChallenges
             });
         };
 
         for (const update of updates) {
-            await pool.query('UPDATE users SET followers = $1, following = $2, completed_challenges = $3 WHERE id = $4', [update.followers, update.following, update.completedChallenges, update.id]);
+            await pool.query(
+                'UPDATE users SET followers = $1, following = $2, completed_challenges = $3, bookmarked_challenges = $4 WHERE id = $5',
+                [update.followers, update.following, update.completedChallenges, update.bookmarkedChallenges, update.id]
+            );
         };
     } catch (error) {
         console.error('Error checking user:', error);

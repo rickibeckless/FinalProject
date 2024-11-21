@@ -65,7 +65,7 @@ export default function UserChallenges() {
         }
 
         fetchTargetUser();
-    }, [loading, username]);
+    }, [loading, user, userHandle]);
 
     return (
         <>

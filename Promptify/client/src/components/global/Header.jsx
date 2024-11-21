@@ -45,7 +45,7 @@ export default function Header() {
                     const { data, status } = notificationPayload;
             
                     setUnreadNotifications((prevNotifications) => {
-                        const notificationId = data.id || notificationPayload.id;
+                        const notificationId = data?.id || notificationPayload?.id;
             
                         if (status === "unread") {
                             const exists = prevNotifications.some(notification => notification.id === notificationId);

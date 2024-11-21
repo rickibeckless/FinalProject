@@ -44,23 +44,23 @@ export default function ChallengeCard({ challenge }) {
     const navigate = useNavigate(); // used to navigate to a different page
 
     useEffect(() => {
-        const newTags = [challenge.genre, challenge.status, challenge.skill_level];
+        const newTags = [challenge?.genre, challenge?.status, challenge?.skill_level];
 
         const limitationTags = [
-            challenge.limitations.time_limit.min  && "time limit" || challenge.limitations.time_limit.max && "time limit",
-            challenge.limitations.word_limit.min && "word limit" || challenge.limitations.word_limit.max && "word limit",
-            challenge.limitations.character_limit.min && "character limit" || challenge.limitations.character_limit.max && "character limit",
-            challenge.limitations.required_phrase.length > 0 && "required phrase",
+            challenge?.limitations.time_limit.min  && "time limit" || challenge?.limitations.time_limit.max && "time limit",
+            challenge?.limitations.word_limit.min && "word limit" || challenge?.limitations.word_limit.max && "word limit",
+            challenge?.limitations.character_limit.min && "character limit" || challenge?.limitations.character_limit.max && "character limit",
+            challenge?.limitations.required_phrase.length > 0 && "required phrase",
         ];
 
         const filteredLimitationTags = limitationTags.filter(Boolean);
 
         const participationCountTags = [
-            challenge.participation_count === 0 && "0",
-            challenge.participation_count >=1 && challenge.participation_count <= 10 && "1-10",
-            challenge.participation_count <= 50 && challenge.participation_count > 10 && "11-50",
-            challenge.participation_count <= 100 && challenge.participation_count > 50 && "51-100",
-            challenge.participation_count > 100 && "100+",
+            challenge?.participation_count === 0 && "0",
+            challenge?.participation_count >=1 && challenge?.participation_count <= 10 && "1-10",
+            challenge?.participation_count <= 50 && challenge?.participation_count > 10 && "11-50",
+            challenge?.participation_count <= 100 && challenge?.participation_count > 50 && "51-100",
+            challenge?.participation_count > 100 && "100+",
         ];
 
         const filteredParticipationCountTags = participationCountTags.filter(Boolean);
@@ -68,10 +68,10 @@ export default function ChallengeCard({ challenge }) {
         setTags([...newTags, ...filteredLimitationTags, ...filteredParticipationCountTags]);
         
         let now = new Date();
-        let timeToStart = new Date(challenge.start_date_time) - now;
-        let timeToEnd = new Date(challenge.end_date_time) - now;
+        let timeToStart = new Date(challenge?.start_date_time) - now;
+        let timeToEnd = new Date(challenge?.end_date_time) - now;
 
-        setFormattedDate(new Date(challenge.end_date_time).toLocaleString());
+        setFormattedDate(new Date(challenge?.end_date_time).toLocaleString());
         let timeInterval;
 
         const updateCountdown = (time, status) => {
@@ -107,7 +107,7 @@ export default function ChallengeCard({ challenge }) {
         };
 
         async function fetchAuthor() {
-            const response = await fetch(`/api/users/${challenge.author_id}`);
+            const response = await fetch(`/api/users/${challenge?.author_id}`);
             const data = await response.json();
 
             if (response.ok) {
@@ -120,7 +120,7 @@ export default function ChallengeCard({ challenge }) {
 
         async function checkIfBookmarked() {
             if (user) {
-                if (user.bookmarked_challenges.includes(challenge.id)) {
+                if (user.bookmarked_challenges.includes(challenge?.id)) {
                     setBookmarkedChallenge(true);
                 } else {
                     setBookmarkedChallenge(false);
@@ -130,7 +130,7 @@ export default function ChallengeCard({ challenge }) {
 
         async function checkGenreFollowed() {
             if (user) {
-                if (user.following_genres.includes(challenge.genre)) {
+                if (user.following_genres.includes(challenge?.genre)) {
                     setFollowedGenre(true);
                 } else {
                     setFollowedGenre(false);
@@ -140,7 +140,7 @@ export default function ChallengeCard({ challenge }) {
 
         async function checkIfUserInChallenge() {
             if (user) {
-                const response = await fetch(`/api/submissions/user/${user.id}/challenge/${challenge.id}`);
+                const response = await fetch(`/api/submissions/user/${user.id}/challenge/${challenge?.id}`);
                 const data = await response.json();
 
                 if (data.length > 0) {
@@ -163,7 +163,7 @@ export default function ChallengeCard({ challenge }) {
     const handleFollow = async (type) => {
         if (user) {
             if (type === "genre") {
-                const response = await fetch(`/api/users/${user.id}/${challenge.genre}/follow`, {
+                const response = await fetch(`/api/users/${user.id}/${challenge?.genre}/follow`, {
                     method: "PATCH",
                     headers: {
                         role: user ? "user" : "none",
@@ -181,7 +181,7 @@ export default function ChallengeCard({ challenge }) {
 
     const handleBookmark = async () => {
         if (user) {
-            const response = await fetch(`/api/users/${user.id}/${challenge.id}/bookmark`, {
+            const response = await fetch(`/api/users/${user.id}/${challenge?.id}/bookmark`, {
                 method: "PATCH",
                 headers: {
                     role: user ? "user" : "none",
@@ -214,11 +214,11 @@ export default function ChallengeCard({ challenge }) {
         // if there are less than 3 participants, the points will be split evenly between the participants
         // if there is a tie, each participant will receive the same amount of points
 
-        // if (challenge.participation_count <= 1) {
+        // if (challenge?.participation_count <= 1) {
         //     return `You can get up to ${points}pts!`;
-        // } else if (challenge.participation_count < 3) {
-        //     return `${Math.floor(points / challenge.participation_count)}pts each`;
-        // } else if (challenge.participation_count >= 3) {
+        // } else if (challenge?.participation_count < 3) {
+        //     return `${Math.floor(points / challenge?.participation_count)}pts each`;
+        // } else if (challenge?.participation_count >= 3) {
         //     return `1st: ${Math.floor(points * 0.5)}pts | 2nd: ${Math.floor(points * 0.3)}pts | 3rd: ${Math.floor(points * 0.2)}pts`;
         // };
         
@@ -245,11 +245,11 @@ export default function ChallengeCard({ challenge }) {
                 )}
 
                 <div className="challenge-card-section">
-                    <h2 className="challenge-card-name">{challenge.name}</h2>
+                    <h2 className="challenge-card-name">{challenge?.name}</h2>
                     <div className="challenge-card-dates">
-                        <span>{new Date(challenge.start_date_time).toLocaleDateString()}</span>
+                        <span>{new Date(challenge?.start_date_time).toLocaleDateString()}</span>
                         —
-                        <span>{new Date(challenge.end_date_time).toLocaleDateString()}</span>
+                        <span>{new Date(challenge?.end_date_time).toLocaleDateString()}</span>
                     </div>
                 </div>
 
@@ -259,10 +259,10 @@ export default function ChallengeCard({ challenge }) {
                 </div>
                 
                 <div className="points-holder" onMouseEnter={() => handlePointsDetails('open')} onMouseLeave={() => handlePointsDetails('close')}>
-                    <p className="points">{challenge.available_points}pts</p>
+                    <p className="points">{challenge?.available_points}pts</p>
                 </div>
                 <div className={`points-details-holder ${showPointsDetails ? 'shown' : ''}`}>
-                    <p className={`points-details ${showPointsDetails ? 'shown' : ''}`}>{calculatePoints(challenge.available_points)}</p>
+                    <p className={`points-details ${showPointsDetails ? 'shown' : ''}`}>{calculatePoints(challenge?.available_points)}</p>
                 </div>
 
                 <div className="challenge-card-tags-holder">
@@ -287,21 +287,21 @@ export default function ChallengeCard({ challenge }) {
                 </div>
             </div>
             <div className="challenge-card-content">
-                <p className="challenge-card-description">{challenge.description}</p>
-                <p className="challenge-card-prompt">{challenge.prompt}</p>
+                <p className="challenge-card-description">{challenge?.description}</p>
+                <p className="challenge-card-prompt">{challenge?.prompt}</p>
                 <div className="challenge-card-countdown" title={formattedDate}>
-                    {challenge.end_date_time === '3004-08-13T00:00:00.000Z' ? 'Never Ending!' : countdown}
+                    {challenge?.end_date_time === '3004-08-13T00:00:00.000Z' ? 'Never Ending!' : countdown}
                 </div>
             </div>
             <div className="challenge-card-footer">
-                <Link to={`/challenges/${challenge.id}`} className="challenge-card-link">View Challenge</Link>
+                <Link to={`/challenges/${challenge?.id}`} className="challenge-card-link">View Challenge</Link>
                 <div className="challenge-card-footer-participants-join">
-                    {challenge.participation_count === 1 ? (<p className="challenge-card-participants">{challenge.participation_count} participant</p>) : (<p className="challenge-card-participants">{challenge.participation_count} participants</p>)}
+                    {challenge?.participation_count === 1 ? (<p className="challenge-card-participants">{challenge?.participation_count} participant</p>) : (<p className="challenge-card-participants">{challenge?.participation_count} participants</p>)}
                     {user && inProgress && author?.id !== user?.id && (
                         (userInChallenge ? (
                             <Link to={`/submissions/${submission?.id}`} className="challenge-card-button">View Submission</Link>
                         ) : (
-                            <Link to={`/challenges/${challenge.id}/join`} className="challenge-card-button">Join Challenge</Link>
+                            <Link to={`/challenges/${challenge?.id}/join`} className="challenge-card-button">Join Challenge</Link>
                         ))
                     )}
                 </div>
