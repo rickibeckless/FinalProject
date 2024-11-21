@@ -24,7 +24,7 @@ const server = http.createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : process.env.FRONTEND_URL;
+export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : process.env.PRODUCTION_URL;
 
 export const io = new Server(server, {
     cors: {
@@ -91,5 +91,5 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/user-followers', userFollowersRoutes);
 
 server.listen(PORT, () => {
-    console.log(`Server is running on '${process.env.BACKEND_URL}'`);
+    console.log(`Server is running on '${environmentUrl}'`);
 });
