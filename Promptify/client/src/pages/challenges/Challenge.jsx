@@ -20,6 +20,10 @@ export default function Challenge() {
     const [challenge, setChallenge] = useState({});
     const [submissions, setSubmissions] = useState([]);
     const { challengeId } = useParams();
+    const [isTimeLimit, setIsTimeLimit] = useState(false);
+    const [isWordLimit, setIsWordLimit] = useState(false);
+    const [isCharacterLimit, setIsCharacterLimit] = useState(false);
+    const [isRequiredPhrase, setIsRequiredPhrase] = useState(false);
 
     const [author, setAuthor] = useState({});
     const [openEditModal, setOpenEditModal] = useState(false);
@@ -37,6 +41,19 @@ export default function Challenge() {
             if (response.ok) {
                 setChallenge(data[0]);
                 setLoading(false);
+
+                if (data[0].limitations.time_limit.min !== null || data[0].limitations.time_limit.max !== null) {
+                    setIsTimeLimit(true);
+                };
+                if (data[0].limitations.word_limit.min !== null || data[0].limitations.word_limit.max !== null) {
+                    setIsWordLimit(true);
+                };
+                if (data[0].limitations.character_limit.min !== null || data[0].limitations.character_limit.max !== null) {
+                    setIsCharacterLimit(true);
+                };
+                if (data[0].limitations.required_phrase.length > 0) {
+                    setIsRequiredPhrase(true);
+                };
 
                 const authorResponse = await fetch(`/api/users/${data[0].author_id}`);
                 const authorData = await authorResponse.json();
@@ -151,6 +168,46 @@ export default function Challenge() {
                             <p className="detail-label">Genre:</p>
                             <p className="detail-content">{challenge.genre}</p>
                         </div>
+                        {isTimeLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Time Limit:</p>
+                                <p className="detail-content">
+                                    {challenge.limitations.time_limit.min !== null ? `${challenge.limitations.time_limit.min} minutes` : "None"}
+                                    {challenge.limitations.time_limit.max !== null ? ` - ${challenge.limitations.time_limit.max} minutes` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isWordLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Word Limit:</p>
+                                <p className="detail-content">
+                                    {challenge.limitations.word_limit.min !== null ? `${challenge.limitations.word_limit.min} words` : "None"}
+                                    {challenge.limitations.word_limit.max !== null ? ` - ${challenge.limitations.word_limit.max} words` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isCharacterLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Character Limit:</p>
+                                <p className="detail-content">
+                                    {challenge.limitations.character_limit.min !== null ? `${challenge.limitations.character_limit.min} characters` : "None"}
+                                    {challenge.limitations.character_limit.max !== null ? ` - ${challenge.limitations.character_limit.max} characters` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isRequiredPhrase && (
+                            <div className="detail-row long">
+                                {challenge.limitations.required_phrase.length > 1 ? (
+                                    <p className="detail-label">Required Phrases:</p>
+                                ) : (
+                                    <p className="detail-label">Required Phrase:</p>
+                                )}
+                                
+                                {challenge.limitations.required_phrase.map((phrase, index) => (
+                                    <p key={index} className="detail-content">{phrase}</p>
+                                ))}
+                            </div>
+                        )}
                         <div className="detail-row">
                             <p className="detail-label">Start Date:</p>
                             <p className="detail-content">

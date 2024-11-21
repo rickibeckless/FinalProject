@@ -59,6 +59,11 @@ export default function JoinChallenge() {
     const [characterMin, setCharacterMin] = useState(null);
     const [characterMax, setCharacterMax] = useState(null);
     const [timeLimit, setTimeLimit] = useState(null);
+    const [isTimeLimit, setIsTimeLimit] = useState(false);
+    const [isWordLimit, setIsWordLimit] = useState(false);
+    const [isCharacterLimit, setIsCharacterLimit] = useState(false);
+    const [isRequiredPhrase, setIsRequiredPhrase] = useState(false);
+    const [openPointsInfo, setOpenPointsInfo] = useState(false);
 
     const [elapsedTime, setElapsedTime] = useState(0);
 
@@ -83,7 +88,7 @@ export default function JoinChallenge() {
                     const data = await response.json();
                     setChallenge(data[0]);
 
-                    const { word_limit, character_limit, time_limit } = data[0].limitations;
+                    const { word_limit, character_limit, time_limit, required_phrase } = data[0].limitations;
 
                     if (data[0].author_id === user.id) {
                         setMessage("You cannot join your own challenge.");
@@ -110,6 +115,19 @@ export default function JoinChallenge() {
                     setCharacterMin(character_limit?.min || null);
                     setCharacterMax(character_limit?.max || null);
                     setTimeLimit(timeLimitInSeconds || null);
+
+                    if (time_limit.min !== null || time_limit.max !== null) {
+                        setIsTimeLimit(true);
+                    };
+                    if (word_limit.min !== null || word_limit.max !== null) {
+                        setIsWordLimit(true);
+                    };
+                    if (character_limit.min !== null || character_limit.max !== null) {
+                        setIsCharacterLimit(true);
+                    };
+                    if (required_phrase.length > 0) {
+                        setIsRequiredPhrase(true);
+                    };
 
                     fetchAuthor(data[0].author_id);
 
@@ -266,7 +284,7 @@ export default function JoinChallenge() {
         console.log(challenge, submission);
 
         try {
-            const response = await fetch(`/api/submissions/${user.id}/${challenge.id}/create`, {
+            const response = await fetch(`/api/submissions/${user.id}/${challenge?.id}/create`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -308,7 +326,7 @@ export default function JoinChallenge() {
             {message && <MessagePopup message={message} setMessage={setMessage} />}
 
             <main id="join-challenge-body" className="container">
-                <section id="challenge-details-section">
+                {/* <section id="challenge-details-section">
                     <h1 id="name">New Submission | {challenge?.name} <span id="author">{author?.username}</span></h1>
                     <p className="challenge-detail" id="description">{challenge?.description}</p>
                     <p className="challenge-detail" id="dates">{new Date(challenge?.start_date_time).toLocaleDateString()} - {new Date(challenge?.end_date_time).toLocaleDateString()}</p>
@@ -316,11 +334,109 @@ export default function JoinChallenge() {
                     <p className="challenge-detail" id="skill-level">{challenge?.skill_level}</p>
                     {wordMin && wordMax && <p className="challenge-detail" id="word-limit">Word Limit: {wordMin} - {wordMax}</p>}
                     {characterMin && characterMax && <p className="challenge-detail" id="character-limit">Character Limit: {characterMin} - {characterMax}</p>}
-                    {timeLimit && <p className="challenge-detail" id="time-limit">Time Limit: {timeLimit}</p>}
+                    {timeLimit && <p className="challenge-detail" id="time-limit">Time Limit: {challenge?.limitations.time_limit.max} minutes</p>}
                     <p className="challenge-detail" id="available-points">{challenge?.available_points} points available!</p>
                     <div className="challenge-detail-holder" id="prompt-holder">
                         <h2>Prompt</h2>
                         <p className="challenge-detail" id="prompt">{challenge?.prompt}</p>
+                    </div>
+                </section> */}
+                <section id="challenge-info" className="challenge-section">
+                    <h1 className="section-title">{challenge?.name}</h1>
+                    <div id="challenge-details" className="challenge-details">
+                        <div className="detail-row">
+                            <p className="detail-label">Author:</p>
+                            <Link to={`/@${author?.username}`} className="detail-content author-link">{author?.username}</Link>
+                        </div>
+                        <div className="detail-row long">
+                            <p className="detail-label">Description:</p>
+                            <p className="detail-content">{challenge?.description}</p>
+                        </div>
+                        <div className="detail-row long">
+                            <p className="detail-label">Prompt:</p>
+                            <p className="detail-content">{challenge?.prompt}</p>
+                        </div>
+                        <div className="detail-row">
+                            <p className="detail-label">Status:</p>
+                            <p className={`status-badge status-${challenge?.status}`}>
+                                {challenge?.status}
+                            </p>
+                        </div>
+                        <div className="detail-row">
+                            <p className="detail-label">Skill Level:</p>
+                            <p className="detail-content">{challenge?.skill_level}</p>
+                        </div>
+                        <div className="detail-row">
+                            <p className="detail-label">Genre:</p>
+                            <p className="detail-content">{challenge?.genre}</p>
+                        </div>
+                        {isTimeLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Time Limit:</p>
+                                <p className="detail-content">
+                                    {challenge?.limitations.time_limit.min !== null ? `${challenge?.limitations.time_limit.min} minutes` : "None"}
+                                    {challenge?.limitations.time_limit.max !== null ? ` - ${challenge?.limitations.time_limit.max} minutes` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isWordLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Word Limit:</p>
+                                <p className="detail-content">
+                                    {challenge?.limitations.word_limit.min !== null ? `${challenge?.limitations.word_limit.min} words` : "None"}
+                                    {challenge?.limitations.word_limit.max !== null ? ` - ${challenge?.limitations.word_limit.max} words` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isCharacterLimit && (
+                            <div className="detail-row">
+                                <p className="detail-label">Character Limit:</p>
+                                <p className="detail-content">
+                                    {challenge?.limitations.character_limit.min !== null ? `${challenge?.limitations.character_limit.min} characters` : "None"}
+                                    {challenge?.limitations.character_limit.max !== null ? ` - ${challenge?.limitations.character_limit.max} characters` : ""}
+                                </p>
+                            </div>
+                        )}
+                        {isRequiredPhrase && (
+                            <div className="detail-row long">
+                                {challenge?.limitations.required_phrase.length > 1 ? (
+                                    <p className="detail-label">Required Phrases:</p>
+                                ) : (
+                                    <p className="detail-label">Required Phrase:</p>
+                                )}
+                                
+                                {challenge?.limitations.required_phrase.map((phrase, index) => (
+                                    <p key={index} className="detail-content">{phrase}</p>
+                                ))}
+                            </div>
+                        )}
+                        <div className="detail-row">
+                            <p className="detail-label">Start Date:</p>
+                            <p className="detail-content">
+                                {new Date(challenge?.start_date_time).toLocaleString()}
+                            </p>
+                        </div>
+                        <div className="detail-row">
+                            <p className="detail-label">End Date:</p>
+                            <p className="detail-content">
+                                {new Date(challenge?.end_date_time).toLocaleString()}
+                            </p>
+                        </div>
+                        <div className="detail-row" onMouseEnter={() => setOpenPointsInfo(true)} onMouseLeave={() => setOpenPointsInfo(false)}>
+                            <p className="detail-label">Available Points:</p>
+                            <p className="detail-content">{challenge?.available_points}</p>
+                        </div>
+                        <div className={`detail-row points-info ${openPointsInfo ? 'active' : ''}`}>
+                            <ul>
+                                <li>1st place: 50%</li>
+                                <li>2nd place: 30%</li>
+                                <li>3rd place: 20%</li>
+                            </ul>
+                            <p>
+                                You will receive points based on your placement in the challenge! 
+                                Places are decided by how many upvotes your submission receives!
+                            </p>
+                        </div>
                     </div>
                 </section>
 
