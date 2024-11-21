@@ -219,8 +219,9 @@ export default function SignUpModal({ toggleModal }) {
                         <p>Already have an account? <button type="button" onClick={() => toggleModal('login', 'sign-up')}>Log in</button></p>
                     </div>
                 </div>
+                
+                {message && <MessagePopup message={message} setMessage={setMessage} />}
             </div>
-            {message && <MessagePopup message={message} setMessage={setMessage} />}
         </>
     );
 };

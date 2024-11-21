@@ -94,10 +94,11 @@ export const createUserWithConventional = async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
-        const checkUser = await pool.query('SELECT * FROM users WHERE email = $1, username = $2', [email, username]);
+        const checkUserEmail = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+        const checkUsername = await pool.query('SELECT * FROM users WHERE username = $1', [username]);
 
-        if (checkUser.rows.length > 0) {
-            return res.status(400).json({ error: 'User already exists' });
+        if (checkUserEmail.rows.length > 0 || checkUsername.rows.length > 0) {
+            return res.status(400).json({ error: 'Username or email already exists!' });
         };
 
         const adminEmails = process.env.ADMIN_EMAILS.split(', ');

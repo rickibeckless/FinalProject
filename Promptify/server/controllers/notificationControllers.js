@@ -7,7 +7,6 @@ const notificationCheck = async (results, res) => {
         let updates = [];
 
         if (results.rows.length === 0) {
-            await pool.query('UPDATE users SET notifications = $1', [[]]);
             return;
         };
 
@@ -15,6 +14,16 @@ const notificationCheck = async (results, res) => {
             const user = results.rows[i];
             let notificationsToKeep = [];
             let notificationsToDelete = [];
+
+            if (user.notifications === null || user.notifications === undefined) {
+                await pool.query('UPDATE users SET notifications = $1', [JSON.stringify([])]);
+            }
+
+            if (user.notifications.length === 0 || user.notifications.length === undefined || user.notifications === null) {
+                continue;
+            }
+
+            console.log(user.notifications);
 
             for (const notification of user.notifications) {
                 const dateDeleted = new Date(notification.date_deleted);
@@ -50,7 +59,6 @@ const notificationCheck = async (results, res) => {
         }
     } catch (error) {
         console.error('Error checking notifications:', error);
-        res.status(500).json({ error: 'An unexpected error occurred' });
     };
 };
 
@@ -91,7 +99,7 @@ export const getNotificationsByNotificationId = async (req, res) => {
         const { userId, notificationId } = req.params;
 
         const results = await pool.query(`
-            SELECT notification 
+            SELECT notification
             FROM users, jsonb_array_elements(notifications) AS notification
             WHERE id = $1 AND notification->>'id' = $2
         `, [userId, notificationId]);
@@ -112,7 +120,7 @@ export const updateNotificationStatus = async (req, res) => {
         const { userId, notificationId, status } = req.params;
 
         const notification = await pool.query(`
-            SELECT notification 
+            SELECT notification
             FROM users, jsonb_array_elements(notifications) AS notification
             WHERE id = $1 AND notification->>'id' = $2
         `, [userId, notificationId]);
@@ -133,9 +141,9 @@ export const updateNotificationStatus = async (req, res) => {
                 RETURNING notifications;
             `, [userId, notificationId]);
 
-            if (results.rows[0].notifications.length === 0) {
-                results.rows[0].notifications = [];
-            };
+            // if (results.rows[0].notifications.length === 0) {
+            //     results.rows[0].notifications = [];
+            // };
 
             await notificationCheck(results, res);
 
@@ -150,10 +158,10 @@ export const updateNotificationStatus = async (req, res) => {
             UPDATE users
             SET notifications = (
                 SELECT jsonb_agg(
-                    CASE 
-                        WHEN notification->>'id' = $2 THEN 
-                            jsonb_set(notification, '{status}', $3::jsonb) 
-                        ELSE notification 
+                    CASE
+                        WHEN notification->>'id' = $2 THEN
+                            jsonb_set(notification, '{status}', $3::jsonb)
+                        ELSE notification
                     END
                 )
                 FROM jsonb_array_elements(notifications) AS notification
@@ -212,7 +220,7 @@ export const updateAllNotificationsStatus = async (req, res) => {
                             jsonb_set(notification, '{status}', $3::jsonb)
                         ELSE notification
                     END
-                ) 
+                )
                 FROM jsonb_array_elements(notifications) AS notification
             )
             WHERE id = $1
