@@ -71,6 +71,15 @@ app.use(authSession);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api/admin/default', defaultRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/challenges', challengeRoutes);
+app.use('/api/submissions', submissionRoutes);
+app.use('/api/comments', commentRoutes);
+app.use('/api/upvotes', upvoteRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/user-followers', userFollowersRoutes);
+
 if (process.env.NODE_ENV === 'production') {
     //app.use(express.static('public'));
 
@@ -80,15 +89,6 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.join(__dirname, 'public', 'index.html'));
     });
 };
-
-app.use('/api/admin/default', defaultRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/challenges', challengeRoutes);
-app.use('/api/submissions', submissionRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/upvotes', upvoteRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/user-followers', userFollowersRoutes);
 
 server.listen(PORT, () => {
     console.log(`Server is running on '${environmentUrl}'`);
