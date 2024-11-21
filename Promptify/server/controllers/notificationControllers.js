@@ -6,6 +6,11 @@ const notificationCheck = async (results, res) => {
     try {
         let updates = [];
 
+        if (results.rows.length === 0) {
+            await pool.query('UPDATE users SET notifications = $1', [[]]);
+            return;
+        };
+
         for (let i = 0; i < results.rows.length; i++) {
             const user = results.rows[i];
             let notificationsToKeep = [];
@@ -127,6 +132,10 @@ export const updateNotificationStatus = async (req, res) => {
                 WHERE id = $1
                 RETURNING notifications;
             `, [userId, notificationId]);
+
+            if (results.rows[0].notifications.length === 0) {
+                results.rows[0].notifications = [];
+            };
 
             await notificationCheck(results, res);
 
