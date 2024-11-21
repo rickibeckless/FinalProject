@@ -28,7 +28,7 @@ export default function Help() {
 
                 <h3>1. How do I reset my password?</h3>
                 <p>
-                    Click on the “Forgot Password?” link on the login page. Follow the prompts to reset your password.
+                    To reset your password, please contact the developer at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
                 </p>
 
                 <h3>2. How can I submit my writing?</h3>
@@ -38,7 +38,7 @@ export default function Help() {
 
                 <h3>3. Can I delete my account?</h3>
                 <p>
-                    Yes, if you wish to delete your account, please contact our support team at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link> for assistance.
+                    Yes, to delete your account, navigate to your account setting found after selecting your profile picture. Then, navigate to the "Delete Profile" section and select the delete button. Please note that this action is irreversible.
                 </p>
 
                 <h3>4. How does community feedback work?</h3>
