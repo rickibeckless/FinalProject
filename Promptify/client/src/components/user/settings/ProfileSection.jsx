@@ -144,7 +144,7 @@ export default function ProfileSection({ user, edit }) {
                 const unfollowResponse = await fetch(`/api/user-followers/${user.id}/follow/${unfollowId}`, {
                     method: "POST",
                     headers: {
-                        role: user ? (user.is_admin ? "admin" : "user") : "guest",
+                        role: user ? "user" : "guest",
                     },
                 });
 
