@@ -135,19 +135,42 @@ export default function ProfileSection({ user, edit }) {
     };
 
     const handleRemove = async (type, id, name) => {
-        console.log("Removing:", type, id);
-        setProfileInfo({ 
-            ...profileInfo, 
-            [type]: profileInfo[type].filter((item) => item !== id) 
-        });
+        if (type === "following") {
+            try {
+                const response = await fetch(`/api/users/username/${name}`);
+                const data = await response.json();
+                const unfollowId = data[0].id;
 
-        if (type === "bookmarked_challenges") {
-            console.log("Removing bookmarked challenge:", name);
-            setBookmarkedChallengesNames(bookmarkedChallengesNames.filter((challenge) => challenge !== name));
-        } else if (type === "following") {
-            console.log("Removing following user:", name);
-            setFollowingUsersNames(followingUsersNames.filter((user) => user !== name));
-        };
+                const unfollowResponse = await fetch(`/api/user-followers/${user.id}/follow/${unfollowId}`, {
+                    method: "POST",
+                    headers: {
+                        role: user ? (user.isAdmin ? "admin" : "user") : "guest",
+                    },
+                });
+
+                if (unfollowResponse.ok) {
+                    setProfileInfo({
+                        ...profileInfo,
+                        following: profileInfo.following - 1,
+                    });
+
+                    setFollowingUsersNames(followingUsersNames.filter((user) => user !== name));
+                };
+            } catch (error) {
+                console.error("Error removing following user:", error);
+                setMessage("An unexpected error occurred when unfollowing user");
+                setTimeout(() => setMessage(""), 3000);
+            }
+        } else {
+            setProfileInfo({ 
+                ...profileInfo, 
+                [type]: profileInfo[type].filter((item) => item !== id) 
+            });
+
+            if (type === "bookmarked_challenges") {
+                setBookmarkedChallengesNames(bookmarkedChallengesNames.filter((challenge) => challenge !== name));
+            };
+        }
     };
 
     return (
