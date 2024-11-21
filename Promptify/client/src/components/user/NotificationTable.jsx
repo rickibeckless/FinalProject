@@ -37,7 +37,7 @@ export default function NotificationTable({ selectedNotifications, toggleNotific
     };
 
     return (
-        <table>
+        <table className={`${selectedNotifications.length > 0 ? "block" : ""}`}>
             <thead>
                 <tr>
                     <th>Notification</th>

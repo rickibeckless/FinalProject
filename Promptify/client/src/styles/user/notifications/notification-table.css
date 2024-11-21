@@ -9,9 +9,11 @@
 .left-notification-holder table {
     width: 100%;
     border-collapse: collapse;
-
     height: 70vh;
     overflow-y: auto;
+}
+
+.left-notification-holder table.block {
     display: block;
 }
 

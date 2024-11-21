@@ -168,9 +168,7 @@ export default function CreateChallenge() {
         e.preventDefault();
         setLoading(true);
 
-
-
-        if (challengeForm.limitations.required_phrase.includes('\n')) {
+        if (challengeForm.limitations.required_phrase.length > 0 && !challengeForm.limitations.required_phrase?.includes('\n')) {
             setChallengeForm((prevForm) => ({
                 ...prevForm,
                 limitations: {
@@ -179,17 +177,6 @@ export default function CreateChallenge() {
                 }
             }));
         };
-
-        // setChallengeForm((prevForm) => ({
-        //     ...prevForm,
-        //     start_date_time: new Date(prevForm.start_date_time).toISOString(),
-        //     end_date_time: new Date(prevForm.end_date_time).toISOString()
-        // }));
-
-        // console.log(challengeForm.start_date_time)
-        // console.log(challengeForm.end_date_time)
-        // console.log(new Date(challengeForm.start_date_time).toISOString())
-        // console.log(new Date(challengeForm.end_date_time).toISOString())
 
         try {
             const response = await fetch('/api/challenges/create', {
@@ -492,7 +479,7 @@ export default function CreateChallenge() {
                                             </li>
                                         ) : null}
 
-                                        {challengeForm.limitations.required_phrase > 0 ? (
+                                        {challengeForm.limitations.required_phrase.length > 0 ? (
                                             challengeForm.limitations.required_phrase?.includes('\n') ? (
                                                 <>
                                                     <li>Required Phrases:</li>

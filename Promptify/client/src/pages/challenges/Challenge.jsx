@@ -107,10 +107,11 @@ export default function Challenge() {
             document.body.classList.toggle("modal-open");
         }
 
-        // if (challenge.status !== "upcoming" && user.is_admin === false) {
-        //     setMessage("Cannot edit a challenge that is in-progress or ended!");
-        //     return;
-        // };
+        if (challenge.status !== "upcoming" && user.is_admin === false) {
+            setMessage("Cannot edit a challenge that is in-progress or ended!");
+            setTimeout(() => setMessage(""), 2000);
+            return;
+        };
 
         setOpenEditModal(true);
     };
@@ -179,7 +180,7 @@ export default function Challenge() {
                         </div>
                     </div>
 
-                    {openEditModal && <EditChallenge toggleEditChallenge={toggleEditChallenge} challenge={challenge} author={author} user={user} />}
+                    {openEditModal && <EditChallenge toggleEditChallenge={toggleEditChallenge} challenge={challenge} setChallenge={setChallenge} author={author} user={user} />}
                 </section>
 
                 <section id="challenge-actions" className="challenge-section">

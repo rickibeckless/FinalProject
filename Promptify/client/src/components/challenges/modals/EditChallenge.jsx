@@ -5,7 +5,7 @@ import LoadingScreen from "../../global/LoadingScreen.jsx";
 import MessagePopup from "../../global/MessagePopup.jsx";
 import CloseImg from "../../../assets/close.svg";
 
-export default function EditChallenge({ toggleEditChallenge, challenge, user, author }) {
+export default function EditChallenge({ toggleEditChallenge, challenge, setChallenge, user, author }) {
     const [challengeForm, setChallengeForm] = useState({
         author_id: '',
         name: '',
@@ -80,7 +80,43 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        setMessage('Challenge successfully updated!');
+        async function updateChallenge() {
+            try {
+                const response = await fetch(`/api/challenges/${challenge.id}/edit`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        role: user.is_admin ? 'admin' : user.id === author.id ? 'author' : 'user'
+                    },
+                    body: JSON.stringify(challengeForm),
+                });
+
+                if (!response.ok) {
+                    setMessage('Failed to update challenge');
+                    return;
+                }
+
+                const data = await response.json();
+                if (data.errors) {
+                    setMessage(data.errors.join(' '));
+                    return;
+                }
+
+                setChallenge(data[0]);
+
+                setMessage('Challenge successfully updated!');
+
+                setTimeout(() => {
+                    setMessage(null);
+                    toggleEditChallenge('edit', 'close');
+                }, 2000);
+            }
+            catch (err) {
+                setMessage(err.message);
+            }
+        }
+
+        updateChallenge();
     };
 
     const handleDelete = () => {
@@ -110,9 +146,9 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
     return (
         <>
             <div id="modalOverlay"></div>
-            <div id="edit-challenge-form-modal" className="modal">
+            <div id="account-form-modal" className="modal">
                 <div className="modal-content">
-                    <form id="account-form" onSubmit={handleSubmit}>
+                    <form id="account-form" className="modal-form" onSubmit={handleSubmit}>
                         <h2 className="account-form-modal-header">Edit Challenge</h2>
                         {challenge.status === "upcoming" ? (
                             <>
@@ -127,7 +163,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         required
                                     />
                                 </div>
-        
+
                                 <div className="form-input-holder">
                                     <label htmlFor="description">Description:</label>
                                     <textarea
@@ -138,7 +174,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         required
                                     />
                                 </div>
-        
+
                                 <div className="form-input-holder">
                                     <label htmlFor="skill_level">Skill Level:</label>
                                     <select
@@ -154,7 +190,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         <option value="advanced">Advanced</option>
                                     </select>
                                 </div>
-        
+
                                 <div className="form-input-holder">
                                     <label htmlFor="genre">Genre:</label>
                                     <select
@@ -172,7 +208,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         <option value="general">General</option>
                                     </select>
                                 </div>
-        
+
                                 <div className="form-input-holder">
                                     <label>Limitations:</label>
                                     <div className="limitations">
@@ -189,7 +225,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                                     {limitation.replace('_', ' ').toUpperCase()}
                                                 </label>
                                                 {selectedLimitations.includes(limitation) && (
-                                                    <div>
+                                                    <div className="extra-input">
                                                         <input
                                                             type="number"
                                                             name={`${limitation}_min`}
@@ -210,7 +246,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         ))}
                                     </div>
                                 </div>
-        
+
                                 <div className="form-input-holder">
                                     <label htmlFor="prompt">Prompt:</label>
                                     <textarea
@@ -221,7 +257,7 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                                         required
                                     />
                                 </div>
-        
+
                                 <button type="submit">Update Challenge</button>
                             </>
                         ) : (
@@ -232,8 +268,9 @@ export default function EditChallenge({ toggleEditChallenge, challenge, user, au
                         <button type="button" className="challenge-card-button" onClick={() => toggleEditChallenge('edit', 'close')}>Cancel</button>
                     </form>
                 </div>
+
+                {message && <MessagePopup message={message} setMessage={setMessage} />}
             </div>
-            {message && <MessagePopup message={message} setMessage={setMessage} />}
         </>
     );
 };

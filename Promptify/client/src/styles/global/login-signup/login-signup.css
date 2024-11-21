@@ -70,13 +70,54 @@
     letter-spacing: 1px;
 }
 
-#account-form .form-input-holder input {
+#account-form .form-input-holder input,
+#account-form .form-input-holder textarea,
+#account-form .form-input-holder select {
     grid-area: input;
 
-    padding: 1%;
+    padding: 2%;
     font-size: 1rem;
     font-weight: 300;
     letter-spacing: 1px;
+
+    border: 1px solid var(--verdigris);
+    border-radius: 5px;
+}
+
+#account-form .form-input-holder input:focus,
+#account-form .form-input-holder textarea:focus,
+#account-form .form-input-holder select:focus {
+    border: 2px solid var(--paynes-gray);
+    outline: none;
+}
+
+#account-form .form-input-holder textarea {
+    resize: vertical;
+    min-height: 5rem;
+    max-height: 10rem;
+}
+
+#account-form .form-input-holder input[type="checkbox"] {
+    grid-area: input;
+    width: 1rem;
+    height: 1rem;
+    margin: 0 1rem;
+    cursor: pointer;
+}
+
+#account-form .form-input-holder select {
+    cursor: pointer;
+}
+
+#account-form .form-input-holder div.extra-input {
+    width: 80%;
+    margin: 1rem auto;
+
+}
+
+#account-form .form-input-holder div.extra-input input {
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 #account-form .form-input-required-asterisk {
