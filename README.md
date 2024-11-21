@@ -6,6 +6,8 @@ Designed and developed by: Ricki Beckless
 
 🔗 Link to deployed app: https://promptify-ur5z.onrender.com
 
+🔗 Link to YouTube app demo: https://youtu.be/DaxxJaa_lGM
+
 ## About
 
 ### Description and Purpose
