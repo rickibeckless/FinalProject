@@ -16,7 +16,7 @@ const notificationCheck = async (results, res) => {
             let notificationsToDelete = [];
 
             if (user.notifications === null || user.notifications === undefined) {
-                await pool.query('UPDATE users SET notifications = $1', [JSON.stringify([])]);
+                await pool.query('UPDATE users SET notifications = $1 WHERE id = $2', [JSON.stringify([]), user.id]);
             }
 
             if (user.notifications.length === 0 || user.notifications.length === undefined || user.notifications === null) {
