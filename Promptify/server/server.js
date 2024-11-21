@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('disconnect', () => {
-        // cleanup could go here
+        // cleanup could go here... yeah
     });
 });
 
@@ -81,8 +81,6 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/user-followers', userFollowersRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-    //app.use(express.static('public'));
-
     app.use(express.static(path.join(__dirname, 'public')));
 
     app.get('*', (req, res) => {
