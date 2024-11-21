@@ -24,7 +24,7 @@ const server = http.createServer(app);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.BACKEND_URL : process.env.PRODUCTION_URL;
+export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_URL : process.env.BACKEND_URL;
 
 export const io = new Server(server, {
     cors: {
