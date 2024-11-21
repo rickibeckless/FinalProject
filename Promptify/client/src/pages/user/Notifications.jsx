@@ -7,6 +7,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
+import { environmentUrl } from "../../App.jsx";
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
@@ -30,7 +31,7 @@ import AuthContext from "../../context/AuthProvider.jsx"; // context used for au
 import "../../styles/user/notifications/notifications.css"; // styling for the notifications page
 
 export default function Notifications() {
-    const socket = io(import.meta.env.VITE_BACKEND_URL); // connect to the server's socket
+    const socket = io(environmentUrl); // connect to the server's socket
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup

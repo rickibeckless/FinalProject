@@ -18,8 +18,10 @@ import UserProfileImg from "../../assets/imgs/blank_profile_picture.png";
 
 import PromptifyLogo2 from "../../assets/android-chrome-192x192.png";
 
+import { environmentUrl } from "../../App.jsx";
+
 export default function Header() {
-    const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false }); // connect to the server's socket
+    const socket = io(environmentUrl, { autoConnect: false }); // connect to the server's socket
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);

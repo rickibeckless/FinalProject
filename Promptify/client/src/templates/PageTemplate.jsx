@@ -8,6 +8,7 @@
 import { useEffect, useState, useContext } from "react";
 import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
 import { io } from 'socket.io-client'; // used to connect to the server's socket
+import { environmentUrl } from "../App.jsx";
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../components/global/PageTitle.jsx"; // note: components will not use this
@@ -27,8 +28,7 @@ import { FetchContext } from "../context/FetchProvider.jsx"; // context used to 
 import '../utils/validators.js'; // note: this validator is for the classes pages url validation
 
 export default function PageTemplate() {
-    const environment = import.meta.env.VITE_NODE_ENV; // 'development' or 'production'
-    const socket = io(import.meta.env.VITE_BACKEND_URL); // connect to the server's socket
+    const socket = io(environmentUrl, { autoConnect: false }); // connect to the server's socket
     const { user, login, logout } = useContext(AuthContext); // context used for authentication
     const { fetchWithRetry } = useContext(FetchContext); // context used to fetch data from the server
     const [loading, setLoading] = useState(true); // set to false when done loading

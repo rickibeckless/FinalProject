@@ -12,8 +12,10 @@ import "../../styles/submissions/submission.css";
 import thumbsUpImg from "../../assets/thumbs_up.svg";
 import thumbsUpFilledImg from "../../assets/thumbs_up_filled.svg";
 
+import { environmentUrl } from "../../App.jsx";
+
 export default function Submission() {
-    const socket = io(import.meta.env.VITE_BACKEND_URL, { autoConnect: false }); // connect to the server's socket
+    const socket = io(environmentUrl, { autoConnect: false }); // connect to the server's socket
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup

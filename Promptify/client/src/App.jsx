@@ -7,6 +7,9 @@ import { faCircleUp } from "@fortawesome/free-solid-svg-icons";
 
 import './App.css';
 
+const environment = import.meta.env.NODE_ENV;
+export const environmentUrl = environment === 'production' ? import.meta.env.PRODUCTION_URL : import.meta.env.BACKEND_URL;
+
 function App() {
     const scrollToTop = () => {
         window.scrollTo({
