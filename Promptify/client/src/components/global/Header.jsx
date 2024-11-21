@@ -88,7 +88,9 @@ export default function Header() {
 
         if (user) {
             setUserProfileImage(user.profile_picture_url);
-            setUnreadNotifications(user?.notifications?.filter(notification => notification.status === "unread") || []);
+            if (user.notifications) {
+                setUnreadNotifications(user?.notifications?.filter(notification => notification.status === "unread") || []);
+            };
         };
     }, [user]);
 
