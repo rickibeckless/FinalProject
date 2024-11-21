@@ -11,8 +11,8 @@ This unit, be sure to complete all tasks listed below. To complete a task, place
 - [X] Update the status of issues in your project board as you complete them
 - [X] In `readme.md`, check off the features you have completed in this unit by adding a ✅ emoji in front of their title
   - [X] Under each feature you have completed, **include a GIF** showing feature functionality
-- [ ] In this document, complete the **Reflection** section below
-- [ ] 🚩🚩🚩**Complete the Final Project Feature Checklist section below**, detailing each feature you completed in the project (ONLY include features you implemented, not features you planned)
+- [X] In this document, complete the **Reflection** section below
+- [X] 🚩🚩🚩**Complete the Final Project Feature Checklist section below**, detailing each feature you completed in the project (ONLY include features you implemented, not features you planned)
 - [ ] 🚩🚩🚩**Record a GIF showing a complete run-through of your app** that displays all the components included in the **Final Project Feature Checklist** below
   - [ ] Include this GIF in the **Final Demo GIF** section below
 
@@ -77,20 +77,20 @@ Complete the checklist below detailing each baseline, custom, and stretch featur
 
 ### 1. What went well during this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+This is was mostly fixing bugs that popped up and adding final touches. I was able to fix all deployment bugs and get a stable release.
 
 ### 2. What were some challenges your group faced in this unit?
 
-[👉🏾👉🏾👉🏾 your answer here]
+I faced some routing issues after deploying and ran into some confusion with which urls in .env to replace my hard coded urls with. I realized I was still using localhost in some places, and that I was still separating the backend and frontend urls. Fixing those issues allowed for a successful deployment.
 
 ### 3. What were some of the highlights or achievements that you are most proud of in this project?
 
-[👉🏾👉🏾👉🏾 your answer here]
+Being able to use OAuth was a milestone I was eager to reach, the way it was explained and demonstrated made it infinitely easier to understand and implement. I also like the overall design and functionality of the app, I'm proud that I was able to get it all done while even allowing it to grow beyond the initial scope. I am especially proud of how interactive it is and how it has many features that are not just static.
 
 ### 4. Reflecting on your web development journey so far, how have you grown since the beginning of the course?
 
-[👉🏾👉🏾👉🏾 your answer here]
+I am %100 more comfortable working with full-stack web apps, and with PostgreSQL. This was my first time deploying a full-stack app, and I feel like it's given me good grounds to build on.
 
 ### 5. Looking ahead, what are your goals related to web development, and what steps do you plan to take to achieve them?
 
-[👉🏾👉🏾👉🏾 your answer here]
+I'm currently looking to begin my career and am looking for both internships and full-time positions. To help with this, I am continuing to build up my portfolio to display my skills and to revamp my resume. While I'm doing this, I am also enhancing my skills by working on more projects and learning other technologies such as Java.

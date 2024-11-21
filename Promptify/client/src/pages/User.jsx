@@ -5,7 +5,7 @@
 
 // general imports
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, Link, useLocation } from "react-router-dom";
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../components/global/PageTitle.jsx"; // note: modals will not use this component
@@ -32,6 +32,7 @@ import firstSubmissionBadge from "../assets/userBadges/first_submission.png";
 
 export default function User() {
     const navigate = useNavigate(); // used to navigate to a different page
+    const location = useLocation(); // used to get the current URL
     const { user } = useContext(AuthContext); // context used for authentication
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
@@ -92,8 +93,6 @@ export default function User() {
                     if (submissionsResponse.ok) {
                         const submissionsData = await submissionsResponse.json();
 
-                        // get submission stats (upvotes, comments)
-
                         for (let submission of submissionsData) {
                             submission.upvotes = await getSubmissionStats(submission.id, 'upvotes');
                             submission.comments = await getSubmissionStats(submission.id, 'comments');
@@ -112,7 +111,7 @@ export default function User() {
         };
 
         fetchTargetUser();
-    }, []);
+    }, [location, user, userHandle]);
 
     const badgeImages = {
         registered: registeredBadge,
