@@ -21,7 +21,7 @@ import PromptifyLogo2 from "../../assets/android-chrome-192x192.png";
 import { environmentUrl } from "../../App.jsx";
 
 export default function Header() {
-    const socket = io(environmentUrl, { autoConnect: false }); // connect to the server's socket
+    const socket = io(environmentUrl); // connect to the server's socket
     const location = useLocation();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -43,8 +43,11 @@ export default function Header() {
             socket.connect();
 
             const handleReceiveNotification = (notificationPayload) => {
+                console.log(notificationPayload);
                 if (notificationPayload.userId === user.id) {
                     const { data, status } = notificationPayload;
+
+                    console.log(data, status);
             
                     setUnreadNotifications((prevNotifications) => {
                         const notificationId = data?.id || notificationPayload?.id;

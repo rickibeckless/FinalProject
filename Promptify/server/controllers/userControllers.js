@@ -4,6 +4,10 @@ import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { authSession, passport } from '../middleware/auth.js';
 
+const getCurrentTime = (now) => { // used for logging
+    return now.toLocaleTimeString('en-US', { hour12: true, hour: 'numeric', minute: 'numeric', second: 'numeric' });
+}; // ex: console.log(`[${getCurrentTime(new Date())}]`);
+
 const userCheck = async (results, res) => {
     try {
         let updates = [];

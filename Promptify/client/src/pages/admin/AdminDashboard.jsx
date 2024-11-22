@@ -57,8 +57,8 @@ export default function AdminDashboard() {
 
                     let data = await response.json();
                     if (response.ok) {
-                        data = data.filter(user => user.username !== "deleted_user" && user.username !== "PromptifyBot");
-                        setUsers(data);
+                        data = data.filter(userData => userData.username !== "deleted_user" && userData.username !== "PromptifyBot" && userData.username !== user.username);
+                        if (data.length > 0) setUsers(data);
                     } else {
                         console.error(data.error);
                     }
@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                 setMessage(data.error);
             } else {
                 setMessage(data.message);
-                setNewUsers([]); // Clear forms on successful submission
+                setNewUsers([]);
                 setShowNewUserForm(false);
             }
         } catch (error) {
@@ -314,15 +314,17 @@ export default function AdminDashboard() {
                                             <input type="checkbox" id="all" name="all" value="all" onChange={(e) => handleToChange(e)} />
                                             <label htmlFor="all">All Users</label>
                                         </div>
-                                        {users.map(user => (
-                                            <div key={user.id} className="notification-dropdown-holder">
-                                                <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
-                                                <label htmlFor={user.id}>
-                                                    <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
-                                                    {user.username}
-                                                </label>
-                                            </div>
-                                        ))}
+                                        {users.length > 0 ? (
+                                            users?.map(user => (
+                                                <div key={user.id} className="notification-dropdown-holder">
+                                                    <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
+                                                    <label htmlFor={user.id}>
+                                                        <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
+                                                        {user.username}
+                                                    </label>
+                                                </div>
+                                            ))
+                                        ) : <LoadingScreen />}
                                     </div>
                                 )}
 

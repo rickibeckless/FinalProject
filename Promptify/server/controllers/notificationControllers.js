@@ -23,8 +23,6 @@ const notificationCheck = async (results, res) => {
                 continue;
             }
 
-            console.log(user.notifications);
-
             for (const notification of user.notifications) {
                 const dateDeleted = new Date(notification.date_deleted);
                 const currentDate = new Date();
@@ -118,6 +116,7 @@ export const getNotificationsByNotificationId = async (req, res) => {
 export const updateNotificationStatus = async (req, res) => {
     try {
         const { userId, notificationId, status } = req.params;
+        console.log(userId, notificationId, status);
 
         const notification = await pool.query(`
             SELECT notification
@@ -179,6 +178,7 @@ export const updateNotificationStatus = async (req, res) => {
         let data = notification.rows[0].notification;
 
         io.emit('receive-notification', { userId, data, status });
+        console.log('Notification status updated:', data, status);
 
         res.status(200).json({ message: 'Notification status updated' });
     } catch (error) {
