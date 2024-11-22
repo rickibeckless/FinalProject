@@ -43,11 +43,8 @@ export default function Header() {
             socket.connect();
 
             const handleReceiveNotification = (notificationPayload) => {
-                console.log(notificationPayload);
                 if (notificationPayload.userId === user.id) {
                     const { data, status } = notificationPayload;
-
-                    console.log(data, status);
             
                     setUnreadNotifications((prevNotifications) => {
                         const notificationId = data?.id || notificationPayload?.id;
@@ -91,8 +88,7 @@ export default function Header() {
 
         if (user) {
             setUserProfileImage(user.profile_picture_url);
-            if (user.notifications > 0) {
-                console.log(user.notifications);
+            if (user.notifications.length > 0) {
                 setUnreadNotifications(user?.notifications?.filter(notification => notification.status === "unread"));
             } else {
                 setUnreadNotifications([]);

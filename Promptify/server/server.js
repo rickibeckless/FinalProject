@@ -25,10 +25,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export const environmentUrl = process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_URL : process.env.BACKEND_URL;
+export const frontendUrl = process.env.NODE_ENV === 'production' ? process.env.PRODUCTION_URL : process.env.FRONTEND_URL;
 
 export const io = new Server(server, {
     cors: {
-        origin: environmentUrl,
+        origin: frontendUrl,
         methods: ['GET', 'POST'],
         credentials: true,
     },
