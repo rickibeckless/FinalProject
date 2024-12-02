@@ -60,6 +60,8 @@
     transition: color 0.3s;
 }
 
-.not-found-links a:hover {
+.not-found-links a:hover,
+.not-found-links a:focus,
+.not-found-links a:active {
     color: var(--verdigris);
 }

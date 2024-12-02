@@ -35,7 +35,9 @@
     font-size: 1rem;
 }
 
-.notification-tab:hover {
+.notification-tab:hover,
+.notification-tab:focus,
+.notification-tab:active {
     background-color: var(--light-olive);
     color: var(--paynes-gray);
 }

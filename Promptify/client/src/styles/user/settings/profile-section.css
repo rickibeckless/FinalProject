@@ -20,7 +20,9 @@
     transition: transform 0.3s ease;
 }
 
-#profile-section-picture img:hover {
+#profile-section-picture img:hover,
+#profile-section-picture img:focus,
+#profile-section-picture img:active {
     transform: scale(1.05);
 }
 
@@ -69,7 +71,9 @@
     transition: color 0.3s ease;
 }
 
-#profile-section-details ul li:hover {
+#profile-section-details ul li:hover,
+#profile-section-details ul li:focus,
+#profile-section-details ul li:active {
     color: var(--verdigris);
 }
 
@@ -89,7 +93,9 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#profile-section .edit-profile-btn:hover {
+#profile-section .edit-profile-btn:hover,
+#profile-section .edit-profile-btn:focus,
+#profile-section .edit-profile-btn:active {
     background-color: var(--black-olive);
     transform: translateY(-2px);
 }
@@ -170,7 +176,9 @@
     transition: background-color 0.3s ease;
 }
 
-#edit-profile-form ul li button:hover {
+#edit-profile-form ul li button:hover,
+#edit-profile-form ul li button:focus,
+#edit-profile-form ul li button:active {
     background-color: var(--black-olive);
 }
 
@@ -186,7 +194,9 @@
     border-radius: 10px;
 }
 
-#edit-profile-form .close-btn:hover {
+#edit-profile-form .close-btn:hover,
+#edit-profile-form .close-btn:focus,
+#edit-profile-form .close-btn:active {
     background-color: var(--paynes-gray)
 }
 

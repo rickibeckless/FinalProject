@@ -23,7 +23,9 @@
     transition: color 0.3s ease;
 }
 
-.submission-nav-section .submission-nav-link:hover {
+.submission-nav-section .submission-nav-link:hover,
+.submission-nav-section .submission-nav-link:focus,
+.submission-nav-section .submission-nav-link:active {
     color: var(--paynes-gray);
 }
 
@@ -67,7 +69,9 @@
     transition: color 0.3s ease;
 }
 
-.submission-section a.submission-header-username:hover {
+.submission-section a.submission-header-username:hover,
+.submission-section a.submission-header-username:focus,
+.submission-section a.submission-header-username:active {
     color: var(--paynes-gray);
 }
 

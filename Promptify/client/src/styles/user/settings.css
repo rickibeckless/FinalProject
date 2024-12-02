@@ -42,7 +42,9 @@
     transition: background-color 0.3s ease;
 }
 
-#table-of-contents li:hover {
+#table-of-contents li:hover,
+#table-of-contents li:focus,
+#table-of-contents li:active {
     background-color: var(--verdigris);
     color: var(--light-text);
 }
@@ -92,7 +94,9 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-#profile-delete .btn-danger:hover {
+#profile-delete .btn-danger:hover,
+#profile-delete .btn-danger:focus,
+#profile-delete .btn-danger:active {
     background-color: var(--black-olive);
 }
 

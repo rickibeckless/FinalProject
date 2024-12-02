@@ -24,7 +24,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.filter-tag:hover {
+.filter-tag:hover,
+.filter-tag:focus,
+.filter-tag:active {
     background-color: var(--light-olive);
     color: var(--black-olive);
 }

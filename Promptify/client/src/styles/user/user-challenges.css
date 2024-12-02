@@ -39,7 +39,9 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.your-challenges-header-list li:hover {
+.your-challenges-header-list li:hover,
+.your-challenges-header-list li:focus,
+.your-challenges-header-list li:active {
     background-color: var(--verdigris);
     color: #ffffff;
 }

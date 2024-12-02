@@ -109,7 +109,9 @@
     transition: transform 0.2s ease;
 }
 
-.limitations-checkboxes .limitation-checkbox-holder input[type="checkbox"]:hover {
+.limitations-checkboxes .limitation-checkbox-holder input[type="checkbox"]:hover,
+.limitations-checkboxes .limitation-checkbox-holder input[type="checkbox"]:focus,
+.limitations-checkboxes .limitation-checkbox-holder input[type="checkbox"]:active {
     transform: scale(1.1);
 }
 
@@ -124,7 +126,9 @@
     color: var(--paynes-gray);
 }
 
-.limitations-checkboxes .limitation-checkbox-holder:hover::after {
+.limitations-checkboxes .limitation-checkbox-holder:hover::after,
+.limitations-checkboxes .limitation-checkbox-holder:focus::after,
+.limitations-checkboxes .limitation-checkbox-holder:active::after {
     content: attr(data-tooltip);
     position: absolute;
     background-color: #333;
@@ -139,7 +143,9 @@
     transition: opacity 0.2s ease-in-out;
 }
 
-.limitations-checkboxes .limitation-checkbox-holder:hover::after {
+.limitations-checkboxes .limitation-checkbox-holder:hover::after,
+.limitations-checkboxes .limitation-checkbox-holder:focus::after,
+.limitations-checkboxes .limitation-checkbox-holder:active::after {
     opacity: 1;
 }
 
@@ -187,7 +193,9 @@
     transition: background-color 0.3s;
 }
 
-.form-navigation-buttons .button-group button:hover {
+.form-navigation-buttons .button-group button:hover,
+.form-navigation-buttons .button-group button:focus,
+.form-navigation-buttons .button-group button:active {
     background-color: var(--sandy-brown);
 }
 
@@ -209,7 +217,9 @@ button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
+button[type="submit"]:hover,
+button[type="submit"]:focus,
+button[type="submit"]:active {
     background-color: var(--paynes-gray);
 }
 

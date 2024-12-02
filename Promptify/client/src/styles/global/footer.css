@@ -26,7 +26,11 @@
 }
 
 #footer-navbar a:hover,
-#footer-cr-link:hover {
+#footer-navbar a:focus,
+#footer-navbar a:active,
+#footer-cr-link:hover,
+#footer-cr-link:focus,
+#footer-cr-link:active {
     color: var(--black-olive);
 }
 
@@ -51,7 +55,11 @@
 }
 
 #footer-navbar li:hover::after,
-#footer-cr-link:hover::after {
+#footer-navbar li:focus::after,
+#footer-navbar li:active::after,
+#footer-cr-link:hover::after,
+#footer-cr-link:focus::after,
+#footer-cr-link:active::after {
     background-color: var(--verdigris);
     transform: scaleX(1);
 }

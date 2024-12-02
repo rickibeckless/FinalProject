@@ -17,7 +17,9 @@
     transition: background-color 0.15s;
 }
 
-.challenge-card-tag:hover {
+.challenge-card-tag:hover,
+.challenge-card-tag:focus,
+.challenge-card-tag:active {
     background-color: #dfe7ed;
 }
 
@@ -53,7 +55,9 @@
     color: #4b0082;
 }
 
-.challenge-card-tag[value="fantasy"]:hover {
+.challenge-card-tag[value="fantasy"]:hover,
+.challenge-card-tag[value="fantasy"]:focus,
+.challenge-card-tag[value="fantasy"]:active {
     background-color: #d8d8f0;
     color: #3a006a;
 }
@@ -63,7 +67,9 @@
     color: #2f4f4f;
 }
 
-.challenge-card-tag[value="general"]:hover {
+.challenge-card-tag[value="general"]:hover,
+.challenge-card-tag[value="general"]:focus,
+.challenge-card-tag[value="general"]:active {
     background-color: #e0e0e0;
     color: #1f3f3f;
 }
@@ -73,7 +79,9 @@
     color: #556b2f;
 }
 
-.challenge-card-tag[value="non-fiction"]:hover {
+.challenge-card-tag[value="non-fiction"]:hover,
+.challenge-card-tag[value="non-fiction"]:focus,
+.challenge-card-tag[value="non-fiction"]:active {
     background-color: #e5cd9a;
     color: #4a5b28;
 }
@@ -83,7 +91,9 @@
     color: #a52a2a;
 }
 
-.challenge-card-tag[value="poetry"]:hover {
+.challenge-card-tag[value="poetry"]:hover,
+.challenge-card-tag[value="poetry"]:focus,
+.challenge-card-tag[value="poetry"]:active {
     background-color: #ffdad8;
     color: #8b1f1f;
 }
@@ -93,7 +103,9 @@
     color: #8b0000;
 }
 
-.challenge-card-tag[value="thriller"]:hover {
+.challenge-card-tag[value="thriller"]:hover,
+.challenge-card-tag[value="thriller"]:focus,
+.challenge-card-tag[value="thriller"]:active {
     background-color: #f5b7b5;
     color: #6b0000;
 }
@@ -104,7 +116,9 @@
     color: #3e8f3e;
 }
 
-.challenge-card-tag[value="beginner"]:hover {
+.challenge-card-tag[value="beginner"]:hover,
+.challenge-card-tag[value="beginner"]:focus,
+.challenge-card-tag[value="beginner"]:active {
     background-color: #c4e5c4;
 }
 
@@ -113,7 +127,9 @@
     color: #3e5f8f;
 }
 
-.challenge-card-tag[value="intermediate"]:hover {
+.challenge-card-tag[value="intermediate"]:hover,
+.challenge-card-tag[value="intermediate"]:focus,
+.challenge-card-tag[value="intermediate"]:active {
     background-color: #c4d2e5;
 }
 
@@ -122,7 +138,9 @@
     color: #8f3e8f;
 }
 
-.challenge-card-tag[value="advanced"]:hover {
+.challenge-card-tag[value="advanced"]:hover,
+.challenge-card-tag[value="advanced"]:focus,
+.challenge-card-tag[value="advanced"]:active {
     background-color: #e5c4e5;
 }
 
@@ -132,7 +150,9 @@
     color: #00796b;
 }
 
-.challenge-card-tag[value="upcoming"]:hover {
+.challenge-card-tag[value="upcoming"]:hover,
+.challenge-card-tag[value="upcoming"]:focus,
+.challenge-card-tag[value="upcoming"]:active {
     background-color: #b2ebf2;
     color: #004d40;
 }
@@ -142,7 +162,9 @@
     color: #e65100;
 }
 
-.challenge-card-tag[value="in-progress"]:hover {
+.challenge-card-tag[value="in-progress"]:hover,
+.challenge-card-tag[value="in-progress"]:focus,
+.challenge-card-tag[value="in-progress"]:active {
     background-color: #ffe0b2;
     color: #c65100;
 }
@@ -152,7 +174,9 @@
     color: #388e3c;
 }
 
-.challenge-card-tag[value="scoring"]:hover {
+.challenge-card-tag[value="scoring"]:hover,
+.challenge-card-tag[value="scoring"]:focus,
+.challenge-card-tag[value="scoring"]:active {
     background-color: #c8e6c9;
     color: #2e7d32;
 }
@@ -162,7 +186,9 @@
     color: #5d4037;
 }
 
-.challenge-card-tag[value="ended"]:hover {
+.challenge-card-tag[value="ended"]:hover,
+.challenge-card-tag[value="ended"]:focus,
+.challenge-card-tag[value="ended"]:active {
     background-color: #d7ccc8;
     color: #3e2723;
 }
@@ -177,9 +203,17 @@
 }
 
 .challenge-card-tag[value="character limit"]:hover,
+.challenge-card-tag[value="character limit"]:focus,
+.challenge-card-tag[value="character limit"]:active,
 .challenge-card-tag[value="required phrase"]:hover,
+.challenge-card-tag[value="required phrase"]:focus,
+.challenge-card-tag[value="required phrase"]:active,
 .challenge-card-tag[value="word limit"]:hover,
-.challenge-card-tag[value="time limit"]:hover {
+.challenge-card-tag[value="word limit"]:focus,
+.challenge-card-tag[value="word limit"]:active,
+.challenge-card-tag[value="time limit"]:hover,
+.challenge-card-tag[value="time limit"]:focus,
+.challenge-card-tag[value="time limit"]:active {
     background-color: #e6ee9c;
     color: #5c6c1a;
 }

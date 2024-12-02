@@ -18,7 +18,9 @@
     transition: background-color 0.3s;
 }
 
-#user-body button:hover {
+#user-body button:hover,
+#user-body button:focus,
+#user-body button:active {
     background-color: var(--paynes-gray);
 }
 
@@ -82,7 +84,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-#profile-details #about:hover {
+#profile-details #about:hover,
+#profile-details #about:focus,
+#profile-details #about:active {
     border-left: 4px solid var(--verdigris);
     padding-left: 1rem;
 }
@@ -186,7 +190,12 @@ a.user-work-btn.challenge-card-button {
     font-weight: 500;
 }
 
-#profile-challenges li a:hover, #profile-submissions li a:hover {
+#profile-challenges li a:hover, 
+#profile-challenges li a:focus,
+#profile-challenges li a:active,
+#profile-submissions li a:hover,
+#profile-submissions li a:focus,
+#profile-submissions li a:active {
     color: var(--verdigris);
 }
 

@@ -31,7 +31,9 @@
     transition: all .3s ease-in-out;
 }
 
-.detail-row:hover {
+.detail-row:hover,
+.detail-row:focus,
+.detail-row:active {
     background-color: var(--transparent-olive);
     transform: scale(1.01);
 }
@@ -44,7 +46,9 @@
     }
 }
 
-.detail-row.long:hover .detail-content {
+.detail-row.long:hover .detail-content,
+.detail-row.long:focus .detail-content,
+.detail-row.long:active .detail-content {
     border-left: 4px solid var(--paynes-gray);
     padding-left: 1rem;
 }
@@ -123,7 +127,7 @@
         cursor: not-allowed;
         opacity: 80%;
 
-        &:hover {
+        &:hover, &:focus, &:active {
             transform: none;
         }
     }

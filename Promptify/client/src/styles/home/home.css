@@ -110,7 +110,9 @@
     background-color: var(--transparent-naples-yellow);
 }
 
-.section-card:hover {
+.section-card:hover,
+.section-card:focus,
+.section-card:active {
     transform: scale(1.05);
     box-shadow: 2px 2px 12px 2px #4c4c4c70;
 }

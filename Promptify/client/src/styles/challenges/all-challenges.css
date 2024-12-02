@@ -49,7 +49,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.limits-holder label:hover {
+.limits-holder label:hover,
+.limits-holder label:focus,
+.limits-holder label:active {
     color: var(--verdigris);
     border-color: var(--verdigris);
     transform: scale(1.05);

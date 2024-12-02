@@ -42,7 +42,7 @@
     color: var(--light-text);
     transition: all 0.3s ease-in-out;
 
-    &:hover {
+    &:hover, &:active, &:focus {
         background-color: var(--mild-danger-red);
     }
 }
@@ -73,6 +73,8 @@
     transition: background-color 0.3s;
 }
 
-#scroll-top-btn:hover {
+#scroll-top-btn:hover,
+#scroll-top-btn:active,
+#scroll-top-btn:focus {
     background-color: var(--paynes-gray);
 }

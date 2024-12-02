@@ -53,7 +53,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('send-comment', (data) => {
-        console.log(data);
+        // console.log(data);                           <-- remove console log
         io.emit('receive-comment', data);
     });
 

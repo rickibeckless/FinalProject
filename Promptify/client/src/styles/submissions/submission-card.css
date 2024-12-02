@@ -68,7 +68,9 @@
     list-style: none;
 }
 
-.submission-card:hover {
+.submission-card:hover,
+.submission-card:focus,
+.submission-card:active {
     transform: translateY(-3px);
     box-shadow: 0 6px 12px var(--transparent-olive);
 }
@@ -140,7 +142,9 @@
     transition: background-color 0.3s ease;
 }
 
-.submission-card-footer .button:hover {
+.submission-card-footer .button:hover,
+.submission-card-footer .button:focus,
+.submission-card-footer .button:active {
     background-color: var(--paynes-gray);
 }
 
@@ -179,7 +183,9 @@
     transition: transform 0.3s ease;
 }
 
-.stat-btn:hover img {
+.stat-btn:hover img,
+.stat-btn:focus img,
+.stat-btn:active img {
     transform: scale(1.2);
 }
 
@@ -227,7 +233,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.submission-card-comments-list .submission-card-comment p.submission-card-comment-content:hover {
+.submission-card-comments-list .submission-card-comment p.submission-card-comment-content:hover,
+.submission-card-comments-list .submission-card-comment p.submission-card-comment-content:focus,
+.submission-card-comments-list .submission-card-comment p.submission-card-comment-content:active {
     color: var(--black-olive);
     padding-left: 1rem;
     border-left: 4px solid var(--verdigris);
@@ -252,6 +260,8 @@
     transition: background-color 0.3s ease;
 }
 
-.challenge-submissions-call-to-action .challenge-card-button:hover {
+.challenge-submissions-call-to-action .challenge-card-button:hover,
+.challenge-submissions-call-to-action .challenge-card-button:focus,
+.challenge-submissions-call-to-action .challenge-card-button:active {
     background-color: var(--naples-yellow);
 }

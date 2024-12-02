@@ -40,7 +40,9 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
-.form-cancel-btn:hover {
+.form-cancel-btn:hover,
+.form-cancel-btn:focus,
+.form-cancel-btn:active {
     background-color: var(--paynes-gray);
     color: var(--light-olive);
 }

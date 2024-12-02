@@ -57,7 +57,9 @@
     transition: all .1s ease;
 }
 
-.left-notification-holder table tbody tr:hover {
+.left-notification-holder table tbody tr:hover,
+.left-notification-holder table tbody tr:focus,
+.left-notification-holder table tbody tr:active {
     background-color: var(--transparent-olive);
     color: var(--black-olive);
     cursor: pointer;

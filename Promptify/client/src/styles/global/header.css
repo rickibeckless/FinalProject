@@ -41,7 +41,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-#main-logo a:hover {
+#main-logo a:hover,
+#main-logo a:focus,
+#main-logo a:active {
     background-color: #9dad93bf;
     text-shadow: 5px 5px 3px #4d5739;
 }
@@ -92,7 +94,9 @@
     border-radius: 5px;
 }
 
-#main-navbar .nav-link:hover {
+#main-navbar .nav-link:hover,
+#main-navbar .nav-link:focus,
+#main-navbar .nav-link:active {
     text-decoration: underline;
 }
 
@@ -192,7 +196,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.account-links .account-link:hover {
+.account-links .account-link:hover,
+.account-links .account-link:focus,
+.account-links .account-link:active {
     background-color: var(--verdigris);
     color: var(--black-olive);
     border-color: var(--black-olive);
@@ -204,7 +210,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.nav-link:hover .nav-link-text {
+.nav-link:hover .nav-link-text,
+.nav-link:focus .nav-link-text,
+.nav-link:active .nav-link-text {
     opacity: 100%;
     margin-left: 0;
 }

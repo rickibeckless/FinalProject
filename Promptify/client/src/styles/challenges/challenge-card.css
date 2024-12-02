@@ -14,7 +14,9 @@
     position: relative;
 }
 
-.challenge-card:hover {
+.challenge-card:hover,
+.challenge-card:focus,
+.challenge-card:active {
     transform: scale(1.01);
     box-shadow: 0 6px 10px #0000006f;
 }
@@ -96,7 +98,9 @@
     transition: all 0.15s;
 }
 
-.points-holder:hover {
+.points-holder:hover,
+.points-holder:focus,
+.points-holder:active {
     background-color: var(--paynes-gray);
     transform: rotate(0deg) scale(1.05);
 }
@@ -166,7 +170,9 @@
     transition: color 0.15s;
 }
 
-.challenge-card-author:hover {
+.challenge-card-author:hover,
+.challenge-card-author:focus,
+.challenge-card-author:active {
     color: var(--paynes-gray);
 }
 
@@ -210,7 +216,9 @@
     transition: color 0.15s;
 }
 
-.challenge-card-link:hover {
+.challenge-card-link:hover,
+.challenge-card-link:focus,
+.challenge-card-link:active {
     color: var(--paynes-gray);
 }
 
@@ -228,7 +236,9 @@
     transition: background-color 0.15s, transform 0.15s;
 }
 
-.challenge-card-button:hover {
+.challenge-card-button:hover,
+.challenge-card-button:focus,
+.challenge-card-button:active {
     background-color: var(--paynes-gray);
     transform: scale(1.04);
 }

@@ -23,7 +23,9 @@
     transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-.profile-info-item:hover {
+.profile-info-item:hover,
+.profile-info-item:focus,
+.profile-info-item:active {
     box-shadow: 0 4px 10px #00000026;
     transform: translateY(-2px);
 }
@@ -68,7 +70,9 @@
     margin-right: 1rem;
 }
 
-.settings-save-btn:hover {
+.settings-save-btn:hover,
+.settings-save-btn:focus,
+.settings-save-btn:active {
     background-color: var(--paynes-gray);
 }
 
@@ -78,7 +82,9 @@
     margin-right: 1rem;
 }
 
-.settings-default-btn:hover {
+.settings-default-btn:hover,
+.settings-default-btn:focus,
+.settings-default-btn:active {
     background-color: var(--verdigris);
     color: #ffffff;
 }
@@ -88,7 +94,9 @@
     color: var(--dark-text);
 }
 
-.settings-cancel-btn:hover {
+.settings-cancel-btn:hover,
+.settings-cancel-btn:focus,
+.settings-cancel-btn:active {
     background-color: var(--verdigris);
     color: #ffffff;
 }

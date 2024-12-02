@@ -71,7 +71,9 @@
     transition: color 0.3s;
 }
 
-.footer-section a:hover {
+.footer-section a:hover,
+.footer-section a:focus,
+.footer-section a:active {
     color: var(--pale-cyan);
 }
 
@@ -120,6 +122,8 @@
     margin: 2rem auto 0;
 }
 
-.signup-button:hover {
+.signup-button:hover,
+.signup-button:focus,
+.signup-button:active {
     background-color: var(--dark-text);
 }

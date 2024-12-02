@@ -26,7 +26,9 @@
     transition: all 0.3s ease-in-out;
 }
 
-.account-form-modal-close-btn:hover {
+.account-form-modal-close-btn:hover,
+.account-form-modal-close-btn:focus,
+.account-form-modal-close-btn:active {
     background-color: var(--paynes-gray);
 }
 
@@ -195,7 +197,9 @@
     text-decoration: none;
 }
 
-.github-account-btn:hover {
+.github-account-btn:hover,
+.github-account-btn:focus,
+.github-account-btn:active {
     background-color: #374151;
 }
 
@@ -205,7 +209,9 @@
     font-weight: 500;
 }
 
-.other-account-btns p button:hover {
+.other-account-btns p button:hover,
+.other-account-btns p button:focus,
+.other-account-btns p button:active {
     background-color: var(--paynes-gray);
 }
 
