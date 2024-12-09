@@ -3,13 +3,33 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-        <link rel="manifest" href="/favicon/site.webmanifest">
+        <meta name="description" content="Challenge your friends and improve your writing skills with Promptify!" />
+        <meta property="og:title" content="Promptify - Writing Challenges & Skill Improvement" />
+        <meta property="og:description" content="Challenge your friends and improve your writing skills with Promptify!" />
+        <meta property="og:image" content="/images/social-preview.png" />
+        <meta property="og:url" content="https://promptify-ur5z.onrender.com" />
+        <link rel="canonical" href="https://promptify-ur5z.onrender.com" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
         <title>Promptify</title>
-      <script type="module" crossorigin src="/assets/index-CiP-lPba.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-LtBuZ_zs.css">
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "WebApplication",
+                "name": "Promptify",
+                "url": "https://promptify-ur5z.onrender.com",
+                "description": "Challenge your friends and improve your writing skills with Promptify!",
+                "publisher": {
+                    "@type": "Organization",
+                    "name": "Promptify Inc."
+                }
+            }
+        </script>
+        <link rel="preload" href="data:text/jsx;base64,aW1wb3J0IHsgU3RyaWN0TW9kZSB9IGZyb20gJ3JlYWN0JzsKaW1wb3J0IHsgY3JlYXRlUm9vdCB9IGZyb20gJ3JlYWN0LWRvbS9jbGllbnQnOwppbXBvcnQgeyBjcmVhdGVCcm93c2VyUm91dGVyLCBSb3V0ZXJQcm92aWRlciB9IGZyb20gJ3JlYWN0LXJvdXRlci1kb20nOwppbXBvcnQgeyBBdXRoUHJvdmlkZXIgfSBmcm9tICcuL2NvbnRleHQvQXV0aFByb3ZpZGVyLmpzeCc7CmltcG9ydCBBcHAgZnJvbSAnLi9BcHAuanN4JzsKaW1wb3J0ICcuL2luZGV4LmNzcyc7CgovLyBpbXBvcnQgcGFnZXMKaW1wb3J0IEhvbWUgZnJvbSAnLi9wYWdlcy9Ib21lLmpzeCc7CgovLyBhZG1pbiBwYWdlcwppbXBvcnQgQWRtaW5EYXNoYm9hcmQgZnJvbSAnLi9wYWdlcy9hZG1pbi9BZG1pbkRhc2hib2FyZC5qc3gnOwoKLy8gdXNlciBwYWdlcwppbXBvcnQgVXNlciBmcm9tICcuL3BhZ2VzL1VzZXIuanN4JzsKaW1wb3J0IE5vdGlmaWNhdGlvbnMgZnJvbSAnLi9wYWdlcy91c2VyL05vdGlmaWNhdGlvbnMuanN4JzsKaW1wb3J0IFNldHRpbmdzIGZyb20gJy4vcGFnZXMvdXNlci9TZXR0aW5ncy5qc3gnOwppbXBvcnQgVXNlckNoYWxsZW5nZXMgZnJvbSAnLi9wYWdlcy91c2VyL1VzZXJDaGFsbGVuZ2VzLmpzeCc7CgovLyBjaGFsbGVuZ2UgcGFnZXMKaW1wb3J0IEFsbENoYWxsZW5nZXMgZnJvbSAnLi9wYWdlcy9jaGFsbGVuZ2VzL0FsbENoYWxsZW5nZXMuanN4JzsKaW1wb3J0IENyZWF0ZUNoYWxsZW5nZSBmcm9tICcuL3BhZ2VzL2NoYWxsZW5nZXMvQ3JlYXRlQ2hhbGxlbmdlLmpzeCc7CmltcG9ydCBDaGFsbGVuZ2VBcmNoaXZlIGZyb20gJy4vcGFnZXMvY2hhbGxlbmdlcy9DaGFsbGVuZ2VBcmNoaXZlLmpzeCc7CmltcG9ydCBDaGFsbGVuZ2UgZnJvbSAnLi9wYWdlcy9jaGFsbGVuZ2VzL0NoYWxsZW5nZS5qc3gnOwppbXBvcnQgSm9pbkNoYWxsZW5nZSBmcm9tICcuL3BhZ2VzL2NoYWxsZW5nZXMvSm9pbkNoYWxsZW5nZS5qc3gnOwppbXBvcnQgU3VibWlzc2lvbiBmcm9tICcuL3BhZ2VzL2NoYWxsZW5nZXMvU3VibWlzc2lvbi5qc3gnOwppbXBvcnQgTm90Rm91bmQgZnJvbSAnLi9wYWdlcy9Ob3RGb3VuZC5qc3gnOwoKLy8gZm9vdGVyIHBhZ2VzCmltcG9ydCBBYm91dCBmcm9tICcuL3BhZ2VzL2Zvb3Rlci9BYm91dC5qc3gnOwppbXBvcnQgVGVybXNPZlNlcnZpY2UgZnJvbSAnLi9wYWdlcy9mb290ZXIvVGVybXNPZlNlcnZpY2UuanN4JzsKaW1wb3J0IEhlbHAgZnJvbSAnLi9wYWdlcy9mb290ZXIvSGVscC5qc3gnOwoKLy8gc2V0IHJvdXRlcgpjb25zdCByb3V0ZXIgPSBjcmVhdGVCcm93c2VyUm91dGVyKFsKICAgIHsgLy8gbWFpbiBwYWdlcwogICAgICAgIHBhdGg6ICcvJywKICAgICAgICBlbGVtZW50OiA8QXBwIC8+LAogICAgICAgIGNoaWxkcmVuOiBbCiAgICAgICAgICAgIHsgcGF0aDogJy8nLCBlbGVtZW50OiA8SG9tZSAvPiB9LAogICAgICAgICAgICB7IHBhdGg6ICcvYWRtaW4nLCBlbGVtZW50OiA8QWRtaW5EYXNoYm9hcmQgLz4gfSwKICAgICAgICAgICAgeyBwYXRoOiAnL25vdGlmaWNhdGlvbnMnLCBlbGVtZW50OiA8Tm90aWZpY2F0aW9ucyAvPiB9LAogICAgICAgICAgICB7IHBhdGg6ICcvc2V0dGluZ3MnLCBlbGVtZW50OiA8U2V0dGluZ3MgLz4gfSwKCiAgICAgICAgICAgIHsgcGF0aDogJy9hYm91dCcsIGVsZW1lbnQ6IDxBYm91dCAvPiB9LAogICAgICAgICAgICB7IHBhdGg6ICcvdGVybXMtb2Ytc2VydmljZScsIGVsZW1lbnQ6IDxUZXJtc09mU2VydmljZSAvPiB9LAogICAgICAgICAgICB7IHBhdGg6ICcvaGVscCcsIGVsZW1lbnQ6IDxIZWxwIC8+IH0sCgogICAgICAgICAgICB7IHBhdGg6ICcvY2hhbGxlbmdlcycsIGVsZW1lbnQ6IDxBbGxDaGFsbGVuZ2VzIC8+IH0sCiAgICAgICAgICAgIHsgcGF0aDogJy9jaGFsbGVuZ2VzL2NyZWF0ZScsIGVsZW1lbnQ6IDxDcmVhdGVDaGFsbGVuZ2UgLz4gfSwKICAgICAgICAgICAgLy8geyBwYXRoOiAnL2NoYWxsZW5nZXMvYXJjaGl2ZScsIGVsZW1lbnQ6IDxDaGFsbGVuZ2VBcmNoaXZlIC8+IH0sCiAgICAgICAgICAgIHsgcGF0aDogJy9jaGFsbGVuZ2VzLzpjaGFsbGVuZ2VJZCcsIGVsZW1lbnQ6IDxDaGFsbGVuZ2UgLz4gfSwKICAgICAgICAgICAgeyBwYXRoOiAnL2NoYWxsZW5nZXMvOmNoYWxsZW5nZUlkL2pvaW4nLCBlbGVtZW50OiA8Sm9pbkNoYWxsZW5nZSAvPiB9LAoKICAgICAgICAgICAgeyBwYXRoOiAnL3N1Ym1pc3Npb25zLzpzdWJtaXNzaW9uSWQnLCBlbGVtZW50OiA8U3VibWlzc2lvbiAvPiB9LAoKICAgICAgICAgICAgeyBwYXRoOiAnLzp1c2VybmFtZScsIGVsZW1lbnQ6IDxVc2VyIC8+IH0sCiAgICAgICAgICAgIHsgcGF0aDogJy86dXNlcm5hbWUvd29yaycsIGVsZW1lbnQ6IDxVc2VyQ2hhbGxlbmdlcyAvPiB9LAoKICAgICAgICAgICAgeyBwYXRoOiAnKicsIGVsZW1lbnQ6IDxOb3RGb3VuZCAvPiB9LAogICAgICAgICAgICB7IHBhdGg6ICcvNDA0JywgZWxlbWVudDogPE5vdEZvdW5kIC8+IH0sCiAgICAgICAgXSwKICAgIH0KXSk7CgpjcmVhdGVSb290KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyb290JykpLnJlbmRlcigKICAgIDxTdHJpY3RNb2RlPgogICAgICAgIDxBdXRoUHJvdmlkZXI+CiAgICAgICAgICAgIDxSb3V0ZXJQcm92aWRlciByb3V0ZXI9e3JvdXRlcn0gLz4KICAgICAgICA8L0F1dGhQcm92aWRlcj4KICAgIDwvU3RyaWN0TW9kZT4KKTs=" as="script" />
+      <script type="module" crossorigin src="/assets/index-CucOYbL0.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-BIjnGBr1.css">
     </head>
 
     <body>
