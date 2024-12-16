@@ -79,11 +79,15 @@ export const getNotificationsByUserId = async (req, res) => {
 
         const results = await pool.query('SELECT notifications FROM users WHERE id = $1', [userId]);
 
-        await notificationCheck(results, res);
-
         if (results.rows.length === 0) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Notifications for this user not found.' });
         };
+
+        if (results.rows[0].notifications === null || results.rows[0].notifications === undefined) {
+            return res.status(200).json([]);
+        };
+        
+        await notificationCheck(results, res);
 
         res.status(200).json(results.rows);
     } catch (error) {

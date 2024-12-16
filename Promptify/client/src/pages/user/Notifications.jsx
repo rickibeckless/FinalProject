@@ -72,6 +72,15 @@ export default function Notifications() {
 
             if (response.ok) {
                 const rawData = await response.json();
+                
+                if (rawData.length === 0) {
+                    setNotifications([]);
+                    setUnreadNotifications([]);
+                    setReadNotifications([]);
+                    setDeletedNotifications([]);
+                    return;
+                };
+
                 const data = rawData[0].notifications;
                 setNotifications(data);
 
@@ -88,7 +97,7 @@ export default function Notifications() {
             };
         } catch (error) {
             console.error("Error fetching notifications:", error);
-            setMessage("An unexpected error occurred");
+            setMessage("An unexpected error occurred. Please try again later.");
         };
     };
 
