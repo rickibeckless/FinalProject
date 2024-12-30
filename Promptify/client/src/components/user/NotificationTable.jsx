@@ -5,20 +5,8 @@
 */
 
 // general imports
-import { useEffect, useState, useContext } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import DOMPurify from 'dompurify';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelopeOpen, faEnvelope, faTrashCan, faRecycle, faDumpsterFire } from "@fortawesome/free-solid-svg-icons";
-
-// loading screen for when the page is loading (also used for transitions and testing)
-import LoadingScreen from "../global/LoadingScreen.jsx";
-
-// message popup for errors, warnings, and successes
-import MessagePopup from "../global/MessagePopup.jsx";
-
-// some pages may also need to import utils, hooks, or context
-import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
 
 // styling for page will be imported here
 import "../../styles/user/notifications/notification-table.css"; // styling for the notification table
@@ -26,8 +14,6 @@ import "../../styles/user/notifications/notification-table.css"; // styling for 
 // import any images or assets here
 
 export default function NotificationTable({ selectedNotifications, toggleNotification, markNotification }) {
-    const { user } = useContext(AuthContext); // context used for authentication
-
     const formattedDate = (date) => {
         return new Date(date).toLocaleDateString();
     };
@@ -47,7 +33,7 @@ export default function NotificationTable({ selectedNotifications, toggleNotific
             </thead>
             <tbody>
                 {selectedNotifications.length > 0 ? selectedNotifications.map((notification, index) => (
-                    <tr onClick={() => toggleNotification(notification.title)} key={index}>
+                    <tr onClick={() => toggleNotification(notification.id)} key={index}>
                         <td>{splicedTitle(notification.title)}</td>
                         <td>{formattedDate(notification.date_created)}</td>
                         <td className="td-buttons">

@@ -120,6 +120,16 @@ export const getNotificationsByNotificationId = async (req, res) => {
 export const updateNotificationStatus = async (req, res) => {
     try {
         const { userId, notificationId, status } = req.params;
+        const statusOptions = ['read', 'unread', 'delete', 'permanently_delete'];
+        let deleteDate = null;
+
+        if (!statusOptions.includes(status)) {
+            return res.status(400).json({ error: 'Invalid status option' });
+        };
+
+        if (status === 'delete') {
+            deleteDate = new Date().toISOString();
+        };
 
         const notification = await pool.query(`
             SELECT notification
@@ -156,13 +166,17 @@ export const updateNotificationStatus = async (req, res) => {
             return res.status(200).json({ message: 'Notification permanently deleted' });
         };
 
+        // 12/30/2024 - change so that notifications set for deletion gain a date_deleted value
         const results = await pool.query(`
             UPDATE users
             SET notifications = (
                 SELECT jsonb_agg(
                     CASE
                         WHEN notification->>'id' = $2 THEN
-                            jsonb_set(notification, '{status}', $3::jsonb)
+                            jsonb_set(
+                                jsonb_set(notification, '{status}', $3::jsonb),
+                                '{date_deleted}', $4::jsonb
+                            )
                         ELSE notification
                     END
                 )
@@ -170,7 +184,7 @@ export const updateNotificationStatus = async (req, res) => {
             )
             WHERE id = $1
             RETURNING notifications;
-        `, [userId, notificationId, JSON.stringify(status)]);
+        `, [userId, notificationId, JSON.stringify(status), JSON.stringify(deleteDate)]);
 
         await notificationCheck(results, res);
 
