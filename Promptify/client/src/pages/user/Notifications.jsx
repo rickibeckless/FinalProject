@@ -81,7 +81,10 @@ export default function Notifications() {
                     return;
                 };
 
-                const data = rawData[0].notifications;
+                let data = rawData[0].notifications;
+
+                // 12/30/2024 - sort notifications by date_created (newest first)
+                data = data.sort((a, b) => new Date(b.date_created) - new Date(a.date_created));
                 setNotifications(data);
 
                 const unread = data.filter(notification => notification.status === "unread");
@@ -139,11 +142,13 @@ export default function Notifications() {
         setShowNotification(false);
     };
 
-    const toggleNotification = (notificationTitle) => {
-        const notification = notifications.find(notification => notification.title === notificationTitle);
+    // 12/30/2024 - changed notificationTitle to selectedNotificationId, as notifications don't have unique titles (caused the same notification to be displayed multiple times)
+    const toggleNotification = (selectedNotificationId) => {
+        setNotificationId("");
+        const notification = notifications.find(notification => notification.id === selectedNotificationId);
 
         if (notification) {
-            setNotificationId(notification.id);
+            setNotificationId(selectedNotificationId);
             setShowNotification(true);
         } else {
             setShowNotification(false);
@@ -244,7 +249,7 @@ export default function Notifications() {
 
                             <section className="right-notification-holder">
                                 {showNotification ? (
-                                    <NotificationCard notificationId={notificationId} toggleNotification={toggleNotification} />
+                                    <NotificationCard notificationId={notificationId} />
                                 ) : (
                                     <p>Select a notification to view details</p>
                                 )}

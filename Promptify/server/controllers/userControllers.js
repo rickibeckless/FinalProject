@@ -182,7 +182,8 @@ export const editUser = async (req, res) => {
             return res.status(404).json({ error: 'User not found' });
         };
         
-        const results = await pool.query('UPDATE users SET email = $1, username = $2, profile_picture_url = $3, about = $4, bookmarked_challenges = $5, following_genres = $6, following = $7 WHERE id = $8 RETURNING *', [profileInfo.email, profileInfo.username, profileInfo.profile_picture_url, profileInfo.about, profileInfo.bookmarked_challenges, profileInfo.following_genres, profileInfo.following, id]);
+        const updatedDate = new Date().toISOString();
+        const results = await pool.query('UPDATE users SET email = $1, username = $2, profile_picture_url = $3, about = $4, bookmarked_challenges = $5, following_genres = $6, following = $7, date_updated = $8 WHERE id = $9 RETURNING *', [profileInfo.email, profileInfo.username, profileInfo.profile_picture_url, profileInfo.about, profileInfo.bookmarked_challenges, profileInfo.following_genres, profileInfo.following, updatedDate, id]);
 
         res.status(200).json(results.rows);
     } catch (error) {

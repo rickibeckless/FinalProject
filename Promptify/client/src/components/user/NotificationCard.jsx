@@ -6,14 +6,6 @@
 
 // general imports
 import { useEffect, useState, useContext } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import DOMPurify from 'dompurify';
-
-// loading screen for when the page is loading (also used for transitions and testing)
-import LoadingScreen from "../global/LoadingScreen.jsx";
-
-// message popup for errors, warnings, and successes
-import MessagePopup from "../global/MessagePopup.jsx";
 
 // some pages may also need to import utils, hooks, or context
 import AuthContext from "../../context/AuthProvider.jsx"; // context used for authentication
@@ -23,7 +15,7 @@ import "../../styles/user/notifications/notification-card.css"; // styling for t
 
 // import any images or assets here
 
-export default function NotificationCard({ notificationId, toggleNotification }) {
+export default function NotificationCard({ notificationId }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [notification, setNotification] = useState({});
 
