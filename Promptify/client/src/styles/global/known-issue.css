@@ -1,0 +1,23 @@
+#known-issue-modal {
+    z-index: 10001;
+}
+
+#known-issue-modal-list {
+    margin: 0 1rem;
+}
+
+.known-issue-modal-list-item-information {
+    margin: .5rem 1.5rem;
+
+    li {
+        margin-top: .5rem;
+    }
+}
+
+#known-issue-modal-footer {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-align: justify;
+    margin-top: 1rem;
+}

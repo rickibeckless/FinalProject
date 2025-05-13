@@ -101,7 +101,7 @@ export default function TermsOfService() {
             <section className="footer-section" id="contact">
                 <h2>13. Contact Us</h2>
                 <p>
-                    If you have any questions about these Terms, please contact the developer at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
+                    If you have any questions about these Terms, please contact the developer at one of the contact methods listed <Link to="/help#contact-support">here</Link>.
                 </p>
             </section>
         </div>

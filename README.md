@@ -116,4 +116,3 @@ To keep users informed and engaged, the app provides personalized notifications 
 
 ## Known Bugs
 - Because the app is hosted on Render, it may take a few minutes to start up after being idle for a while.
-- Because the database is hosted on Railway, it is currently down as a limitation of the free tier. This means that the app is currently not able to access the database for any user data or challenges. This is a known issue and will be resolved in the future.

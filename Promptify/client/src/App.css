@@ -48,10 +48,8 @@
 }
 
 /* App */
-#scroll-top-btn {
+.global-btn {
     position: fixed;
-    bottom: 2rem;
-    right: 2rem;
     z-index: 1000;
 
     background-color: var(--verdigris);
@@ -65,7 +63,6 @@
 
     padding: 0.5rem;
     width: 3rem;
-    /* height: 2rem; */
     font-size: 1.5rem;
 
     cursor: pointer;
@@ -73,8 +70,19 @@
     transition: background-color 0.3s;
 }
 
-#scroll-top-btn:hover,
-#scroll-top-btn:active,
-#scroll-top-btn:focus {
+.global-btn:hover,
+.global-btn:active,
+.global-btn:focus {
     background-color: var(--paynes-gray);
+}
+
+#scroll-top-btn {
+    bottom: 2rem;
+    right: 2rem;
+}
+
+#known-issue-btn {
+    bottom: 5rem;
+    right: 2rem;
+    z-index: 10000;
 }

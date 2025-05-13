@@ -28,7 +28,7 @@ export default function Help() {
 
                 <h3>1. How do I reset my password?</h3>
                 <p>
-                    To reset your password, please contact the developer at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
+                    To reset your password, please contact the developer via one of the below contact methods.
                 </p>
 
                 <h3>2. How can I submit my writing?</h3>
@@ -48,7 +48,7 @@ export default function Help() {
 
                 <h3>5. What should I do if I encounter a technical issue?</h3>
                 <p>
-                    If you experience any technical issues, please reach out to the developer via email at <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>.
+                    If you experience any technical issues, please reach out to the developer via one of the below contact methods.
                 </p>
             </section>
 
@@ -60,22 +60,12 @@ export default function Help() {
                 <fieldset>
                     <legend>Contact Information</legend>
                     <p>
-                        <strong>Name:</strong> Ricki Beckless
-                    </p>
-                    <p>
-                        <strong>Email:</strong> <Link to="mailto:glbeckless@hotmail.com">glbeckless@hotmail.com</Link>
-                    </p>
-                    <p>
                         <strong>GitHub:</strong> <Link to="https://www.github.com/rickibeckless" target="_blank" rel="noopener noreferrer">github.com/rickibeckless</Link>
                     </p>
                     <p>
                         <strong>LinkedIn:</strong> <Link to="https://www.linkedin.com/in/ricki-beckless" target="_blank" rel="noopener noreferrer">linkedin.com/in/ricki-beckless</Link>
                     </p>
                 </fieldset>
-
-                <p>
-                    We aim to respond to all inquiries within three(3) business days.
-                </p>
             </section>
         </div>
     );

@@ -85,29 +85,6 @@ export default function About() {
                 </ul>
             </section>
 
-            {/* <section className="footer-section" id="meet-the-team">
-                <h2>Meet the Team</h2>
-                <p>
-                    Our team is passionate about writing, creativity, and community. We're writers, designers, and developers who wanted to create a space where inspiration meets functionality. Here's a little about us:
-                </p>
-                <div className="team-members">
-                    <div className="team-member">
-                        <img src="" alt="Ricki Beckless" />
-                        <h3>Ricki Beckless</h3>
-                        <p><em>Founder/Developer</em></p>
-                        <p>Ricki is a writer and developer dedicated to making creative expression accessible to all.</p>
-                    </div>
-                </div>
-            </section> */}
-
-            {/* <section className="footer-section" id="testimonials">
-                <h2>What Our Users Are Saying</h2>
-                <blockquote>
-                    <p>"User Quote."</p>
-                    <footer>- User Name, User Title</footer>
-                </blockquote>
-            </section> */}
-
             <section className="footer-section" id="get-started">
                 <h2>Get Started</h2>
                 {user ? (
