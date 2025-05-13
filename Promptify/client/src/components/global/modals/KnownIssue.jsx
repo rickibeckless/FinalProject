@@ -52,6 +52,10 @@ export default function KnownIssue({ toggleModal }) {
                             For updates on <i>Promptify</i> please 
                             visit: <Link id="footer-cr-link" to="https://github.com/rickibeckless/FinalProject" target="_blank" rel="noopener nofollow noreferrer" title="Promptify GitHub">GitHub</Link>
                         </p>
+                        <p>
+                            For a demo of <i>Promptify</i> please
+                            visit:  <Link id="footer-cr-link" to="https://www.youtube.com/watch?v=DaxxJaa_lGM" target="_blank" rel="noopener nofollow noreferrer" title="Promptify YouTube Demo">YouTube</Link>
+                        </p>
                     </div>
                 </div>
 
