@@ -4,9 +4,18 @@ CodePath WEB103 Final Project
 
 Designed and developed by: Ricki Beckless
 
-🔗 Link to deployed app: https://promptify-ur5z.onrender.com
+🔗 Link to deployed app[*](#known-bugs): https://promptify-ur5z.onrender.com
 
 🔗 Link to YouTube app demo: https://youtu.be/DaxxJaa_lGM
+
+## Table of Contents
+- [About](#about)
+  - [Description and Purpose](#description-and-purpose)
+  - [Inspiration](#inspiration)
+- [Tech Stack](#tech-stack)
+- [Features](#features)
+- [Future Improvements](#future-improvements)
+- [Known Bugs](#known-bugs)
 
 ## About
 
@@ -100,6 +109,11 @@ To keep users informed and engaged, the app provides personalized notifications 
 #### Notifications Gif
 ![notifications gif](./project_demos/features/user_notifications.gif)
 
-## Installation Instructions
+## Future Improvements
+- Introduce a "Challenge of the Day" feature, where users can receive a daily writing prompt to inspire creativity.
+- Add a "Leaderboard" feature to showcase the top writers based on votes received, fostering a sense of competition and motivation.
+- Enhance the commenting system to allow users to reply to specific comments, creating a threaded discussion format.
 
-[instructions go here]
+## Known Bugs
+- Because the app is hosted on Render, it may take a few minutes to start up after being idle for a while.
+- Because the database is hosted on Railway, it is currently down as a limitation of the free tier. This means that the app is currently not able to access the database for any user data or challenges. This is a known issue and will be resolved in the future.
