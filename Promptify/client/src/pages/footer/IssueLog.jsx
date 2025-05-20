@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
 import PageTitle from "../../components/global/PageTitle.jsx";
+import CloseImg from "../../assets/close.svg";
 
 export default function IssueLog() {
     const [loading, setLoading] = useState(true); // set to false when done loading
@@ -10,13 +10,14 @@ export default function IssueLog() {
 
     const adminKey = import.meta.env.VITE_ADMIN_KEY;
     const [adminView, setAdminView] = useState(false);
+    const [showAdminField, setShowAdminField] = useState(false);
     const [adminKeyInput, setAdminKeyInput] = useState("");
-    
+
     const [allIssues, setAllIssues] = useState([]);
     const [currentIssues, setCurrentIssues] = useState([]);
     const [unapprovedIssues, setUnapprovedIssues] = useState([]);
     const [archivedIssues, setArchivedIssues] = useState([]);
-    
+
     async function fetchIssues() {
         try {
             const response = await fetch('/api/issues/list');
@@ -44,20 +45,33 @@ export default function IssueLog() {
         fetchIssues();
     }, []); // the empty array means this effect will only run once
 
-    const openAdminKeyCheck = () => {
-        if (adminView) {
-            setAdminView(false);
-            setMessage("Admin view disabled.");
+    const toggleAdminView = () => {
+        if (showAdminField) {
+            document.body.classList.remove("modal-open");
+            setShowAdminField(false);
         } else {
-            const adminKeyInput = prompt("Enter the admin key to toggle admin view:");
-            if (adminKeyInput === adminKey) {
-                setAdminView(true);
-                setMessage(`Admin view enabled.`);
-            } else {
+            if (adminView) {
                 setAdminView(false);
-                setMessage("Invalid admin key.");
+                setMessage("Admin view disabled.");
+            } else {
+                document.body.classList.add("modal-open");
+                setShowAdminField(true);
             };
         };
+    };
+
+    const handleAdminKeyValidation = () => {
+        if (adminKeyInput === adminKey) {
+            setAdminView(true);
+            setMessage(`Admin view enabled.`);
+        } else {
+            setAdminView(false);
+            setMessage("Invalid admin key.");
+        };
+
+        setAdminKeyInput("");
+        document.body.classList.remove("modal-open");
+        setShowAdminField(false);
     };
 
     const handleIssueApprove = async (issueId) => {
@@ -88,7 +102,7 @@ export default function IssueLog() {
     };
 
     const handleIssueArchive = async (issueId) => {
-        const archiveReason = prompt("Enter the reason for archiving this issue:");            
+        const archiveReason = prompt("Enter the reason for archiving this issue:");
 
         const issue = allIssues.find(issue => issue.id === issueId);
         if (issue) {
@@ -199,16 +213,42 @@ export default function IssueLog() {
                 <h1>Issue Log</h1>
                 <p>Check past and current Promptify issues.</p>
 
-                <p>Admin? <button type="button" id="toggle-admin-btn" onClick={() => openAdminKeyCheck()}>Toggle Admin View</button></p>
+                <p>Admin? <button type="button" id="toggle-admin-btn" onClick={() => toggleAdminView()}>Toggle Admin View</button></p>
+
+                {showAdminField &&
+                    <>
+                        <div id="modalOverlay"></div>
+                        <div id="admin-key-modal" className="modal">
+                            <div className="modal-content">
+                                <button type="button" className="account-form-modal-close-btn" onClick={() => toggleAdminView()}>
+                                    <img src={CloseImg} alt="Close Modal" />
+                                </button>
+                                <div className="account-form-modal-header">
+                                    <h2>Enter Admin Key</h2>
+                                </div>
+
+                                <form id="account-form" className="modal-form">
+                                    <div className="form-input-holder">
+                                        <label htmlFor="admin_key">Admin Key:</label>
+                                        <input type="password" id="admin_key" name="admin_key" placeholder="Admin Key" value={adminKeyInput} onChange={(e) => setAdminKeyInput(e.target.value)} />
+                                    </div>
+
+                                    <button className="account-form-submit-btn sign-up-btn" type="submit" onClick={() => handleAdminKeyValidation()}>Enter</button>
+                                </form>
+                            </div>
+                        </div>
+                    </>
+                }
+
             </header>
 
             <section className="footer-section" id="current-issues">
                 <h2>Current Issues</h2>
                 <p>
-                    Here are some of the current issues that have been reported 
+                    Here are some of the current issues that have been reported
                     and are being worked on:
                 </p>
-                
+
                 {currentIssues.length > 0 ? (
                     <>
                         <ul>
@@ -268,10 +308,10 @@ export default function IssueLog() {
             <section className="footer-section" id="archived-issues">
                 <h2>Archived Issues</h2>
                 <p>
-                    Here are some of the past issues that have been reported and 
+                    Here are some of the past issues that have been reported and
                     have been resolved or dismissed:
                 </p>
-                
+
                 {archivedIssues.length > 0 ? (
                     <>
                         <ul>
@@ -308,10 +348,10 @@ export default function IssueLog() {
             <section className="footer-section" id="future-projects">
                 <h2>Future Projects</h2>
                 <p>
-                    Promptify is always evolving! Here are some of the future 
+                    Promptify is always evolving! Here are some of the future
                     projects that are being worked on:
                 </p>
-                
+
                 <ul>
                     <li>Enhance notification system</li>
                     <li>Integrate AI model to create AI generated prompts</li>

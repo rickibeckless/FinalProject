@@ -26,7 +26,8 @@
     margin-top: 1rem;
 }
 
-#known-issue-modal-btn {
+#known-issue-modal-btn,
+#toggle-admin-btn {
     background-color: var(--verdigris);
     color: var(--light-text);
     border: none;
@@ -36,7 +37,8 @@
     transition: background-color 0.3s;
 }
 
-#known-issue-modal-btn:hover {
+#known-issue-modal-btn:hover,
+#toggle-admin-btn:hover {
     background-color: var(--paynes-gray);
 }
 
