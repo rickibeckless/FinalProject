@@ -20,11 +20,14 @@ function App() {
         });
     };
 
+    const knownIssues = import.meta.env.VITE_KNOWN_ISSUES;
     const [showIssueModal, setShowIssueModal] = useState(false);
 
     useEffect(() => {
-        setShowIssueModal(true);
-        document.body.classList.add("modal-open");
+        if (knownIssues === "true") {
+            setShowIssueModal(true);
+            document.body.classList.add("modal-open");
+        }
     }, []);
 
     const toggleModal = (type) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import LoadingScreen from "../LoadingScreen.jsx";
 import MessagePopup from "../MessagePopup.jsx";
 import CloseImg from "../../../assets/close.svg";
@@ -9,8 +9,6 @@ export default function KnownIssue({ toggleModal }) {
     const [loading, setLoading] = useState(true); // set to false when done loading
     const [message, setMessage] = useState(""); // set to message to display in message popup
     
-    const navigate = useNavigate(); // used to navigate to a different page
-
     useEffect(() => { // runs once when the page loads
         setLoading(false); // set to false when done loading
     }, []); // the empty array means this effect will only run once
@@ -32,16 +30,13 @@ export default function KnownIssue({ toggleModal }) {
 
                     <ul id="known-issue-modal-list">
                         <li className="known-issue-modal-list-item">
-                            <h4 className="known-issue-modal-list-item-header">Database Down!</h4>
+                            <h4 className="known-issue-modal-list-item-header"></h4>
                             <ul className="known-issue-modal-list-item-information">
                                 <li className="known-issue-modal-list-item-information-item">
-                                    Because this app is hosted using the free tier on Railway, 
-                                    <i> the database is currently down. </i>
-                                    This means features like "Challenges", "Accounts", and 
-                                    "Submissions", are currently unavailable.
+
                                 </li>
                                 <li className="known-issue-modal-list-item-information-date">
-                                    Issue as of: <i>05/12/2025</i>
+                                    
                                 </li>
                             </ul>
                         </li>
