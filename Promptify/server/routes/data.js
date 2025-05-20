@@ -1,6 +1,7 @@
 // data.js file imports all routers to allow for easier import in server.js
 
 import defaultRoutes from "./defaultRoutes.js";
+import issueRoutes from "./issueRoutes.js";
 
 import userRoutes from "./userRoutes.js";
 import challengeRoutes from "./challengeRoutes.js";
@@ -12,6 +13,7 @@ import userFollowersRoutes from "./userFollowersRoutes.js";
 
 export { 
     defaultRoutes, 
+    issueRoutes, 
     userRoutes, 
     challengeRoutes, 
     submissionRoutes, 

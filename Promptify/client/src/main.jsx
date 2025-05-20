@@ -27,6 +27,7 @@ import Submission from './pages/challenges/Submission.jsx';
 import NotFound from './pages/NotFound.jsx';
 
 // footer pages
+import IssueLog from './pages/footer/IssueLog.jsx';
 import About from './pages/footer/About.jsx';
 import TermsOfService from './pages/footer/TermsOfService.jsx';
 import Help from './pages/footer/Help.jsx';
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
             { path: '/notifications', element: <Notifications /> },
             { path: '/settings', element: <Settings /> },
 
+            { path: '/issue-log', element: <IssueLog /> },
             { path: '/about', element: <About /> },
             { path: '/terms-of-service', element: <TermsOfService /> },
             { path: '/help', element: <Help /> },

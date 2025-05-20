@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./components/global/Header.jsx";
 import Footer from "./components/global/Footer.jsx";
 import KnownIssue from "./components/global/modals/KnownIssue.jsx";
+import ReportIssue from "./components/global/modals/ReportIssue.jsx";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation, faCircleUp } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ function App() {
 
     const knownIssues = import.meta.env.VITE_KNOWN_ISSUES;
     const [showIssueModal, setShowIssueModal] = useState(false);
+    const [showReportIssueModal, setShowReportIssueModal] = useState(false);
 
     useEffect(() => {
         if (knownIssues === "true") {
@@ -32,12 +34,18 @@ function App() {
 
     const toggleModal = (type) => {
         if (type === "showIssues") {
-            document.body.classList.toggle("modal-open");
+            document.body.classList.add("modal-open");
             setShowIssueModal(true);
+            setShowReportIssueModal(false);
+        } else if (type === "reportIssue") {
+            document.body.classList.add("modal-open");
+            setShowIssueModal(false);
+            setShowReportIssueModal(true);
         } else if (type === "close") {
             document.body.classList.remove("modal-open");
             setShowIssueModal(false);
-        }
+            setShowReportIssueModal(false);
+        };
     };
 
     return (
@@ -45,10 +53,11 @@ function App() {
             <Header />
 
             {showIssueModal && <KnownIssue toggleModal={toggleModal} />}
+            {showReportIssueModal && <ReportIssue toggleModal={toggleModal} />}
             
             <Outlet />
 
-            <button id="known-issue-btn" className="global-btn" type="button" title="There Are Known Issues!" onClick={() => toggleModal("showIssues")}>
+            <button id="known-issue-btn" className="global-btn" type="button" title="Check/Report Issues" onClick={() => toggleModal("showIssues")}>
                 <FontAwesomeIcon icon={faCircleExclamation} />
             </button>
             <button id="scroll-top-btn" className="global-btn" type="button" title="Scroll To Top" onClick={scrollToTop}>

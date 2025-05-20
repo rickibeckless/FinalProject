@@ -18,6 +18,10 @@ export default function Footer() {
                         </li>
                     ) : null}
                     <li>
+                        <Link to="/issue-log">Issue Log</Link>
+                        <div className="custom-bottom-border"></div>
+                    </li>
+                    <li>
                         <Link to="/about">About</Link>
                         <div className="custom-bottom-border"></div>
                     </li>

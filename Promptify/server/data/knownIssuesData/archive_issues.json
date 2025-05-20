@@ -1,0 +1,12 @@
+[
+    {
+        "id": "d2bb417f-a138-4525-ab0d-3c30417dd7f0",
+        "title": "Database Down!",
+        "description": "Because this app is hosted using the free tier on Railway, the database is currently down. This means features like Challenges, Accounts, and Submissions, are currently unavailable.",
+        "status": "archived",
+        "submitted_date": "2025-05-12T12:30:00-06:00",
+        "approved_date": "2025-05-12T12:30:00-06:00",
+        "date": "2025-05-20T08:30:00-06:00",
+        "archive_reason": "Solved"
+    }
+]

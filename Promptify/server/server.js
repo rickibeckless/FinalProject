@@ -7,6 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { 
     defaultRoutes, 
+    issueRoutes, 
     userRoutes, 
     challengeRoutes, 
     submissionRoutes,
@@ -73,6 +74,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/api/admin/default', defaultRoutes);
+app.use('/api/issues', issueRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/challenges', challengeRoutes);
 app.use('/api/submissions', submissionRoutes);

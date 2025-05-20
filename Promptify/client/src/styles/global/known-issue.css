@@ -26,6 +26,20 @@
     margin-top: 1rem;
 }
 
+#known-issue-modal-btn {
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    border: none;
+    border-radius: 10px;
+    padding: .2rem .3rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#known-issue-modal-btn:hover {
+    background-color: var(--paynes-gray);
+}
+
 @media screen and (max-width: 768px) {
     #known-issue-modal {
         width: 80vw;

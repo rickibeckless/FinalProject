@@ -13,3 +13,29 @@
     flex-direction: column;
     align-items: center;
 }
+
+.message-popup-content {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--dark-text);
+}
+
+.message-popup-content:hover {
+    color: var(--paynes-gray);
+}
+
+.message-popup-close {
+    padding: 0.5rem 1rem;
+
+    background-color: var(--verdigris);
+    color: var(--light-text);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.message-popup-close:hover {
+    background-color: var(--paynes-gray);
+}
