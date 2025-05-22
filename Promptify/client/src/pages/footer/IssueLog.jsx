@@ -213,7 +213,7 @@ export default function IssueLog() {
                 <h1>Issue Log</h1>
                 <p>Check past and current Promptify issues.</p>
 
-                <p>Admin? <button type="button" id="toggle-admin-btn" onClick={() => toggleAdminView()}>Toggle Admin View</button></p>
+                <p>Admin? <button type="button" className="toggle-admin-btn" onClick={() => toggleAdminView()}>Toggle Admin View</button></p>
 
                 {showAdminField &&
                     <>
@@ -261,8 +261,8 @@ export default function IssueLog() {
                                     </ul>
                                     {adminView && (
                                         <div className="footer-issue-list-item-admin">
-                                            <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueArchive(issue.id)}>Archive</button>
-                                            <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
+                                            <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueArchive(issue.id)}>Archive</button>
+                                            <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
                                         </div>
                                     )}
                                 </li>
@@ -281,8 +281,8 @@ export default function IssueLog() {
                                                     <li className="footer-issue-list-item-information-date"><b>Submitted:</b> {new Date(issue.date).toLocaleDateString()}—{new Date(issue.date).toLocaleTimeString()}</li>
                                                 </ul>
                                                 <div className="footer-issue-list-item-admin">
-                                                    <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueApprove(issue.id)}>Approve</button>
-                                                    <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
+                                                    <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueApprove(issue.id)}>Approve</button>
+                                                    <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
                                                 </div>
                                             </li>
                                         ))
@@ -293,8 +293,8 @@ export default function IssueLog() {
 
                                 {(unapprovedIssues.length + archivedIssues.length) > 1 && (
                                     <div className="footer-issue-list-item-admin">
-                                        <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueDeleteAll("current")}>Delete All</button>
-                                        <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueArchiveAll()}>Archive All</button>
+                                        <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueDeleteAll("current")}>Delete All</button>
+                                        <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueArchiveAll()}>Archive All</button>
                                     </div>
                                 )}
                             </>
@@ -327,7 +327,7 @@ export default function IssueLog() {
 
                                     {adminView && (
                                         <div className="footer-issue-list-item-admin">
-                                            <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
+                                            <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueDelete(issue.id)}>Delete</button>
                                         </div>
                                     )}
                                 </li>
@@ -336,7 +336,7 @@ export default function IssueLog() {
 
                         {(adminView && archivedIssues.length > 1) && (
                             <div className="footer-issue-list-item-admin">
-                                <button type="button" className="footer-issue-list-item-admin-btn" onClick={() => handleIssueDeleteAll("archived")}>Delete All</button>
+                                <button type="button" className="footer-issue-list-item-admin-btn toggle-admin-btn" onClick={() => handleIssueDeleteAll("archived")}>Delete All</button>
                             </div>
                         )}
                     </>

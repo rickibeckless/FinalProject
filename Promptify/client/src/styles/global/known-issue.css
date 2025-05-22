@@ -27,7 +27,7 @@
 }
 
 #known-issue-modal-btn,
-#toggle-admin-btn {
+.toggle-admin-btn {
     background-color: var(--verdigris);
     color: var(--light-text);
     border: none;
@@ -37,8 +37,12 @@
     transition: background-color 0.3s;
 }
 
+.toggle-admin-btn ~ .toggle-admin-btn {
+    margin-left: .5rem;
+}
+
 #known-issue-modal-btn:hover,
-#toggle-admin-btn:hover {
+.toggle-admin-btn:hover {
     background-color: var(--paynes-gray);
 }
 
