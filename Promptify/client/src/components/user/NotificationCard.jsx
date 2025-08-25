@@ -15,7 +15,7 @@ import "../../styles/user/notifications/notification-card.css"; // styling for t
 
 // import any images or assets here
 
-export default function NotificationCard({ notificationId }) {
+export default function NotificationCard({ notificationId, markNotification }) {
     const { user } = useContext(AuthContext); // context used for authentication
     const [notification, setNotification] = useState({});
 
@@ -32,6 +32,7 @@ export default function NotificationCard({ notificationId }) {
         };
 
         fetchNotification();
+        markNotification(notificationId, 'read');
     }, [notificationId]);
 
     const formattedDate = new Date(notification?.date_created).toLocaleString();
@@ -40,6 +41,21 @@ export default function NotificationCard({ notificationId }) {
         <div className="notification-card">
             <div className="notification-card-header">
                 <h3>{notification?.title}</h3>
+
+                {notification?.type === 'review_update' ?
+                    <p className="notification-type">Review Update</p>
+                : notification?.type === 'follow_activity' ?
+                    <p className="notification-type">Follow Activity</p>
+                : notification?.type === 'account_update' ?
+                    <p className="notification-type">Account Update</p>
+                : notification?.type === 'submission_interaction' ?
+                    <p className="notification-type">Submission Interaction</p>
+                : notification?.type === 'challenge_activity' ?
+                    <p className="notification-type">Challenge Activity</p>
+                : notification?.type === 'general' ?
+                    <p className="notification-type">General</p>
+                : null }
+
                 <p>{formattedDate}</p>
             </div>
             <div className="notification-card-body">

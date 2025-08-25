@@ -249,7 +249,7 @@ export default function Notifications() {
 
                             <section className="right-notification-holder">
                                 {showNotification ? (
-                                    <NotificationCard notificationId={notificationId} />
+                                    <NotificationCard notificationId={notificationId} markNotification={markNotification} />
                                 ) : (
                                     <p id="notification-placeholder">Select a notification to view details</p>
                                 )}
