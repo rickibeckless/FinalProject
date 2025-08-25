@@ -6,6 +6,9 @@
 // general imports
 import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import DOMPurify from 'dompurify';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css'
 
 // sets the page title, used by all pages in the format "Page Title | Promptify"
 import PageTitle from "../../components/global/PageTitle.jsx"; // note: modals will not use this component
@@ -198,8 +201,23 @@ export default function AdminDashboard() {
         }
     };
 
+    const handleCancelNotification = () => {
+        setNotificationForm({
+            title: '',
+            content: '',
+            to: [],
+        });
+        if (openNotificationDropdown) toggleNotificationDropdown();
+        toggleNotificationForm();
+    };
+
     const handleSendNotification = async (e) => {
         e.preventDefault();
+
+        if (!notificationForm.title || !notificationForm.content || !notificationForm.to.length === 0) {
+            setMessage("Please fill out all fields.");
+            return;
+        }
 
         try {
             setLoading(true);
@@ -220,6 +238,13 @@ export default function AdminDashboard() {
             };
 
             setLoading(false);
+            setNotificationForm({
+                title: '',
+                content: '',
+                to: [],
+            });
+            toggleNotificationDropdown();
+            toggleNotificationForm();
         } catch (error) {
             console.error(error);
             setMessage("An error occurred. Please try again.");
@@ -256,11 +281,23 @@ export default function AdminDashboard() {
                 setNewUsers([]);
                 setShowNewUserForm(false);
             }
+
+            toggleUserForm();
         } catch (error) {
             console.error(error);
             setMessage('An error occurred. Please try again.');
         }
     };
+
+    const modules = {
+        toolbar: '#toolbar'
+    };
+
+    const formats = [
+        'bold', 'italic', 'underline', 'strike',
+        'align', 'image', 'video', 
+        'clean', 'header', 'list', 'indent'
+    ];
 
     return (
         <> {/* React fragment (shorthand), used to return multiple elements. Pages usually start with fragment */}
@@ -302,7 +339,28 @@ export default function AdminDashboard() {
 
                             <div className="form-input-holder">
                                 <label htmlFor="content">Content:</label>
-                                <textarea id="content" name="content" value={notificationForm.content} onChange={handleNotificationChange} />
+                                {/* TODO: want to change this to use React Quill to allow formatting */}
+
+                                <div id="toolbar">
+                                    <span className="ql-formats">
+                                        <button className="ql-bold"></button>
+                                        <button className="ql-italic"></button>
+                                        <button className="ql-underline"></button>
+                                        <button className="ql-strike"></button>
+                                        <button className="ql-indent" value="-1"></button>
+                                        <button className="ql-indent" value="+1"></button>
+                                        <button className="ql-list" value="ordered"></button>
+                                        <button className="ql-list" value="bullet"></button>
+                                        <button className="ql-image"></button>
+                                        <button className="ql-video"></button>
+                                        <button className="ql-link"></button>
+                                        <select className="ql-align"></select>
+                                        <select className="ql-header"></select>
+                                        <button className="ql-clean"></button>
+                                    </span>
+                                </div>
+
+                                <ReactQuill id="content" name="content" formats={formats} modules={modules} placeholder="Notification Content Here..." theme="snow" value={notificationForm.content} onChange={(content) => setNotificationForm({...notificationForm, content: DOMPurify.sanitize(content)})} />
                             </div>
 
                             <div className="form-input-holder">
@@ -332,7 +390,10 @@ export default function AdminDashboard() {
                             </div>
                         </form>
 
-                        <button id="notification-form-submit-btn" type="submit" onClick={(e) => handleSendNotification(e)}>Send Notification</button>
+                        <div id="notification-form-btn-holder">
+                            <button id="notification-form-cancel-btn" type="button" onClick={handleCancelNotification}>Cancel</button>
+                            <button id="notification-form-submit-btn" type="submit" onClick={(e) => handleSendNotification(e)}>Send Notification</button>
+                        </div>
                     </>
                 )}
 

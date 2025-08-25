@@ -17,8 +17,37 @@
     color: var(--paynes-gray);
 }
 
-.notification-card-body p {
+.notification-card-body #notification-body-content {
     font-size: 1rem;
     color: var(--black-olive);
     line-height: 1.6;
+    text-align: initial;
+
+    & .ql-align-center {
+        text-align: center;
+    }
+    & .ql-align-right {
+        text-align: right;
+    }
+    & .ql-align-justify {
+        text-align: justify;
+    }
+    & .ql-align-left {
+        text-align: left;
+    }
+
+    & .ql-indent-1 {
+        margin-left: 1.5rem;
+    }
+    & .ql-indent-2 {
+        margin-left: 2.5rem;
+    }
+    & .ql-indent-3 {
+        margin-left: 3.5rem;
+    }
+
+    & ul,
+    & ol {
+        margin-left: 1.5rem;
+    }
 }
