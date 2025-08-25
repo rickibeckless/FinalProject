@@ -2,7 +2,7 @@ import { pool } from '../config/database.js';
 import { io } from '../server.js';
 import { v4 as uuidv4 } from 'uuid';
 
-const notificationCheck = async (results, res) => {
+const notificationCheck = async (userId, results, res) => {
     try {
         let updates = [];
 
@@ -16,20 +16,30 @@ const notificationCheck = async (results, res) => {
             let notificationsToDelete = [];
 
             if (user.notifications === null || user.notifications === undefined) {
-                await pool.query('UPDATE users SET notifications = $1 WHERE id = $2', [JSON.stringify([]), user.id]);
+                await pool.query('UPDATE users SET notifications = $1 WHERE id = $2', [JSON.stringify([]), userId]);
             }
 
             if (user.notifications.length === 0 || user.notifications.length === undefined || user.notifications === null) {
                 continue;
             }
 
-            for (const notification of user.notifications) {
-                const dateDeleted = new Date(notification.date_deleted);
-                const currentDate = new Date();
+            const thirtyDaysMSeconds = 30 * 24 * 60 * 60 * 1000;
+            const currentDate = Date.now();
 
-                if (dateDeleted !== null && dateDeleted !== undefined) {
-                    if (currentDate - dateDeleted > 30) {
-                        notificationsToDelete.push(notification);
+            for (const notification of user.notifications) {
+                const dateDeletedRaw = notification.date_deleted;
+
+                if (dateDeletedRaw !== null && dateDeletedRaw !== undefined) {
+                    const dateDeleted = new Date(dateDeletedRaw).getTime();
+
+                    if (!isNaN(dateDeleted)) {
+                        const timeElapsed = currentDate - dateDeleted;
+
+                        if (timeElapsed > thirtyDaysMSeconds) {
+                            notificationsToDelete.push(notification);
+                        } else {
+                            notificationsToKeep.push(notification);
+                        }
                     } else {
                         notificationsToKeep.push(notification);
                     }
@@ -43,12 +53,12 @@ const notificationCheck = async (results, res) => {
                     UPDATE users
                     SET notifications = notifications - $1
                     WHERE id = $2
-                `, [JSON.stringify(notificationsToDelete), user.id]);
+                `, [JSON.stringify(notificationsToDelete), userId]);
             };
 
             updates.push({
-                id: user.id,
-                notifications: notificationsToKeep
+                id: userId,
+                notifications: JSON.stringify(notificationsToKeep)
             });
         }
 
@@ -64,7 +74,7 @@ export const getAllNotifications = async (req, res) => {
     try {
         const results = await pool.query('SELECT notifications FROM users');
 
-        await notificationCheck(results, res);
+        //await notificationCheck(results, res);
 
         res.status(200).json(results.rows);
     } catch (error) {
@@ -86,8 +96,8 @@ export const getNotificationsByUserId = async (req, res) => {
         if (results.rows[0].notifications === null || results.rows[0].notifications === undefined) {
             return res.status(200).json([]);
         };
-        
-        await notificationCheck(results, res);
+
+        await notificationCheck(userId, results, res);
 
         res.status(200).json(results.rows);
     } catch (error) {
@@ -157,7 +167,7 @@ export const updateNotificationStatus = async (req, res) => {
             //     results.rows[0].notifications = [];
             // };
 
-            await notificationCheck(results, res);
+            //await notificationCheck(results, res);
 
             if (results.rowCount === 0) {
                 return res.status(404).json({ error: 'Notification not found' });
@@ -186,7 +196,7 @@ export const updateNotificationStatus = async (req, res) => {
             RETURNING notifications;
         `, [userId, notificationId, JSON.stringify(status), JSON.stringify(deleteDate)]);
 
-        await notificationCheck(results, res);
+        //await notificationCheck(results, res);
 
         if (results.rowCount === 0) {
             return res.status(404).json({ error: 'Notification not found' });
@@ -219,7 +229,7 @@ export const updateAllNotificationsStatus = async (req, res) => {
                 RETURNING notifications;
             `, [userId, startStatus]);
 
-            await notificationCheck(results, res);
+            //await notificationCheck(results, res);
 
             if (results.rowCount === 0) {
                 return res.status(404).json({ error: 'Notifications not found' });
@@ -243,7 +253,7 @@ export const updateAllNotificationsStatus = async (req, res) => {
             RETURNING notifications;
         `, [userId, startStatus, JSON.stringify(toStatus)]);
 
-        await notificationCheck(results, res);
+        //await notificationCheck(results, res);
 
         if (results.rowCount === 0) {
             return res.status(404).json({ error: 'Notifications not found' });
@@ -300,7 +310,7 @@ export const sendNotificationToUser = async (req, res) => {
                 RETURNING notifications;
             `, [JSON.stringify(notification), recipientId]);
 
-            await notificationCheck(results, res);
+            //await notificationCheck(results, res);
             io.emit('receive-notification', { userId: recipientId, notification, status: 'unread' });
         };
 
@@ -347,7 +357,7 @@ export const sendSeveralNotificationsToUsers = async (req, res) => {
                     [JSON.stringify(notificationObject), recipientId]
                 );
 
-                await notificationCheck(results, res);
+                //await notificationCheck(results, res);
                 io.emit('receive-notification', {
                     userId: recipientId,
                     notification: notificationObject,

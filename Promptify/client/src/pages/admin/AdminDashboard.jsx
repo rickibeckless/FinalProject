@@ -339,7 +339,6 @@ export default function AdminDashboard() {
 
                             <div className="form-input-holder">
                                 <label htmlFor="content">Content:</label>
-                                {/* TODO: want to change this to use React Quill to allow formatting */}
 
                                 <div id="toolbar">
                                     <span className="ql-formats">
@@ -368,21 +367,24 @@ export default function AdminDashboard() {
 
                                 {openNotificationDropdown && (
                                     <div id="notification-dropdown">
-                                        <div className="notification-dropdown-holder">
-                                            <input type="checkbox" id="all" name="all" value="all" onChange={(e) => handleToChange(e)} />
-                                            <label htmlFor="all">All Users</label>
-                                        </div>
-                                        {users.length > 0 ? (
-                                            users?.map(user => (
-                                                <div key={user.id} className="notification-dropdown-holder">
-                                                    <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
-                                                    <label htmlFor={user.id}>
-                                                        <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
-                                                        {user.username}
-                                                    </label>
+                                        {users?.length > 0 ? (
+                                            <>
+                                                <div className="notification-dropdown-holder">
+                                                    <input type="checkbox" id="all" name="all" value="all" onChange={(e) => handleToChange(e)} />
+                                                    <label htmlFor="all">All Users</label>
                                                 </div>
-                                            ))
-                                        ) : <LoadingScreen />}
+
+                                                {users?.map(user => (
+                                                    <div key={user.id} className="notification-dropdown-holder">
+                                                        <input type="checkbox" id={user.id} name={user.id} value={user.id} onChange={(e) => handleToChange(e)} />
+                                                        <label htmlFor={user.id}>
+                                                            <img className="quick" src={user.profile_picture_url} alt={`${user.username} Profile Picture`} />
+                                                            {user.username}
+                                                        </label>
+                                                    </div>
+                                                ))}
+                                            </>
+                                        ) : <div className="notification-dropdown-holder"><p>No valid users found!</p></div>}
                                     </div>
                                 )}
 

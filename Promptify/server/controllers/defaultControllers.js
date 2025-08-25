@@ -22,7 +22,7 @@ export const resetFullDatabase = async (req, res) => {
         await pool.query('DELETE FROM challenges WHERE id != $1 AND id != $2 AND id != $3', baseChallengeIds);
         await pool.query('DELETE FROM submissions WHERE id != $1', baseSubmissionIds);
         await pool.query('DELETE FROM comments WHERE id != $1', baseCommentIds);
-        await pool.query('DELETE FROM user_followers WHERE follower_id != $1 AND following_id != $2', baseUserIds);
+        await pool.query('DELETE FROM user_followers WHERE follower_id != $1 AND following_id != $2', [baseUserIds[0], baseUserIds[1]]);
         await pool.query('DELETE FROM upvotes');
 
         checkAndSetBaseData();
