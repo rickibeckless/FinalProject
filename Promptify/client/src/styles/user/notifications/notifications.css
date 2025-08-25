@@ -71,7 +71,7 @@
 }
 
 /* Select Notification Prompt */
-.right-notification-holder p {
+.right-notification-holder #notification-placeholder {
     font-size: 1rem;
     color: #7f8c8d;
     text-align: center;

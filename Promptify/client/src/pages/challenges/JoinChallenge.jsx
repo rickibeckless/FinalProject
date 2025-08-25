@@ -310,9 +310,7 @@ export default function JoinChallenge() {
     };
 
     const modules = {
-        toolbar: {
-            container: '#toolbar',
-        },
+        toolbar: '#toolbar'
     };
 
     const formats = [
@@ -490,7 +488,7 @@ export default function JoinChallenge() {
                                                 <button className="ql-clean"></button>
                                             </span>
                                         </div>
-                                        <ReactQuill formats={formats} modules={modules} theme="snow" value={submissionForm.content} onChange={(e) => handleContentChange(e)} />
+                                        <ReactQuill formats={formats} modules={modules} placeholder="Your words of wisdom here..." theme="snow" value={submissionForm.content} onChange={(e) => handleContentChange(e)} />
                                     </div>
                                     <div className="submission-form-input-holder form-counters-holder">
                                         <p className="form-counter">{wordCount}{wordMax && (<>/{wordMax}</>)} words</p>

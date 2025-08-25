@@ -43,7 +43,7 @@ export default function NotificationCard({ notificationId }) {
                 <p>{formattedDate}</p>
             </div>
             <div className="notification-card-body">
-                <p>{notification?.content}</p>
+                <div id="notification-body-content" dangerouslySetInnerHTML={{ __html: notification?.content }} />
             </div>
         </div>
     );

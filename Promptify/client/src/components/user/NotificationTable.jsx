@@ -19,11 +19,11 @@ export default function NotificationTable({ selectedNotifications, toggleNotific
     };
 
     const splicedTitle = (title) => {
-        return title.length > 30 ? title.slice(0, 30) + "..." : title;
+        return title?.length > 30 ? title?.slice(0, 30) + "..." : title;
     };
 
     return (
-        <table className={`${selectedNotifications.length > 0 ? "block" : ""}`}>
+        <table className={`${selectedNotifications?.length > 0 ? "block" : ""}`}>
             <thead>
                 <tr>
                     <th>Notification</th>
@@ -34,8 +34,8 @@ export default function NotificationTable({ selectedNotifications, toggleNotific
             <tbody>
                 {selectedNotifications.length > 0 ? selectedNotifications.map((notification, index) => (
                     <tr onClick={() => toggleNotification(notification.id)} key={index}>
-                        <td>{splicedTitle(notification.title)}</td>
-                        <td>{formattedDate(notification.date_created)}</td>
+                        <td>{splicedTitle(notification?.title)}</td>
+                        <td>{formattedDate(notification?.date_created)}</td>
                         <td className="td-buttons">
                             {notification.status === 'unread' && (
                                 <button type="button" title="Mark As Read" className="challenge-card-button" onClick={() => markNotification(notification.id, 'read')}>

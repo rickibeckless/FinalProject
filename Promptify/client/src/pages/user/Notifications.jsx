@@ -251,7 +251,7 @@ export default function Notifications() {
                                 {showNotification ? (
                                     <NotificationCard notificationId={notificationId} />
                                 ) : (
-                                    <p>Select a notification to view details</p>
+                                    <p id="notification-placeholder">Select a notification to view details</p>
                                 )}
                             </section>
                         </div>
