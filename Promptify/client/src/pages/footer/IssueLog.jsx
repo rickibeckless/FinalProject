@@ -233,7 +233,7 @@ export default function IssueLog() {
                                         <input type="password" id="admin_key" name="admin_key" placeholder="Admin Key" value={adminKeyInput} onChange={(e) => setAdminKeyInput(e.target.value)} />
                                     </div>
 
-                                    <button className="account-form-submit-btn sign-up-btn" type="submit" onClick={() => handleAdminKeyValidation()}>Enter</button>
+                                    <button className="account-form-submit-btn sign-up-btn admin-form-submit-btn" type="submit" onClick={() => handleAdminKeyValidation()}>Enter</button>
                                 </form>
                             </div>
                         </div>

@@ -20,6 +20,7 @@ import LoadingScreen from "../../components/global/LoadingScreen.jsx";
 import MessagePopup from "../../components/global/MessagePopup.jsx";
 
 // import any images or assets here
+import CloseImg from "../../assets/close.svg";
 
 // import any styles here
 import "../../styles/admin/dashboard.css"; // styling for the admin dashboard
@@ -46,6 +47,11 @@ export default function AdminDashboard() {
         type: "general",
         to: [],
     });
+
+    const [resetIsLocked, setResetIsLocked] = useState(true);
+    const [showResetConfirmation, setShowResetConfirmation] = useState(false);
+    const adminKey = import.meta.env.VITE_ADMIN_KEY;
+    const [adminKeyInput, setAdminKeyInput] = useState("");
 
     useEffect(() => {
         if (!authLoading) {
@@ -75,7 +81,26 @@ export default function AdminDashboard() {
         }
     }, [authLoading, user, navigate]);
 
+    const handleAdminKeyValidation = () => {
+        if (adminKeyInput === adminKey) {
+            setResetIsLocked(false);
+            setMessage("You can now reset database.");
+        } else {
+            setResetIsLocked(true);
+            setMessage("Invalid admin key.");
+        };
+
+        setAdminKeyInput("");
+        document.body.classList.remove("modal-open");
+        setShowResetConfirmation(false);
+    };
+
     const handleResetFullDatabase = async () => {
+        if (resetIsLocked) {
+            setShowResetConfirmation(true);
+            return;
+        }
+
         try {
             setLoading(true);
             const response = await fetch(`/api/admin/default/reset/${user.id}`, {
@@ -99,6 +124,8 @@ export default function AdminDashboard() {
             setMessage("An error occurred. Please try again.");
             setLoading(false);
         };
+
+        setResetIsLocked(true);
     };
 
     const handleSeedDefaultUsers = async () => {
@@ -309,12 +336,39 @@ export default function AdminDashboard() {
                 <h1>Admin Dashboard</h1>
 
                 <div className="admin-dashboard-action-btns">
-                    <button type="button" onClick={handleResetFullDatabase}>Reset Full Database</button>
-                    <button type="button" onClick={handleSeedDefaultUsers}>Seed Default Users</button>
-                    <button type="button" onClick={handleSeedDefaultChallenges}>Seed Default Challenges</button>
+                    <div id="admin-dashboard-danger-btns">
+                        <button id="admin-reset-btn" className={resetIsLocked ? 'locked' : '' } type="button" onClick={handleResetFullDatabase}>Reset Full Database</button>
+                        <button type="button" onClick={handleSeedDefaultUsers}>Seed Default Users</button>
+                        <button type="button" onClick={handleSeedDefaultChallenges}>Seed Default Challenges</button>    
+                    </div>
 
                     <button type="button" onClick={() => toggleNotificationForm()}>New Notification</button>
                     <button type="button" onClick={() => toggleUserForm()}>Add Users</button>
+
+                    {showResetConfirmation && 
+                        <>
+                            <div id="modalOverlay"></div>
+                            <div id="admin-key-modal" className="modal">
+                                <div className="modal-content">
+                                    <button type="button" id="admin-dashboard-reset-close-btn" className="account-form-modal-close-btn" onClick={() => setShowResetConfirmation(false)}>
+                                        <img src={CloseImg} alt="Close Modal" />
+                                    </button>
+                                    <div className="account-form-modal-header">
+                                        <h2>Enter Admin Key To Confirm Database Reset</h2>
+                                    </div>
+
+                                    <form id="account-form" className="modal-form">
+                                        <div className="form-input-holder">
+                                            <label htmlFor="admin_key">Admin Key:</label>
+                                            <input type="password" id="admin_key" name="admin_key" placeholder="Admin Key" value={adminKeyInput} onChange={(e) => setAdminKeyInput(e.target.value)} />
+                                        </div>
+
+                                        <button className="account-form-submit-btn sign-up-btn admin-form-submit-btn" type="button" onClick={() => handleAdminKeyValidation()}>Confirm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </>
+                    }
                 </div>
 
                 {showNotificationForm && (
