@@ -15,9 +15,35 @@
 #admin-dashboard-body .admin-dashboard-action-btns {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 1.5rem;
-    row-gap: .5rem;
+    gap: .5rem;
+}
+
+#admin-dashboard-body .admin-dashboard-action-btns #admin-dashboard-danger-btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: .5rem;
+
+    border: 2px solid var(--mild-danger-red);
+    border-radius: 5px;
+    padding: .5rem;
+
+    & #admin-reset-btn {
+        background-color: var(--mild-danger-red);
+        color: var(--dark-text);
+
+        &:hover, &:focus, &:active {
+            background-color: var(--danger-red);
+        }
+
+        &.locked {
+            cursor: not-allowed;
+        }        
+    }
 }
 
 #admin-dashboard-body button {
@@ -29,6 +55,14 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+#admin-dashboard-body #admin-dashboard-reset-close-btn {
+    padding: 0;
+}
+
+.admin-form-submit-btn {
+    justify-content: center;
 }
 
 #admin-dashboard-body button:hover,
