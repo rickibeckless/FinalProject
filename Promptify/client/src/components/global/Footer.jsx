@@ -6,6 +6,7 @@ import PromptifyLogo2 from "../../assets/android-chrome-192x192.png";
 
 export default function Footer() {
     const { user } = useContext(AuthContext);
+    const currentYear = new Date().getFullYear();
 
     return (
         <footer id="main-footer">
@@ -37,7 +38,7 @@ export default function Footer() {
             </nav>
             <p id="footer-cr-statement">
                 <img src={PromptifyLogo2} alt="Promptify logo" />
-                Copyright &copy; 2024 &nbsp;<Link id="footer-cr-link" to="https://github.com/rickibeckless" target="_blank" rel="noopener nofollow noreferrer" title="Ricki Beckless GitHub">Ricki Beckless.</Link> &nbsp;All rights reserved.
+                Copyright &copy; {currentYear} &nbsp;<Link id="footer-cr-link" to="https://github.com/rickibeckless" target="_blank" rel="noopener nofollow noreferrer" title="Ricki Beckless GitHub">Ricki Beckless.</Link> &nbsp;All rights reserved.
             </p>
         </footer>
     )
